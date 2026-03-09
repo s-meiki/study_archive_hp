@@ -85,7 +85,7 @@
     const extensionMatch = fileName.match(/\.[a-z0-9]+$/i);
     const extension = extensionMatch ? extensionMatch[0].toLowerCase() : "";
     const baseName = sanitizeSegment(fileName.replace(/\.[^.]+$/, ""), kind);
-    return `content/uploads/${month}/${folder}/${kind}-${baseName}${extension}`;
+    return `uploads/${month}/${folder}/${kind}-${baseName}${extension}`;
   }
 
   window.StudyArchiveDataUtils = {

@@ -16,7 +16,7 @@ NS = {
 
 DEFAULT_SHEET_NAME = "開催勉強会、レクチャー一覧"
 DEFAULT_SOURCE_PATH = "content/source/lecture-archives.xlsx"
-DEFAULT_OUTPUT_PATH = "data/site-content.js"
+DEFAULT_OUTPUT_PATH = "public/data/site-content.js"
 
 THEMES = [
     {
@@ -76,7 +76,7 @@ SUMMARY_OVERRIDES = {
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Import archive rows from an Excel workbook into data/site-content.js",
+        description="Import archive rows from an Excel workbook into public/data/site-content.js",
     )
     parser.add_argument(
         "--source",

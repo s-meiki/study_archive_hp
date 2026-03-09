@@ -479,7 +479,7 @@ window.STUDY_ARCHIVE_DATA = {
         "recording": "",
         "slides": "",
         "notes": "",
-        "references": "content/uploads/2026-02/archive-19n74r/references-references-1m9clq.pdf"
+        "references": "uploads/2026-02/archive-19n74r/references-references-1m9clq.pdf"
       },
       "thumbnail": {
         "start": "#6b5548",
@@ -506,7 +506,7 @@ window.STUDY_ARCHIVE_DATA = {
         "recording": "",
         "slides": "",
         "notes": "",
-        "references": "content/uploads/2026-02/archive-1tk3qr/references-af.pdf"
+        "references": "uploads/2026-02/archive-1tk3qr/references-af.pdf"
       },
       "thumbnail": {
         "start": "#6b5548",

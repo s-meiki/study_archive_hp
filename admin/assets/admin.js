@@ -289,7 +289,7 @@ function updateUploadNotes() {
     const currentLink = archive?.links?.[kind] || "";
 
     if (pendingFile) {
-      note.textContent = `保存予定: ${pendingFile.name}。プロジェクトへ保存すると content/uploads/ 配下へ配置します。`;
+      note.textContent = `保存予定: ${pendingFile.name}。リポジトリへ保存すると public/uploads/ 配下へ配置します。`;
       return;
     }
 
@@ -499,10 +499,16 @@ function pendingUploadCount() {
 }
 
 function expectedRootPath() {
+  const fallbackPath = "/Users/meiki/Devloper/study_archive_hp";
+
   try {
-    return decodeURIComponent(new URL(".", window.location.href).pathname).replace(/\/$/, "");
+    if (window.location.protocol !== "file:") {
+      return fallbackPath;
+    }
+
+    return decodeURIComponent(new URL("../", window.location.href).pathname).replace(/\/$/, "");
   } catch (error) {
-    return "/Users/meiki/Devloper/study_archive_hp";
+    return fallbackPath;
   }
 }
 
@@ -537,8 +543,10 @@ async function copyRootPath() {
 
 async function isProjectRootHandle(handle) {
   try {
-    await handle.getFileHandle("index.html");
-    await handle.getFileHandle("admin.html");
+    const publicDir = await handle.getDirectoryHandle("public");
+    const adminDir = await handle.getDirectoryHandle("admin");
+    await publicDir.getFileHandle("index.html");
+    await adminDir.getFileHandle("index.html");
     return true;
   } catch (error) {
     return false;
@@ -617,7 +625,7 @@ async function persistPendingUploads() {
 
     for (const [kind, file] of Object.entries(uploads)) {
       const relativePath = dataUtils.createUploadPath(archive, kind, file.name);
-      await writeBinaryFile(projectRootHandle, relativePath, file);
+      await writeBinaryFile(projectRootHandle, `public/${relativePath}`, file);
       archive.links[kind] = relativePath;
       archive.assets[kind] = true;
     }
@@ -634,10 +642,10 @@ async function saveProjectFiles() {
   }
 
   await persistPendingUploads();
-  await writeTextFile(projectRootHandle, "data/site-content.js", dataUtils.serializeSiteData(workingData));
+  await writeTextFile(projectRootHandle, "public/data/site-content.js", dataUtils.serializeSiteData(workingData));
 
   updateUploadNotes();
-  showStatus("プロジェクトへ保存しました。index.html を再読み込みすると反映を確認できます。", "success");
+  showStatus("リポジトリへ保存しました。public/index.html を再読み込みすると反映を確認できます。", "success");
 }
 
 function updateSupportNote() {
@@ -742,11 +750,11 @@ function handleDownload() {
   upsertCurrentArchive({ quiet: true });
 
   if (pendingUploadCount() > 0) {
-    throw new Error("ファイルアップロードが含まれています。プロジェクトへ保存を使うか、URL入力へ切り替えてください。");
+    throw new Error("ファイルアップロードが含まれています。リポジトリへ保存を使うか、URL入力へ切り替えてください。");
   }
 
   downloadTextFile("site-content.js", dataUtils.serializeSiteData(workingData));
-  showStatus("site-content.js をダウンロードしました。data/ に置き換えれば反映できます。", "success");
+  showStatus("site-content.js をダウンロードしました。public/data/ に置き換えれば反映できます。", "success");
 }
 
 function attachEvents() {
