@@ -71,16 +71,22 @@
 
 .admin-library {
   grid-area: library;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  height: var(--library-panel-height, auto);
+  max-height: var(--library-panel-height, none);
+  overflow: hidden;
 }
 
 .admin-editor {
   grid-area: editor;
+  align-self: start;
 }
 
 .workflow-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 1.08fr) minmax(340px, 0.92fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 455px);
+  gap: 22px;
   align-items: start;
 }
 
@@ -91,7 +97,9 @@
 
 .workflow-save {
   display: grid;
+  width: min(100%, 455px);
   gap: 12px;
+  justify-self: end;
 }
 
 .admin-panel h1,
@@ -108,19 +116,43 @@
   line-height: 1.55;
 }
 
-.admin-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.workflow-quickstart {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  max-width: 760px;
+  gap: 12px;
   margin-top: 12px;
+}
+
+.workflow-step {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+
+.workflow-step strong {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.workflow-step span {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
 }
 
 .save-guide {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   margin-top: 0;
-  padding: 12px 14px;
-  border-radius: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 14px;
   border: 1px solid rgba(54, 90, 92, 0.16);
   background: linear-gradient(180deg, #f7fbfa 0%, #f2f7f6 100%);
 }
@@ -134,37 +166,43 @@
 }
 
 .save-guide-head strong {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .root-path {
   display: block;
   overflow-wrap: anywhere;
-  padding: 10px 12px;
-  border-radius: 16px;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border-radius: 14px;
   border: 1px solid var(--line);
   background: #ffffff;
   color: var(--ink);
   font-size: 0.82rem;
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .save-guide-copy {
   margin: 0;
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .support-note {
   margin-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   padding: 8px 10px;
   border-radius: 14px;
   background: var(--surface-muted);
   border: 1px solid var(--line);
   color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .inline-actions,
@@ -184,7 +222,8 @@
   display: grid;
   gap: 10px;
   margin-top: 16px;
-  max-height: calc(100vh - 220px);
+  min-height: 0;
+  height: 100%;
   overflow: auto;
   padding-right: 4px;
 }
@@ -378,13 +417,22 @@
       "editor";
   }
 
-  .archive-admin-list {
+  .admin-library {
+    height: auto;
     max-height: none;
+  }
+
+  .archive-admin-list {
+    height: auto;
   }
 }
 
 @media (max-width: 960px) {
   .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-quickstart {
     grid-template-columns: 1fr;
   }
 }
@@ -410,6 +458,11 @@
 
   .save-guide-head {
     align-items: start;
+  }
+
+  .save-guide-copy,
+  .support-note {
+    white-space: normal;
   }
 
   .form-grid,

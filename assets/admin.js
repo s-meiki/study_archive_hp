@@ -25,6 +25,8 @@ const elements = {
   draftIndicator: document.querySelector("#draft-indicator"),
   editorTitle: document.querySelector("#editor-title"),
   fsSupportNote: document.querySelector("#fs-support-note"),
+  libraryPanel: document.querySelector(".admin-library"),
+  editorPanel: document.querySelector(".admin-editor"),
   rootPathValue: document.querySelector("#root-path-value"),
   saveProject: document.querySelector("#save-project"),
   stats: document.querySelector("#admin-stats"),
@@ -203,6 +205,10 @@ function renderThemeOptions() {
 }
 
 function renderStats() {
+  if (!elements.stats) {
+    return;
+  }
+
   const recordingCount = workingData.archives.filter((archive) => archive.assets.recording).length;
   const referenceCount = workingData.archives.filter((archive) => archive.assets.references).length;
 
@@ -566,7 +572,7 @@ async function connectProjectFolder() {
   const handle = await window.showDirectoryPicker({ mode: "readwrite" });
   projectRootHandle = await resolveProjectRootHandle(handle);
   await saveStoredRootHandle(projectRootHandle);
-  elements.fsSupportNote.textContent = `接続済み: ${expectedRootPath()} に直接保存できます。`;
+  elements.fsSupportNote.textContent = "接続済みです。このままリポジトリへ保存を押せます。";
   showStatus("リポジトリを接続しました。このまま「リポジトリへ保存」を押せます。", "success");
 }
 
@@ -636,7 +642,7 @@ async function saveProjectFiles() {
 
 function updateSupportNote() {
   if (projectRootHandle) {
-    elements.fsSupportNote.textContent = `接続済み: ${expectedRootPath()} に直接保存できます。`;
+    elements.fsSupportNote.textContent = "接続済みです。このままリポジトリへ保存を押せます。";
     return;
   }
 
@@ -645,7 +651,23 @@ function updateSupportNote() {
     return;
   }
 
-  elements.fsSupportNote.textContent = "このブラウザは直接保存に未対応です。ダウンロード運用か Chrome / Edge を使ってください。";
+  elements.fsSupportNote.textContent = "直接保存は未対応です。Chrome / Edge かダウンロード運用を使ってください。";
+}
+
+function syncLibraryHeight() {
+  if (!elements.libraryPanel || !elements.editorPanel) {
+    return;
+  }
+
+  if (window.matchMedia("(max-width: 1180px)").matches) {
+    elements.libraryPanel.style.removeProperty("--library-panel-height");
+    return;
+  }
+
+  const editorHeight = Math.ceil(elements.editorPanel.getBoundingClientRect().height);
+  if (editorHeight > 0) {
+    elements.libraryPanel.style.setProperty("--library-panel-height", `${editorHeight}px`);
+  }
 }
 
 async function restoreStoredProjectRootHandle() {
@@ -819,6 +841,10 @@ function attachEvents() {
     event.preventDefault();
     event.returnValue = "";
   });
+
+  window.addEventListener("resize", () => {
+    syncLibraryHeight();
+  });
 }
 
 async function initialize() {
@@ -837,8 +863,17 @@ async function initialize() {
   }
 
   renderArchiveList();
+  syncLibraryHeight();
+
+  if ("ResizeObserver" in window && elements.editorPanel) {
+    const observer = new ResizeObserver(() => {
+      syncLibraryHeight();
+    });
+    observer.observe(elements.editorPanel);
+  }
 
   await restoreStoredProjectRootHandle();
+  syncLibraryHeight();
 }
 
 initialize();
