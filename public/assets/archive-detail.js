@@ -290,6 +290,7 @@ function renderMaterials(archive) {
   }
 
   items.forEach((item) => {
+    const resolvedUrl = dataUtils.resolveSiteUrl(item.url, "../");
     const row = document.createElement("div");
     row.className = "detail-link-row";
 
@@ -306,9 +307,9 @@ function renderMaterials(archive) {
 
     const anchor = document.createElement("a");
     anchor.className = "mini-link";
-    anchor.href = item.url;
+    anchor.href = resolvedUrl;
     anchor.textContent = "開く";
-    linkAttributes(anchor, item.url);
+    linkAttributes(anchor, resolvedUrl);
 
     row.append(label, anchor);
     materialsEl.append(row);

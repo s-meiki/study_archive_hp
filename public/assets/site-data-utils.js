@@ -77,6 +77,20 @@
     return `${basePath}?id=${archiveId}`;
   }
 
+  function resolveSiteUrl(url, basePath = "./") {
+    const value = String(url ?? "").trim();
+    if (!value) {
+      return "";
+    }
+
+    if (/^(?:[a-z]+:)?\/\//i.test(value) || value.startsWith("/") || value.startsWith("#")) {
+      return value;
+    }
+
+    const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
+    return `${normalizedBase}${value}`.replace(/\/{2,}/g, "/").replace(/^https:\//, "https://").replace(/^http:\//, "http://");
+  }
+
   function parseYouTubeVideoId(url) {
     if (!url) {
       return "";
@@ -147,6 +161,7 @@
     getArchiveDetailUrl,
     getThemeColors,
     getYouTubeEmbedUrl,
+    resolveSiteUrl,
     hasValidSiteData,
     normalizeText,
     parseYouTubeVideoId,
