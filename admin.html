@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>アーカイブ管理 | Study Archive</title>
+    <meta
+      name="description"
+      content="勉強会アーカイブの管理画面。URLや資料リンクを直接追加して公開データへ反映できます。"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <link rel="stylesheet" href="./assets/admin.css" />
+    <script defer src="./assets/site-data-utils.js"></script>
+    <script defer src="./data/site-content.js"></script>
+    <script defer src="./assets/admin.js"></script>
+  </head>
+  <body class="admin-page">
+    <div class="page-shell admin-shell">
+      <header class="topbar admin-topbar">
+        <div>
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>Study Archive Admin</span>
+          </div>
+          <p class="admin-lead">URL と資料を直接追加して、公開用データをその場で更新します。</p>
+        </div>
+        <div class="admin-topbar-actions">
+          <a class="button button-secondary" href="./index.html">公開ページを見る</a>
+          <button class="button button-secondary" type="button" id="download-data">data をダウンロード</button>
+        </div>
+      </header>
+
+      <div class="status-strip panel" id="status-strip" hidden></div>
+
+      <main class="admin-layout">
+        <section class="panel admin-panel admin-workflow">
+          <div class="workflow-grid">
+            <div class="workflow-intro">
+              <div class="section-kicker">Workflow</div>
+              <h1>アーカイブ管理</h1>
+              <p class="admin-copy">
+                一覧から選んで編集し、必要なら新規追加します。Chrome 系ブラウザなら資料も直接保存できます。
+              </p>
+              <div class="admin-stats" id="admin-stats"></div>
+            </div>
+
+            <div class="workflow-save">
+              <div class="save-guide">
+                <div class="save-guide-head">
+                  <strong>保存先はこのフォルダです</strong>
+                  <button class="button button-tertiary button-small" type="button" id="copy-root-path">パスをコピー</button>
+                </div>
+                <code class="root-path" id="root-path-value">/Users/meiki/Devloper/study_archive_hp</code>
+                <p class="save-guide-copy">
+                  保存先は `study_archive_hp` です。`Downloads` は使いません。
+                </p>
+              </div>
+              <div class="support-note" id="fs-support-note"></div>
+              <div class="workflow-actions">
+                <button class="button button-tertiary" type="button" id="create-archive">新規追加</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel admin-panel admin-library">
+          <div class="section-kicker">Library</div>
+          <div class="library-toolbar">
+            <h2>登録済みアーカイブ</h2>
+            <input
+              id="archive-search"
+              class="admin-input"
+              type="search"
+              placeholder="タイトルや講師で検索"
+            />
+          </div>
+          <div class="archive-admin-list" id="archive-admin-list"></div>
+        </section>
+
+        <section class="panel admin-panel admin-editor">
+          <div class="editor-header">
+            <div>
+              <div class="section-kicker">Editor</div>
+              <h2 id="editor-title">アーカイブを編集</h2>
+            </div>
+            <div class="editor-actions">
+              <span class="editor-chip" id="draft-indicator">保存前の変更は未反映</span>
+              <button class="button button-tertiary" type="button" id="delete-archive">削除</button>
+            </div>
+          </div>
+
+          <form id="archive-form" class="admin-form">
+            <div class="form-grid">
+              <label class="field field-full">
+                <span>タイトル</span>
+                <input id="field-title" class="admin-input" name="title" type="text" required />
+              </label>
+
+              <label class="field">
+                <span>開催日</span>
+                <input id="field-date" class="admin-input" name="date" type="date" required />
+              </label>
+
+              <label class="field">
+                <span>講師</span>
+                <input id="field-speaker" class="admin-input" name="speaker" type="text" required />
+              </label>
+
+              <label class="field">
+                <span>テーマ</span>
+                <select id="field-theme" class="admin-input" name="themeId"></select>
+              </label>
+
+              <label class="field">
+                <span>所要時間</span>
+                <input id="field-duration" class="admin-input" name="duration" type="text" placeholder="例: 45分" />
+              </label>
+
+              <label class="field field-checkbox">
+                <input id="field-featured" name="featured" type="checkbox" />
+                <span>このテーマの注目アーカイブにする</span>
+              </label>
+
+              <label class="field field-full">
+                <span>概要</span>
+                <textarea
+                  id="field-summary"
+                  class="admin-input admin-textarea"
+                  name="summary"
+                  rows="4"
+                  placeholder="空欄ならタイトルとテーマから自動生成します"
+                ></textarea>
+              </label>
+            </div>
+
+            <section class="asset-section">
+              <div class="section-kicker">Assets</div>
+              <h3>リンクと資料</h3>
+              <p class="asset-copy">
+                録画は URL を直接入力します。スライド・メモ・参考資料は URL かファイルのどちらかを使えます。
+              </p>
+
+              <div class="asset-grid">
+                <div class="asset-card">
+                  <label class="field field-full">
+                    <span>アーカイブ URL</span>
+                    <input
+                      id="field-recording"
+                      class="admin-input"
+                      name="recording"
+                      type="url"
+                      placeholder="https://www.youtube.com/watch?v=..."
+                    />
+                  </label>
+                </div>
+
+                <div class="asset-card">
+                  <label class="field field-full">
+                    <span>スライド URL</span>
+                    <input id="field-slides" class="admin-input" name="slides" type="url" placeholder="https://..." />
+                  </label>
+                  <div class="upload-row">
+                    <input id="file-slides" type="file" accept=".pdf,.ppt,.pptx,.key,.zip" />
+                    <button class="button button-tertiary button-small" type="button" data-clear-upload="slides">クリア</button>
+                  </div>
+                  <div class="upload-note" id="upload-note-slides"></div>
+                </div>
+
+                <div class="asset-card">
+                  <label class="field field-full">
+                    <span>要点メモ URL</span>
+                    <input id="field-notes" class="admin-input" name="notes" type="url" placeholder="https://..." />
+                  </label>
+                  <div class="upload-row">
+                    <input id="file-notes" type="file" accept=".pdf,.doc,.docx,.txt,.md" />
+                    <button class="button button-tertiary button-small" type="button" data-clear-upload="notes">クリア</button>
+                  </div>
+                  <div class="upload-note" id="upload-note-notes"></div>
+                </div>
+
+                <div class="asset-card">
+                  <label class="field field-full">
+                    <span>参考資料 URL</span>
+                    <input
+                      id="field-references"
+                      class="admin-input"
+                      name="references"
+                      type="url"
+                      placeholder="https://..."
+                    />
+                  </label>
+                  <div class="upload-row">
+                    <input id="file-references" type="file" accept=".pdf,.doc,.docx,.xlsx,.xls,.zip" />
+                    <button class="button button-tertiary button-small" type="button" data-clear-upload="references">クリア</button>
+                  </div>
+                  <div class="upload-note" id="upload-note-references"></div>
+                </div>
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <button class="button button-secondary" type="button" id="autofill-summary">概要を自動入力</button>
+              <button class="button button-primary" type="submit">一覧へ反映</button>
+              <button class="button button-secondary" type="button" id="connect-folder">リポジトリを接続</button>
+              <button class="button button-primary" type="button" id="save-project">リポジトリへ保存</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

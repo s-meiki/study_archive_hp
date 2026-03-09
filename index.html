@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>勉強会アーカイブ | 薬剤師向け</title>
+    <meta
+      name="description"
+      content="薬剤師向けの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script defer src="./assets/site-data-utils.js"></script>
+    <script defer src="./data/site-content.js"></script>
+    <script defer src="./assets/app.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Study Archive / Pharmacist Edition</span>
+        </div>
+        <div class="topbar-note">教育目的の勉強会アーカイブ</div>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="panel hero-copy">
+            <div class="eyebrow">Learning Archive</div>
+            <h1 id="page-title">必要な勉強会に、<br />静かにたどり着く。</h1>
+            <p class="lead">
+              薬剤師向けの勉強会をテーマ単位で整理し、録画や参考資料がある回はそのまま開ける構成です。
+              情報量は抑えつつ、必要な回に短時間でたどり着ける見やすさを優先しています。
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#archive-list">注目の回を見る</a>
+              <a class="button button-secondary" href="#themes">テーマを選ぶ</a>
+            </div>
+            <div class="hero-stats" id="hero-stats" aria-label="アーカイブの概要"></div>
+          </div>
+
+          <div class="panel hero-feature" id="featured-card" aria-live="polite"></div>
+        </section>
+
+        <form class="panel controls" id="filters" aria-label="検索と絞り込み">
+          <label class="search-field">
+            <span class="visually-hidden">キーワード検索</span>
+            <input id="search-input" name="search" type="search" placeholder="キーワードで検索" />
+          </label>
+
+          <label class="select-field">
+            <span class="visually-hidden">資料種別</span>
+            <select id="asset-filter" name="asset">
+              <option value="all">資料種別</option>
+              <option value="recording">録画あり</option>
+              <option value="slides">スライドあり</option>
+              <option value="notes">要点メモあり</option>
+              <option value="references">参考文献あり</option>
+            </select>
+          </label>
+
+          <label class="select-field">
+            <span class="visually-hidden">年度</span>
+            <select id="year-filter" name="year">
+              <option value="all">年度</option>
+            </select>
+          </label>
+
+          <button class="button button-tertiary" type="button" id="clear-filters">リセット</button>
+        </form>
+
+        <div class="notice" role="note">
+          <strong>教育用コンテンツ</strong>
+          <span>個別診療の代替ではないことと、症例情報は匿名化前提で公開することを固定表示する想定です。</span>
+        </div>
+
+        <div class="layout">
+          <aside class="panel theme-panel" id="themes" aria-labelledby="theme-heading">
+            <div class="section-kicker">Theme Library</div>
+            <h2 id="theme-heading">分野から入る</h2>
+            <p>テーマ一覧は短く保ち、アーカイブ一覧を主役にする構成です。</p>
+            <div class="theme-list" id="theme-list" role="list"></div>
+          </aside>
+
+          <section class="archive-column" aria-labelledby="archive-heading">
+            <div class="archive-header">
+              <div>
+                <div class="section-kicker">Archive Library</div>
+                <h2 id="archive-heading">勉強会アーカイブ</h2>
+                <p id="archive-description">テーマを選ぶと、ここに該当アーカイブを新しい順で並べます。</p>
+              </div>
+              <div class="archive-summary" id="archive-summary"></div>
+            </div>
+
+            <div class="status-panel" id="status-panel" hidden></div>
+            <div class="archive-list" id="archive-list" aria-live="polite"></div>
+
+            <div class="empty-state" id="empty-state" hidden>
+              <h3>該当するアーカイブがありません</h3>
+              <p>検索条件を緩めるか、別のテーマを選んでください。</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

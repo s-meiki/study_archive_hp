@@ -1,0 +1,428 @@
+.admin-page {
+  min-height: 100vh;
+}
+
+.admin-shell {
+  width: min(calc(100% - 32px), 1380px);
+  padding-bottom: 40px;
+}
+
+.admin-topbar {
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.admin-topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.admin-lead {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.status-strip {
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.status-strip.is-error {
+  border-color: rgba(151, 114, 75, 0.3);
+  background: #fbf4ec;
+}
+
+.status-strip.is-success {
+  border-color: rgba(54, 90, 92, 0.18);
+  background: #f3f8f7;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  grid-template-areas:
+    "workflow workflow"
+    "library editor";
+  gap: 18px;
+  align-items: start;
+}
+
+.admin-panel {
+  padding: 22px;
+}
+
+.admin-workflow,
+.admin-library,
+.admin-editor {
+  min-width: 0;
+}
+
+.admin-workflow {
+  grid-area: workflow;
+  padding: 18px 20px;
+}
+
+.admin-library {
+  grid-area: library;
+}
+
+.admin-editor {
+  grid-area: editor;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.08fr) minmax(340px, 0.92fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.workflow-intro,
+.workflow-save {
+  min-width: 0;
+}
+
+.workflow-save {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-panel h1,
+.admin-panel h2,
+.admin-panel h3 {
+  margin-top: 10px;
+  letter-spacing: -0.03em;
+}
+
+.admin-copy,
+.asset-copy {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.admin-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.save-guide {
+  display: grid;
+  gap: 10px;
+  margin-top: 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(54, 90, 92, 0.16);
+  background: linear-gradient(180deg, #f7fbfa 0%, #f2f7f6 100%);
+}
+
+.save-guide-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.save-guide-head strong {
+  font-size: 0.9rem;
+}
+
+.root-path {
+  display: block;
+  overflow-wrap: anywhere;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.save-guide-copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.support-note {
+  margin-top: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.inline-actions,
+.workflow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.library-toolbar {
+  display: grid;
+  gap: 12px;
+}
+
+.archive-admin-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.archive-admin-item {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  text-align: left;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.archive-admin-item:hover {
+  transform: translateY(-1px);
+}
+
+.archive-admin-item.is-active {
+  border-color: rgba(54, 90, 92, 0.2);
+  background: #f2f6f5;
+}
+
+.archive-admin-title {
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.archive-admin-meta,
+.archive-admin-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.archive-admin-badges span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.archive-admin-empty {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.admin-editor {
+  min-height: 70vh;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.editor-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.editor-chip.is-dirty {
+  color: var(--accent);
+}
+
+.admin-form {
+  display: grid;
+  gap: 24px;
+}
+
+.form-grid,
+.asset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+.field-checkbox {
+  align-items: center;
+  grid-auto-flow: column;
+  justify-content: start;
+}
+
+.field-checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.admin-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.admin-textarea {
+  min-height: 120px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.asset-section {
+  display: grid;
+  gap: 14px;
+}
+
+.asset-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+}
+
+.upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.upload-row input[type="file"] {
+  max-width: 100%;
+  color: var(--muted);
+}
+
+.upload-note {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.button-small {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 0.84rem;
+}
+
+@media (max-width: 1180px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "workflow"
+      "library"
+      "editor";
+  }
+
+  .archive-admin-list {
+    max-height: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-shell {
+    width: min(calc(100% - 20px), 1380px);
+  }
+
+  .admin-topbar,
+  .editor-header {
+    flex-direction: column;
+  }
+
+  .admin-topbar-actions,
+  .editor-actions {
+    justify-content: flex-start;
+  }
+
+  .workflow-actions {
+    width: 100%;
+  }
+
+  .save-guide-head {
+    align-items: start;
+  }
+
+  .form-grid,
+  .asset-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inline-actions {
+    width: 100%;
+  }
+
+  .inline-actions .button,
+  .workflow-actions .button {
+    width: 100%;
+  }
+}
