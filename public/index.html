@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>勉強会アーカイブ | 薬剤師向け</title>
+    <title>臨床学術ワーキンググループ | 勉強会アーカイブ</title>
     <meta
       name="description"
-      content="薬剤師向けの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
+      content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="臨床学術ワーキンググループ" />
     <meta property="og:title" content="勉強会アーカイブ | 臨床学術ワーキンググループ" />
     <meta
       property="og:description"
-      content="薬剤師向けの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
+      content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
     <meta property="og:url" content="https://s-meiki.github.io/study_archive_hp/" />
     <meta property="og:image" content="https://s-meiki.github.io/study_archive_hp/images/ogp.png" />
@@ -23,7 +23,7 @@
     <meta name="twitter:title" content="勉強会アーカイブ | 臨床学術ワーキンググループ" />
     <meta
       name="twitter:description"
-      content="薬剤師向けの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
+      content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
     <meta name="twitter:image" content="https://s-meiki.github.io/study_archive_hp/images/ogp.png" />
     <link rel="stylesheet" href="./assets/styles.css" />
@@ -36,23 +36,27 @@
       <header class="topbar">
         <div class="brand">
           <span class="brand-mark" aria-hidden="true"></span>
-          <span>Study Archive / Pharmacist Edition</span>
+          <div class="brand-copy">
+            <span class="brand-label">Clinical Academic Working Group</span>
+            <span class="brand-name">臨床学術ワーキンググループ</span>
+          </div>
         </div>
-        <div class="topbar-note">教育目的の勉強会アーカイブ</div>
+        <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
       </header>
 
       <main>
         <section class="hero" aria-labelledby="page-title">
           <div class="panel hero-copy">
-            <div class="eyebrow">Learning Archive</div>
-            <h1 id="page-title">必要な勉強会に、<br />静かにたどり着く。</h1>
+            <div class="eyebrow">Archive Library</div>
+            <div class="hero-brandline">臨床学術ワーキンググループの学びを、公開アーカイブとして整理。</div>
+            <h1 id="page-title">必要な勉強会に、<br />すぐ届く。</h1>
             <p class="lead">
-              薬剤師向けの勉強会をテーマ単位で整理し、録画や参考資料がある回はそのまま開ける構成です。
-              情報量は抑えつつ、必要な回に短時間でたどり着ける見やすさを優先しています。
+              循環器、脳神経、基礎レクチャーなどをテーマ別に整理し、
+              録画や参考資料のある回へ短時間でたどり着けるようにしています。
             </p>
             <div class="hero-actions">
-              <a class="button button-primary" href="#archive-list">注目の回を見る</a>
-              <a class="button button-secondary" href="#themes">テーマを選ぶ</a>
+              <a class="button button-primary" href="#entry-picks">おすすめから見る</a>
+              <a class="button button-secondary" href="#themes">テーマから探す</a>
             </div>
             <div class="hero-stats" id="hero-stats" aria-label="アーカイブの概要"></div>
           </div>
@@ -101,6 +105,8 @@
           </aside>
 
           <section class="archive-column" aria-labelledby="archive-heading">
+            <div class="entry-picks" id="entry-picks" aria-label="おすすめの入口"></div>
+
             <div class="archive-header">
               <div>
                 <div class="section-kicker">Archive Library</div>

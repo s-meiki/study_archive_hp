@@ -15,6 +15,7 @@ const archiveHeadingEl = document.querySelector("#archive-heading");
 const archiveDescriptionEl = document.querySelector("#archive-description");
 const archiveSummaryEl = document.querySelector("#archive-summary");
 const featuredCardEl = document.querySelector("#featured-card");
+const entryPicksEl = document.querySelector("#entry-picks");
 const heroStatsEl = document.querySelector("#hero-stats");
 const emptyStateEl = document.querySelector("#empty-state");
 const statusPanelEl = document.querySelector("#status-panel");
@@ -69,6 +70,10 @@ function archivesForTheme(themeId) {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+function allArchivesSorted() {
+  return [...archives].sort((a, b) => b.date.localeCompare(a.date));
+}
+
 function filteredArchives() {
   return archivesForTheme(state.themeId).filter((archive) => {
     const matchesSearch =
@@ -103,13 +108,14 @@ function linkAttributes(url) {
 function renderHeroStats() {
   const totalArchives = archives.length;
   const themeCount = themes.length;
-  const currentYear = new Date().getFullYear();
-  const updatedThisYear = archives.filter((archive) => archive.updatedAt.startsWith(String(currentYear))).length;
+  const recordingCount = archives.filter((archive) => archive.assets.recording).length;
+  const referenceCount = archives.filter((archive) => archive.assets.references).length;
 
   heroStatsEl.innerHTML = `
     <span class="stat-chip">${themeCount}テーマ</span>
     <span class="stat-chip">${totalArchives}件のアーカイブ</span>
-    <span class="stat-chip">${updatedThisYear}件を今年更新</span>
+    <span class="stat-chip">録画あり ${recordingCount}件</span>
+    <span class="stat-chip">参考資料あり ${referenceCount}件</span>
   `;
 }
 
@@ -131,7 +137,7 @@ function renderFeatured() {
     <div class="feature-copy-block">
       <div>
         <h2>${featured.title}</h2>
-        <p>${theme.name}テーマの注目アーカイブ。最初に見たい1件として表示しています。</p>
+        <p>${theme.name}テーマで最初に確認したい1件です。</p>
       </div>
       <div class="feature-meta">
         <span>${theme.name}</span>
@@ -140,6 +146,79 @@ function renderFeatured() {
       </div>
     </div>
   `;
+}
+
+function syncFilterControls() {
+  searchInputEl.value = state.search;
+  assetFilterEl.value = state.asset;
+  yearFilterEl.value = state.year;
+}
+
+function activateEntryPick(archive, asset = "all") {
+  if (!archive) {
+    return;
+  }
+
+  state.themeId = archive.themeId;
+  state.search = "";
+  state.asset = asset;
+  state.year = "all";
+  syncFilterControls();
+  render();
+  archiveHeadingEl.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderEntryPicks() {
+  if (!entryPicksEl) {
+    return;
+  }
+
+  const latest = allArchivesSorted()[0];
+  const recording = allArchivesSorted().find((archive) => archive.assets.recording);
+  const references = allArchivesSorted().find((archive) => archive.assets.references);
+
+  const picks = [
+    {
+      id: "latest",
+      label: "Latest",
+      title: "最新の回から見る",
+      archive: latest,
+      asset: "all",
+    },
+    {
+      id: "recording",
+      label: "Recording",
+      title: "録画ありの回から見る",
+      archive: recording,
+      asset: "recording",
+    },
+    {
+      id: "references",
+      label: "Reference",
+      title: "参考資料ありの回から見る",
+      archive: references,
+      asset: "references",
+    },
+  ].filter((pick) => Boolean(pick.archive));
+
+  entryPicksEl.innerHTML = "";
+
+  picks.forEach((pick) => {
+    const archive = pick.archive;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "entry-pick";
+    button.innerHTML = `
+      <span class="entry-pick-label">${pick.label}</span>
+      <span class="entry-pick-title">${pick.title}</span>
+      <span class="entry-pick-meta">${archive.title}<br />${formatDate(archive.date)} / ${themeById(archive.themeId)?.name ?? archive.themeId}</span>
+      <span class="entry-pick-arrow">この入口を使う</span>
+    `;
+    button.addEventListener("click", () => {
+      activateEntryPick(archive, pick.asset);
+    });
+    entryPicksEl.append(button);
+  });
 }
 
 function renderThemes() {
@@ -249,6 +328,7 @@ function render() {
   renderHeroStats();
   renderFeatured();
   renderThemes();
+  renderEntryPicks();
   renderArchives();
   setStatus("");
 }
@@ -272,9 +352,7 @@ clearFiltersEl.addEventListener("click", () => {
   state.search = "";
   state.asset = "all";
   state.year = "all";
-  searchInputEl.value = "";
-  assetFilterEl.value = "all";
-  yearFilterEl.value = "all";
+  syncFilterControls();
   renderArchives();
 });
 
