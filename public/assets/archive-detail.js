@@ -18,6 +18,21 @@ const materialsEl = document.querySelector("#detail-materials");
 const relatedPanelEl = document.querySelector("#detail-related-panel");
 const relatedEl = document.querySelector("#detail-related");
 
+function clearElement(element) {
+  element.replaceChildren();
+}
+
+function normalizeDetailUrl(url) {
+  const normalized = dataUtils.normalizeLinkUrl(url, { allowRelative: true, allowHash: false });
+  return normalized ? dataUtils.resolveSiteUrl(normalized, "../") : "";
+}
+
+function setThumbnailStyles(element, thumbnail) {
+  const fallback = dataUtils.getThemeColors("");
+  element.style.setProperty("--thumb-a", dataUtils.sanitizeColor(thumbnail?.start, fallback.start));
+  element.style.setProperty("--thumb-b", dataUtils.sanitizeColor(thumbnail?.end, fallback.end));
+}
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
@@ -35,9 +50,9 @@ function setStatus(message = "") {
 }
 
 function linkAttributes(anchor, url) {
-  if (/^https?:\/\//.test(url)) {
+  if (dataUtils.isExternalUrl(url)) {
     anchor.target = "_blank";
-    anchor.rel = "noreferrer";
+    anchor.rel = "noreferrer noopener";
   }
 }
 
@@ -56,8 +71,8 @@ function setMetaDescription(text) {
   }
 }
 
-function buildOverviewParagraphs(archive) {
-  const overview = archive.detail?.overview || archive.summary || "概要は準備中です。";
+function buildOverviewParagraphs(detail) {
+  const overview = detail?.overview || "概要は準備中です。";
   return String(overview)
     .split(/\n+/)
     .map((line) => line.trim())
@@ -69,17 +84,19 @@ function buildMaterialItems(archive) {
   const seen = new Set();
 
   const pushItem = (label, url) => {
-    if (!label || !url) {
+    const normalizedUrl = normalizeDetailUrl(url);
+
+    if (!label || !normalizedUrl) {
       return;
     }
 
-    const key = `${label}|${url}`;
+    const key = `${label}|${normalizedUrl}`;
     if (seen.has(key)) {
       return;
     }
 
     seen.add(key);
-    items.push({ label, url });
+    items.push({ label, url: normalizedUrl });
   };
 
   if (Array.isArray(archive.detail?.materials)) {
@@ -109,7 +126,7 @@ function createMetaChip(text) {
 }
 
 function renderHero(archive, theme) {
-  const overview = archive.detail?.overview || archive.summary || "概要は準備中です。";
+  const overview = buildOverviewParagraphs(archive.detail).join(" ") || archive.summary || "概要は準備中です。";
 
   document.title = `${archive.title} | 臨床学術ワーキンググループ`;
   setMetaDescription(overview);
@@ -117,7 +134,7 @@ function renderHero(archive, theme) {
   breadcrumbCurrentEl.textContent = archive.title;
   titleEl.textContent = archive.title;
   leadEl.textContent = overview;
-  metaEl.innerHTML = "";
+  clearElement(metaEl);
 
   if (theme?.name) {
     metaEl.append(createMetaChip(theme.name));
@@ -143,8 +160,8 @@ function renderHero(archive, theme) {
 }
 
 function renderOverview(archive) {
-  const paragraphs = buildOverviewParagraphs(archive);
-  overviewEl.innerHTML = "";
+  const paragraphs = buildOverviewParagraphs(archive.detail);
+  clearElement(overviewEl);
 
   paragraphs.forEach((text) => {
     const paragraph = document.createElement("p");
@@ -154,23 +171,23 @@ function renderOverview(archive) {
 }
 
 function renderVideoSection(archive) {
-  const recordingUrl = archive.detail?.video?.url || archive.links?.recording || "";
+  const rawRecordingUrl = archive.detail?.video?.url || archive.links?.recording || "";
+  const recordingUrl = normalizeDetailUrl(rawRecordingUrl);
   const embedUrl = dataUtils.getYouTubeEmbedUrl(recordingUrl);
 
-  videoPlayerEl.innerHTML = "";
+  clearElement(videoPlayerEl);
 
   if (!recordingUrl) {
     const empty = document.createElement("p");
     empty.className = "detail-muted";
-    empty.textContent = "この回の録画は準備中です。";
+    empty.textContent = rawRecordingUrl ? "この回の録画リンクを表示できません。" : "この回の録画は準備中です。";
     videoPlayerEl.append(empty);
     return;
   }
 
   const shell = document.createElement("div");
   shell.className = "detail-video-shell";
-  shell.style.setProperty("--thumb-a", archive.thumbnail?.start || "#365a5c");
-  shell.style.setProperty("--thumb-b", archive.thumbnail?.end || "#9dbab7");
+  setThumbnailStyles(shell, archive.thumbnail);
 
   if (embedUrl) {
     const overlay = document.createElement("div");
@@ -202,7 +219,7 @@ function renderVideoSection(archive) {
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
       iframe.allowFullscreen = true;
       iframe.loading = "lazy";
-      shell.innerHTML = "";
+      clearElement(shell);
       shell.append(iframe);
     });
 
@@ -246,7 +263,7 @@ function renderVideoSection(archive) {
 
 function renderKeyPoints(archive) {
   const items = Array.isArray(archive.detail?.keyPoints) ? archive.detail.keyPoints.filter(Boolean) : [];
-  keypointsEl.innerHTML = "";
+  clearElement(keypointsEl);
   keypointsPanelEl.hidden = items.length === 0;
 
   items.forEach((item) => {
@@ -258,7 +275,7 @@ function renderKeyPoints(archive) {
 
 function renderChapters(archive) {
   const items = Array.isArray(archive.detail?.chapters) ? archive.detail.chapters.filter((item) => item?.label) : [];
-  chaptersEl.innerHTML = "";
+  clearElement(chaptersEl);
   chaptersPanelEl.hidden = items.length === 0;
 
   items.forEach((item) => {
@@ -279,7 +296,7 @@ function renderChapters(archive) {
 
 function renderMaterials(archive) {
   const items = buildMaterialItems(archive);
-  materialsEl.innerHTML = "";
+  clearElement(materialsEl);
 
   if (items.length === 0) {
     const empty = document.createElement("p");
@@ -290,7 +307,6 @@ function renderMaterials(archive) {
   }
 
   items.forEach((item) => {
-    const resolvedUrl = dataUtils.resolveSiteUrl(item.url, "../");
     const row = document.createElement("div");
     row.className = "detail-link-row";
 
@@ -301,15 +317,15 @@ function renderMaterials(archive) {
     strong.textContent = item.label;
 
     const meta = document.createElement("span");
-    meta.textContent = /^https?:\/\//.test(item.url) ? "外部リンク" : "サイト内資料";
+    meta.textContent = dataUtils.isExternalUrl(item.url) ? "外部リンク" : "サイト内資料";
 
     label.append(strong, meta);
 
     const anchor = document.createElement("a");
     anchor.className = "mini-link";
-    anchor.href = resolvedUrl;
+    anchor.href = item.url;
     anchor.textContent = "開く";
-    linkAttributes(anchor, resolvedUrl);
+    linkAttributes(anchor, item.url);
 
     row.append(label, anchor);
     materialsEl.append(row);
@@ -317,19 +333,17 @@ function renderMaterials(archive) {
 }
 
 function renderRelatedArchives(archive, archives, themes) {
-  const relatedArchives = archives
-    .filter((item) => item.themeId === archive.themeId && item.id !== archive.id)
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 3);
+  const relatedArchives = dataUtils.rankRelatedArchives(archive, archives, themes, { limit: 3 });
 
-  relatedEl.innerHTML = "";
+  clearElement(relatedEl);
   relatedPanelEl.hidden = relatedArchives.length === 0;
 
   if (relatedArchives.length === 0) {
     return;
   }
 
-  relatedArchives.forEach((item) => {
+  relatedArchives.forEach((entry) => {
+    const item = entry.archive;
     const row = document.createElement("a");
     row.className = "detail-related-item";
     row.href = dataUtils.getArchiveDetailUrl(item, "./");
@@ -338,8 +352,12 @@ function renderRelatedArchives(archive, archives, themes) {
     title.textContent = item.title;
 
     const meta = document.createElement("span");
-    const themeName = themeById(themes, item.themeId)?.name || item.themeId;
-    meta.textContent = `${formatDate(item.date)} / ${themeName}`;
+    const themeName = entry.theme?.name || themeById(themes, item.themeId)?.name || item.themeId;
+    const metaParts = [formatDate(item.date), themeName];
+    if (entry.reasons.length > 0) {
+      metaParts.push(entry.reasons.slice(0, 2).join("・"));
+    }
+    meta.textContent = metaParts.join(" / ");
 
     row.append(title, meta);
     relatedEl.append(row);
@@ -348,14 +366,18 @@ function renderRelatedArchives(archive, archives, themes) {
 
 function renderArchivePage(data, archive) {
   const theme = themeById(data.themes, archive.themeId);
+  const archiveWithDetail = {
+    ...archive,
+    detail: dataUtils.buildArchiveDetail(archive, theme),
+  };
 
-  renderHero(archive, theme);
-  renderOverview(archive);
-  renderVideoSection(archive);
-  renderMaterials(archive);
-  renderKeyPoints(archive);
-  renderChapters(archive);
-  renderRelatedArchives(archive, data.archives, data.themes);
+  renderHero(archiveWithDetail, theme);
+  renderOverview(archiveWithDetail);
+  renderVideoSection(archiveWithDetail);
+  renderMaterials(archiveWithDetail);
+  renderKeyPoints(archiveWithDetail);
+  renderChapters(archiveWithDetail);
+  renderRelatedArchives(archiveWithDetail, data.archives, data.themes);
 
   emptyEl.hidden = true;
   layoutEl.hidden = false;

@@ -8,6 +8,10 @@
       name="description"
       content="勉強会アーカイブの管理画面。URLや資料リンクを直接追加して公開データへ反映できます。"
     />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
     <link rel="stylesheet" href="../public/assets/styles.css" />
     <link rel="stylesheet" href="./assets/admin.css" />
     <script defer src="../public/assets/site-data-utils.js"></script>
@@ -146,6 +150,63 @@
               </label>
             </div>
 
+            <section class="detail-builder">
+              <div class="section-kicker">Detail Page</div>
+              <h3>詳細ページの内容</h3>
+              <p class="asset-copy">
+                タイトル・テーマ・資料有無から叩き台を自動生成できます。必要な箇所だけ手直しする前提です。
+              </p>
+
+              <div class="form-grid">
+                <label class="field field-full">
+                  <span>詳細ページ要約</span>
+                  <textarea
+                    id="field-detail-overview"
+                    class="admin-input admin-textarea"
+                    name="detailOverview"
+                    rows="5"
+                    placeholder="空欄なら自動生成の叩き台を使えます"
+                  ></textarea>
+                </label>
+
+                <label class="field">
+                  <span>学習ポイント</span>
+                  <textarea
+                    id="field-detail-keypoints"
+                    class="admin-input admin-textarea"
+                    name="detailKeyPoints"
+                    rows="5"
+                    placeholder="1行に1項目ずつ入力"
+                  ></textarea>
+                  <small class="field-hint">自動生成後に、不要な項目だけ削る運用を想定しています。</small>
+                </label>
+
+                <label class="field">
+                  <span>目次 / タイムスタンプ</span>
+                  <textarea
+                    id="field-detail-chapters"
+                    class="admin-input admin-textarea"
+                    name="detailChapters"
+                    rows="5"
+                    placeholder="00:00 | 導入"
+                  ></textarea>
+                  <small class="field-hint">`00:00 | 導入` か `00:00 導入` の形式で入力できます。</small>
+                </label>
+
+                <label class="field field-full">
+                  <span>追加資料</span>
+                  <textarea
+                    id="field-detail-materials"
+                    class="admin-input admin-textarea"
+                    name="detailMaterials"
+                    rows="4"
+                    placeholder="資料名 | https://example.com"
+                  ></textarea>
+                  <small class="field-hint">一覧の資料リンクに加えて、詳細ページ専用の補足資料を追加できます。</small>
+                </label>
+              </div>
+            </section>
+
             <section class="asset-section">
               <div class="section-kicker">Assets</div>
               <h3>リンクと資料</h3>
@@ -212,7 +273,8 @@
             </section>
 
             <div class="form-actions">
-              <button class="button button-secondary" type="button" id="autofill-summary">概要を自動入力</button>
+              <button class="button button-secondary" type="button" id="autofill-summary">一覧概要を自動入力</button>
+              <button class="button button-secondary" type="button" id="autofill-detail">詳細要約・学習ポイントを自動入力</button>
               <button class="button button-primary" type="submit">一覧へ反映</button>
               <button class="button button-secondary" type="button" id="connect-folder">リポジトリを接続</button>
               <button class="button button-primary" type="button" id="save-project">リポジトリへ保存</button>

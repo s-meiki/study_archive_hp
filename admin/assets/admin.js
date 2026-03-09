@@ -1,6 +1,11 @@
 const dataUtils = window.StudyArchiveDataUtils;
 
 const FILE_KINDS = ["slides", "notes", "references"];
+const FILE_KIND_LABELS = {
+  slides: "スライド",
+  notes: "要点メモ",
+  references: "参考資料",
+};
 const HANDLE_DB_NAME = "study-archive-admin";
 const HANDLE_STORE_NAME = "file-handles";
 const ROOT_HANDLE_KEY = "project-root";
@@ -17,6 +22,7 @@ const elements = {
   archiveList: document.querySelector("#archive-admin-list"),
   archiveSearch: document.querySelector("#archive-search"),
   autofillSummary: document.querySelector("#autofill-summary"),
+  autofillDetail: document.querySelector("#autofill-detail"),
   connectFolder: document.querySelector("#connect-folder"),
   createArchive: document.querySelector("#create-archive"),
   copyRootPath: document.querySelector("#copy-root-path"),
@@ -39,6 +45,10 @@ const elements = {
     duration: document.querySelector("#field-duration"),
     featured: document.querySelector("#field-featured"),
     summary: document.querySelector("#field-summary"),
+    detailOverview: document.querySelector("#field-detail-overview"),
+    detailKeyPoints: document.querySelector("#field-detail-keypoints"),
+    detailChapters: document.querySelector("#field-detail-chapters"),
+    detailMaterials: document.querySelector("#field-detail-materials"),
     recording: document.querySelector("#field-recording"),
     slides: document.querySelector("#field-slides"),
     notes: document.querySelector("#field-notes"),
@@ -69,8 +79,42 @@ function formatDate(dateString) {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
 }
 
+function clearElement(element) {
+  element.replaceChildren();
+}
+
+function createElement(tagName, options = {}) {
+  const { className = "", text = null } = options;
+  const element = document.createElement(tagName);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (text !== null) {
+    element.textContent = text;
+  }
+
+  return element;
+}
+
+function createStatChip(text) {
+  return createElement("span", { className: "stat-chip", text });
+}
+
+function normalizeArchiveLink(kind, value) {
+  return dataUtils.normalizeLinkUrl(value, {
+    allowRelative: kind !== "recording",
+    allowHash: false,
+  });
+}
+
 function getThemeName(themeId) {
   return workingData.themes.find((theme) => theme.id === themeId)?.name ?? themeId;
+}
+
+function getThemeMeta(themeId) {
+  return workingData.themes.find((theme) => theme.id === themeId) ?? { id: themeId, name: getThemeName(themeId) };
 }
 
 function sortedArchives() {
@@ -83,6 +127,101 @@ function selectedArchive() {
 
 function selectedPendingUploads() {
   return pendingUploads.get(selectedArchiveId) ?? {};
+}
+
+function multilineValue(value) {
+  return String(value ?? "")
+    .split(/\r?\n/)
+    .map((line) => dataUtils.normalizeText(line))
+    .filter(Boolean);
+}
+
+function serializeLines(items) {
+  return Array.isArray(items)
+    ? items.map((item) => dataUtils.normalizeText(item)).filter(Boolean).join("\n")
+    : "";
+}
+
+function parseChapterLine(line) {
+  const value = dataUtils.normalizeText(line);
+  if (!value) {
+    return null;
+  }
+
+  const piped = value.split(/\s*[|｜]\s*/).filter(Boolean);
+  if (piped.length >= 2) {
+    return {
+      time: dataUtils.normalizeText(piped.shift()),
+      label: dataUtils.normalizeText(piped.join(" | ")),
+    };
+  }
+
+  const timed = value.match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s+(.+)$/);
+  if (timed) {
+    return {
+      time: timed[1],
+      label: dataUtils.normalizeText(timed[2]),
+    };
+  }
+
+  return {
+    time: "",
+    label: value,
+  };
+}
+
+function serializeChapters(items) {
+  return Array.isArray(items)
+    ? items
+        .map((item) => {
+          const label = dataUtils.normalizeText(item?.label);
+          if (!label) {
+            return "";
+          }
+
+          const time = dataUtils.normalizeText(item?.time);
+          return time ? `${time} | ${label}` : label;
+        })
+        .filter(Boolean)
+        .join("\n")
+    : "";
+}
+
+function parseMaterialLine(line) {
+  const value = dataUtils.normalizeText(line);
+  if (!value) {
+    return null;
+  }
+
+  const piped = value.split(/\s*[|｜]\s*/).filter(Boolean);
+  if (piped.length >= 2) {
+    return {
+      label: dataUtils.normalizeText(piped.shift()),
+      url: dataUtils.normalizeText(piped.join(" | ")),
+    };
+  }
+
+  if (/^(?:[a-z]+:)?\/\//i.test(value) || value.startsWith("/") || (value.includes("/") && !/\s/.test(value))) {
+    return {
+      label: "追加資料",
+      url: value,
+    };
+  }
+
+  return null;
+}
+
+function serializeMaterials(items) {
+  return Array.isArray(items)
+    ? items
+        .map((item) => {
+          const label = dataUtils.normalizeText(item?.label);
+          const url = dataUtils.normalizeText(item?.url);
+          return label && url ? `${label} | ${url}` : "";
+        })
+        .filter(Boolean)
+        .join("\n")
+    : "";
 }
 
 function emptyArchiveDraft() {
@@ -107,6 +246,12 @@ function emptyArchiveDraft() {
       slides: "",
       notes: "",
       references: "",
+    },
+    detail: {
+      overview: "",
+      keyPoints: [],
+      chapters: [],
+      materials: [],
     },
     thumbnail: dataUtils.getThemeColors(workingData.themes[0]?.id ?? ""),
   };
@@ -199,9 +344,14 @@ function setDirtyState(nextDirty) {
 }
 
 function renderThemeOptions() {
-  elements.fields.themeId.innerHTML = workingData.themes
-    .map((theme) => `<option value="${theme.id}">${theme.name}</option>`)
-    .join("");
+  clearElement(elements.fields.themeId);
+
+  workingData.themes.forEach((theme) => {
+    const option = document.createElement("option");
+    option.value = theme.id;
+    option.textContent = theme.name;
+    elements.fields.themeId.append(option);
+  });
 }
 
 function renderStats() {
@@ -212,11 +362,12 @@ function renderStats() {
   const recordingCount = workingData.archives.filter((archive) => archive.assets.recording).length;
   const referenceCount = workingData.archives.filter((archive) => archive.assets.references).length;
 
-  elements.stats.innerHTML = `
-    <span class="stat-chip">${workingData.archives.length}件のアーカイブ</span>
-    <span class="stat-chip">${recordingCount}件に録画あり</span>
-    <span class="stat-chip">${referenceCount}件に参考資料あり</span>
-  `;
+  clearElement(elements.stats);
+  elements.stats.append(
+    createStatChip(`${workingData.archives.length}件のアーカイブ`),
+    createStatChip(`${recordingCount}件に録画あり`),
+    createStatChip(`${referenceCount}件に参考資料あり`),
+  );
 }
 
 function archiveBadges(archive) {
@@ -226,6 +377,7 @@ function archiveBadges(archive) {
   if (archive.assets.slides) badges.push("スライド");
   if (archive.assets.notes) badges.push("メモ");
   if (archive.assets.references) badges.push("参考資料");
+  if (archive.detail?.overview || archive.detail?.keyPoints?.length) badges.push("詳細");
   if (archive.featured) badges.push("注目");
 
   return badges;
@@ -236,7 +388,15 @@ function archiveMatchesSearch(archive, query) {
     return true;
   }
 
-  const haystack = [archive.title, archive.summary, archive.speaker, getThemeName(archive.themeId)]
+  const haystack = [
+    archive.title,
+    archive.summary,
+    archive.speaker,
+    getThemeName(archive.themeId),
+    archive.detail?.overview,
+    ...(archive.detail?.keyPoints ?? []),
+  ]
+    .map((value) => String(value ?? ""))
     .join(" ")
     .toLowerCase();
   return haystack.includes(query);
@@ -245,31 +405,32 @@ function archiveMatchesSearch(archive, query) {
 function renderArchiveList() {
   const query = elements.archiveSearch.value.trim().toLowerCase();
   const items = sortedArchives().filter((archive) => archiveMatchesSearch(archive, query));
+  clearElement(elements.archiveList);
 
   if (items.length === 0) {
-    elements.archiveList.innerHTML = '<p class="archive-admin-empty">該当するアーカイブがありません。</p>';
+    elements.archiveList.append(createElement("p", { className: "archive-admin-empty", text: "該当するアーカイブがありません。" }));
     return;
   }
-
-  elements.archiveList.innerHTML = "";
 
   items.forEach((archive) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `archive-admin-item${archive.id === selectedArchiveId ? " is-active" : ""}`;
-    button.innerHTML = `
-      <div class="archive-admin-title">${archive.title}</div>
-      <div class="archive-admin-meta">
-        <span>${formatDate(archive.date)}</span>
-        <span>${getThemeName(archive.themeId)}</span>
-        <span>${archive.speaker}</span>
-      </div>
-      <div class="archive-admin-badges">
-        ${archiveBadges(archive)
-          .map((badge) => `<span>${badge}</span>`)
-          .join("")}
-      </div>
-    `;
+
+    const title = createElement("div", { className: "archive-admin-title", text: archive.title || "無題" });
+    const meta = createElement("div", { className: "archive-admin-meta" });
+    meta.append(
+      createElement("span", { text: formatDate(archive.date) }),
+      createElement("span", { text: getThemeName(archive.themeId) }),
+      createElement("span", { text: archive.speaker || "講師未記載" }),
+    );
+
+    const badges = createElement("div", { className: "archive-admin-badges" });
+    archiveBadges(archive).forEach((badge) => {
+      badges.append(createElement("span", { text: badge }));
+    });
+
+    button.append(title, meta, badges);
 
     button.addEventListener("click", () => {
       selectArchive(archive.id);
@@ -304,6 +465,7 @@ function updateUploadNotes() {
 
 function populateForm(archive) {
   const target = archive ?? emptyArchiveDraft();
+  const detail = target.detail ?? {};
 
   elements.fields.title.value = target.title ?? "";
   elements.fields.date.value = target.date ?? todayIso();
@@ -312,6 +474,10 @@ function populateForm(archive) {
   elements.fields.duration.value = target.duration ?? "未記載";
   elements.fields.featured.checked = Boolean(target.featured);
   elements.fields.summary.value = target.summary ?? "";
+  elements.fields.detailOverview.value = detail.overview ?? "";
+  elements.fields.detailKeyPoints.value = serializeLines(detail.keyPoints);
+  elements.fields.detailChapters.value = serializeChapters(detail.chapters);
+  elements.fields.detailMaterials.value = serializeMaterials(detail.materials);
   elements.fields.recording.value = target.links?.recording ?? "";
   elements.fields.slides.value = target.links?.slides ?? "";
   elements.fields.notes.value = target.links?.notes ?? "";
@@ -396,13 +562,83 @@ function syncPendingFiles(previousId, nextId) {
   }
 }
 
+function draftArchiveFromFields() {
+  const themeId = elements.fields.themeId.value;
+  const theme = getThemeMeta(themeId);
+  const links = {
+    recording: normalizeArchiveLink("recording", elements.fields.recording.value),
+    slides: normalizeArchiveLink("slides", elements.fields.slides.value),
+    notes: normalizeArchiveLink("notes", elements.fields.notes.value),
+    references: normalizeArchiveLink("references", elements.fields.references.value),
+  };
+
+  return {
+    id: selectedArchiveId,
+    themeId,
+    title: dataUtils.normalizeText(elements.fields.title.value),
+    summary: dataUtils.normalizeText(elements.fields.summary.value) || dataUtils.buildSummary(elements.fields.title.value, theme.name),
+    speaker: dataUtils.normalizeText(elements.fields.speaker.value),
+    date: elements.fields.date.value,
+    duration: dataUtils.normalizeText(elements.fields.duration.value) || "未記載",
+    featured: elements.fields.featured.checked,
+    assets: {
+      recording: Boolean(links.recording),
+      slides: Boolean(links.slides || elements.files.slides.files[0]),
+      notes: Boolean(links.notes || elements.files.notes.files[0]),
+      references: Boolean(links.references || elements.files.references.files[0]),
+    },
+    links,
+    thumbnail: dataUtils.getThemeColors(themeId),
+  };
+}
+
+function buildDetailFromFields(existingDetail = {}) {
+  const overview = elements.fields.detailOverview.value
+    .split(/\r?\n/)
+    .map((line) => dataUtils.normalizeText(line))
+    .filter(Boolean)
+    .join("\n");
+  const keyPoints = multilineValue(elements.fields.detailKeyPoints.value);
+  const chapters = multilineValue(elements.fields.detailChapters.value)
+    .map((line) => parseChapterLine(line))
+    .filter((item) => item?.label);
+  const materials = multilineValue(elements.fields.detailMaterials.value)
+    .map((line) => parseMaterialLine(line))
+    .map((item) => {
+      if (!item) {
+        return null;
+      }
+
+      const url = normalizeArchiveLink("references", item.url);
+      return item.label && url ? { label: item.label, url } : null;
+    })
+    .filter((item) => item?.label && item?.url);
+  const detail = {
+    ...existingDetail,
+    overview,
+    keyPoints,
+    chapters,
+    materials,
+  };
+  const hasVisibleDetail = Boolean(overview || keyPoints.length || chapters.length || materials.length);
+  const hasPreservedVideo = Boolean(existingDetail?.video?.url || existingDetail?.video?.provider);
+  return hasVisibleDetail || hasPreservedVideo ? detail : undefined;
+}
+
 function formToArchive() {
   const previousId = selectedArchiveId;
   const archiveId = previousId || dataUtils.createArchiveId(elements.fields.date.value, elements.fields.title.value);
   const themeId = elements.fields.themeId.value;
   const themeName = getThemeName(themeId);
   const colors = dataUtils.getThemeColors(themeId);
+  const links = {
+    recording: normalizeArchiveLink("recording", elements.fields.recording.value),
+    slides: normalizeArchiveLink("slides", elements.fields.slides.value),
+    notes: normalizeArchiveLink("notes", elements.fields.notes.value),
+    references: normalizeArchiveLink("references", elements.fields.references.value),
+  };
 
+  const currentArchive = workingData.archives.find((item) => item.id === previousId || item.id === archiveId);
   const archive = {
     id: archiveId,
     themeId,
@@ -414,19 +650,18 @@ function formToArchive() {
     duration: dataUtils.normalizeText(elements.fields.duration.value) || "未記載",
     featured: elements.fields.featured.checked,
     assets: {
-      recording: Boolean(dataUtils.normalizeText(elements.fields.recording.value)),
-      slides: Boolean(dataUtils.normalizeText(elements.fields.slides.value)),
-      notes: Boolean(dataUtils.normalizeText(elements.fields.notes.value)),
-      references: Boolean(dataUtils.normalizeText(elements.fields.references.value)),
+      recording: Boolean(links.recording),
+      slides: Boolean(links.slides),
+      notes: Boolean(links.notes),
+      references: Boolean(links.references),
     },
-    links: {
-      recording: dataUtils.normalizeText(elements.fields.recording.value),
-      slides: dataUtils.normalizeText(elements.fields.slides.value),
-      notes: dataUtils.normalizeText(elements.fields.notes.value),
-      references: dataUtils.normalizeText(elements.fields.references.value),
-    },
+    links,
     thumbnail: colors,
   };
+  const detail = buildDetailFromFields(currentArchive?.detail ?? {});
+  if (detail) {
+    archive.detail = detail;
+  }
 
   const uploads = pendingUploads.get(previousId) ?? {};
   FILE_KINDS.forEach((kind) => {
@@ -451,6 +686,26 @@ function validateArchive(archive) {
   if (!archive.themeId) {
     throw new Error("テーマを選択してください。");
   }
+
+  const recordingInput = String(elements.fields.recording.value ?? "").trim();
+  if (recordingInput && !archive.links.recording) {
+    throw new Error("アーカイブ URL は http:// または https:// から始まる安全な URL を入力してください。");
+  }
+
+  FILE_KINDS.forEach((kind) => {
+    const inputValue = String(elements.fields[kind].value ?? "").trim();
+    if (inputValue && !archive.links[kind]) {
+      throw new Error(`${FILE_KIND_LABELS[kind]} の URL は http:// / https:// またはサイト内相対パスだけを使ってください。`);
+    }
+  });
+
+  multilineValue(elements.fields.detailMaterials.value).forEach((line) => {
+    const item = parseMaterialLine(line);
+    const url = item ? normalizeArchiveLink("references", item.url) : "";
+    if (!item || !url) {
+      throw new Error("追加資料は `資料名 | URL` または URL 単体で入力してください。");
+    }
+  });
 }
 
 function upsertCurrentArchive(options = {}) {
@@ -780,6 +1035,18 @@ function attachEvents() {
     const themeName = getThemeName(elements.fields.themeId.value);
     elements.fields.summary.value = dataUtils.buildSummary(elements.fields.title.value, themeName);
     setDirtyState(true);
+    showStatus("一覧カード用の概要を自動入力しました。必要なら表現だけ手直ししてください。", "success");
+  });
+
+  elements.autofillDetail.addEventListener("click", () => {
+    const draft = draftArchiveFromFields();
+    const theme = getThemeMeta(draft.themeId);
+    const detail = dataUtils.buildArchiveDetail(draft, theme);
+
+    elements.fields.detailOverview.value = detail.overview || "";
+    elements.fields.detailKeyPoints.value = serializeLines(detail.keyPoints);
+    setDirtyState(true);
+    showStatus("詳細ページ用の要約と学習ポイントを自動入力しました。叩き台として調整してください。", "success");
   });
 
   elements.deleteArchive.addEventListener("click", () => {
