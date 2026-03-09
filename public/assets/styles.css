@@ -137,6 +137,27 @@ p {
   background: rgba(255, 253, 249, 0.8);
 }
 
+.topbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 249, 0.8);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .hero {
   display: grid;
   grid-template-columns: 0.94fr 1.06fr;
@@ -620,6 +641,23 @@ h1 {
   font-size: 1.32rem;
   line-height: 1.28;
   letter-spacing: -0.03em;
+}
+
+.archive-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.archive-title-link:hover {
+  color: var(--primary);
+}
+
+.feature-title-link {
+  text-decoration: underline;
+  text-decoration-color: rgba(54, 90, 92, 0.18);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
 }
 
 .archive-content p {

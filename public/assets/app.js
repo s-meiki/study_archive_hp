@@ -105,6 +105,10 @@ function linkAttributes(url) {
   return isExternal ? ' target="_blank" rel="noreferrer"' : "";
 }
 
+function archiveDetailUrl(archive) {
+  return dataUtils.getArchiveDetailUrl(archive, "./archive/");
+}
+
 function renderHeroStats() {
   const totalArchives = archives.length;
   const themeCount = themes.length;
@@ -136,7 +140,7 @@ function renderFeatured() {
     </div>
     <div class="feature-copy-block">
       <div>
-        <h2>${featured.title}</h2>
+        <h2><a class="archive-title-link feature-title-link" href="${archiveDetailUrl(featured)}">${featured.title}</a></h2>
         <p>${theme.name}テーマで最初に確認したい1件です。</p>
       </div>
       <div class="feature-meta">
@@ -311,7 +315,7 @@ function renderArchives() {
       </div>
       <div class="archive-content">
         <div class="archive-meta">${assetMeta.join("")}</div>
-        <h3>${archive.title}</h3>
+        <h3><a class="archive-title-link" href="${archiveDetailUrl(archive)}">${archive.title}</a></h3>
         <p>${archive.summary}</p>
         <div class="archive-footer">
           <div class="archive-links">${linksMarkup}</div>

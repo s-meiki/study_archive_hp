@@ -62,6 +62,55 @@
     return `archive-${day}-${hash}`;
   }
 
+  function createArchiveSlug(archive) {
+    if (archive?.slug) {
+      return archive.slug;
+    }
+
+    const base = sanitizeSegment(archive?.title || archive?.id, "archive");
+    const suffix = stableHash(`${archive?.id || ""}|${archive?.title || ""}`).slice(0, 6);
+    return `${base}-${suffix}`;
+  }
+
+  function getArchiveDetailUrl(archive, basePath = "./archive/") {
+    const archiveId = archive?.id ? encodeURIComponent(archive.id) : "";
+    return `${basePath}?id=${archiveId}`;
+  }
+
+  function parseYouTubeVideoId(url) {
+    if (!url) {
+      return "";
+    }
+
+    try {
+      const parsedUrl = new URL(url, "https://example.com");
+      const host = parsedUrl.hostname.replace(/^www\./, "");
+
+      if (host === "youtu.be") {
+        return parsedUrl.pathname.slice(1).split("/")[0];
+      }
+
+      if (host === "youtube.com" || host === "m.youtube.com") {
+        if (parsedUrl.pathname === "/watch") {
+          return parsedUrl.searchParams.get("v") || "";
+        }
+
+        if (parsedUrl.pathname.startsWith("/embed/") || parsedUrl.pathname.startsWith("/shorts/")) {
+          return parsedUrl.pathname.split("/")[2] || "";
+        }
+      }
+    } catch (error) {
+      return "";
+    }
+
+    return "";
+  }
+
+  function getYouTubeEmbedUrl(url) {
+    const videoId = parseYouTubeVideoId(url);
+    return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0` : "";
+  }
+
   function getThemeColors(themeId) {
     return THEME_COLORS[themeId] ?? { start: "#365a5c", end: "#9dbab7" };
   }
@@ -92,11 +141,15 @@
     buildSummary,
     cloneSiteData,
     createArchiveId,
+    createArchiveSlug,
     createUploadPath,
     getSiteData,
+    getArchiveDetailUrl,
     getThemeColors,
+    getYouTubeEmbedUrl,
     hasValidSiteData,
     normalizeText,
+    parseYouTubeVideoId,
     sanitizeSegment,
     serializeSiteData,
     stableHash,

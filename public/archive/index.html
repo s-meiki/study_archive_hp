@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>勉強会アーカイブ詳細 | 臨床学術ワーキンググループ</title>
+    <meta
+      name="description"
+      content="臨床学術ワーキンググループの勉強会アーカイブ詳細。動画、参考資料、要点を1ページで確認できます。"
+    />
+    <link rel="icon" href="../favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png" />
+    <link rel="stylesheet" href="../assets/styles.css" />
+    <link rel="stylesheet" href="../assets/archive-detail.css" />
+    <script defer src="../assets/site-data-utils.js"></script>
+    <script defer src="../data/site-content.js"></script>
+    <script defer src="../assets/archive-detail.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div class="brand-copy">
+            <span class="brand-label">Clinical Academic Working Group</span>
+            <span class="brand-name">臨床学術ワーキンググループ</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a class="topbar-link" href="../">アーカイブ一覧へ戻る</a>
+        </div>
+      </header>
+
+      <main>
+        <nav class="detail-breadcrumb" aria-label="パンくず">
+          <a href="../">勉強会アーカイブ</a>
+          <span>/</span>
+          <span id="detail-breadcrumb-current">詳細</span>
+        </nav>
+
+        <div class="status-panel" id="detail-status" hidden></div>
+
+        <section class="panel detail-hero" id="detail-hero" hidden>
+          <div class="section-kicker">Archive Detail</div>
+          <h1 id="detail-title">勉強会アーカイブ詳細</h1>
+          <p class="detail-lead" id="detail-lead"></p>
+          <div class="detail-meta" id="detail-meta"></div>
+        </section>
+
+        <div class="detail-layout" id="detail-layout" hidden>
+          <section class="detail-main">
+            <article class="panel detail-section" id="detail-overview-panel">
+              <div class="section-kicker">Overview</div>
+              <h2>概要</h2>
+              <div class="detail-body" id="detail-overview"></div>
+            </article>
+
+            <article class="panel detail-section" id="detail-video-panel">
+              <div class="section-kicker">Video</div>
+              <h2>録画</h2>
+              <div class="detail-video-player" id="detail-video-player"></div>
+            </article>
+
+            <article class="panel detail-section" id="detail-keypoints-panel" hidden>
+              <div class="section-kicker">Key Points</div>
+              <h2>学習ポイント</h2>
+              <ul class="detail-keypoint-list" id="detail-keypoints"></ul>
+            </article>
+
+            <article class="panel detail-section" id="detail-chapters-panel" hidden>
+              <div class="section-kicker">Chapters</div>
+              <h2>目次</h2>
+              <ul class="detail-chapter-list" id="detail-chapters"></ul>
+            </article>
+          </section>
+
+          <aside class="detail-aside">
+            <article class="panel detail-section" id="detail-materials-panel">
+              <div class="section-kicker">Materials</div>
+              <h2>資料</h2>
+              <div class="detail-link-list" id="detail-materials"></div>
+            </article>
+
+            <article class="panel detail-section" id="detail-related-panel">
+              <div class="section-kicker">Related</div>
+              <h2>関連アーカイブ</h2>
+              <div class="detail-related-list" id="detail-related"></div>
+            </article>
+
+            <div class="notice detail-notice" role="note">
+              <strong>教育用コンテンツ</strong>
+              <span>個別診療の代替ではなく、症例情報は匿名化前提で扱う方針です。</span>
+            </div>
+          </aside>
+        </div>
+
+        <div class="empty-state detail-empty" id="detail-empty" hidden>
+          <h2>アーカイブを表示できませんでした</h2>
+          <p>一覧ページから対象の回を選んで、もう一度開いてください。</p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
