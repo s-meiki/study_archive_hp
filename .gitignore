@@ -2,3 +2,9 @@
 .obsidian/
 __pycache__/
 .pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+.env.local
+.vercel/
