@@ -545,7 +545,7 @@ h1 {
 .archive-header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   gap: 18px;
 }
 
