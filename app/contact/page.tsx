@@ -1,3 +1,5 @@
+import SiteFooter from "../site-footer";
+import { siteLegal } from "../site-legal";
 import ContactForm from "./contact-form";
 
 export default function ContactPage() {
@@ -10,7 +12,7 @@ export default function ContactPage() {
           <span className="brand-mark" aria-hidden="true"></span>
           <div className="brand-copy">
             <span className="brand-label">Clinical Academic Working Group</span>
-            <span className="brand-name">臨床学術ワーキンググループ</span>
+            <span className="brand-name">{siteLegal.shortSiteName}</span>
           </div>
         </div>
         <div className="topbar-actions">
@@ -35,10 +37,18 @@ export default function ContactPage() {
               <strong>注意</strong>
               <span>個人情報や匿名化されていない症例情報は入力しないでください。</span>
             </div>
+            <div className="notice contact-simple-note" role="note">
+              <strong>外部サービス</strong>
+              <span>
+                送信時は Cloudflare Turnstile でボット判定を行い、内容は Discord Webhook に通知されます。
+                詳細は <a href={siteLegal.privacyUrl}>プライバシーポリシー</a> を確認してください。
+              </span>
+            </div>
             <ContactForm siteKey={siteKey} />
           </div>
         </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

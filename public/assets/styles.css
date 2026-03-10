@@ -406,6 +406,13 @@ h1 {
   white-space: nowrap;
 }
 
+.notice a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 290px 1fr;
@@ -1577,6 +1584,42 @@ h1 {
   align-items: start;
 }
 
+.site-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) auto;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 24px 28px;
+  align-items: center;
+}
+
+.site-footer-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.site-footer-copy strong {
+  font-size: 1.08rem;
+  letter-spacing: -0.02em;
+}
+
+.site-footer-note,
+.site-footer-meta {
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.site-footer-meta {
+  font-size: 0.86rem;
+}
+
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .detail-empty {
   margin-top: 18px;
 }
@@ -1616,6 +1659,14 @@ h1 {
 
   .meeting-layout {
     grid-template-columns: 1fr;
+  }
+
+  .site-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer-links {
+    justify-content: flex-start;
   }
 
   .meeting-card-side {

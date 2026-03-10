@@ -16,7 +16,6 @@ const archiveDescriptionEl = document.querySelector("#archive-description");
 const archiveSummaryEl = document.querySelector("#archive-summary");
 const featuredCardEl = document.querySelector("#featured-card");
 const entryPicksEl = document.querySelector("#entry-picks");
-const heroStatsEl = document.querySelector("#hero-stats");
 const emptyStateEl = document.querySelector("#empty-state");
 const statusPanelEl = document.querySelector("#status-panel");
 const yearFilterEl = document.querySelector("#year-filter");
@@ -160,26 +159,6 @@ function featuredArchiveForTheme(themeId) {
 
 function archiveDetailUrl(archive) {
   return dataUtils.getArchiveDetailUrl(archive, "./archive/");
-}
-
-function createStatChip(text) {
-  return createElement("span", { className: "stat-chip", text });
-}
-
-function renderHeroStats() {
-  clearElement(heroStatsEl);
-
-  const totalArchives = archives.length;
-  const themeCount = themes.length;
-  const recordingCount = archives.filter((archive) => archive.assets.recording).length;
-  const referenceCount = archives.filter((archive) => archive.assets.references).length;
-
-  heroStatsEl.append(
-    createStatChip(`${themeCount}テーマ`),
-    createStatChip(`${totalArchives}件のアーカイブ`),
-    createStatChip(`録画あり ${recordingCount}件`),
-    createStatChip(`参考資料あり ${referenceCount}件`),
-  );
 }
 
 function renderFeatured() {
@@ -424,7 +403,6 @@ function renderArchives() {
 }
 
 function render() {
-  renderHeroStats();
   renderFeatured();
   renderThemes();
   renderEntryPicks();
@@ -471,7 +449,6 @@ function loadSiteData() {
     emptyStateEl.hidden = true;
     clearElement(archiveListEl);
     clearElement(featuredCardEl);
-    clearElement(heroStatsEl);
     clearElement(themeListEl);
 
     setStatus("データを読み込めませんでした。data/site-content.js の内容を確認してください。");

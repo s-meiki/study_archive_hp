@@ -189,6 +189,15 @@ function renderVideoSection(archive) {
   shell.className = "detail-video-shell";
   setThumbnailStyles(shell, archive.thumbnail);
 
+  const disclosure = document.createElement("p");
+  disclosure.className = "detail-video-disclosure";
+  disclosure.append("再生時には YouTube が読み込まれ、外部サービスへ情報が送信される場合があります。");
+
+  const privacyLink = document.createElement("a");
+  privacyLink.href = "/privacy";
+  privacyLink.textContent = "プライバシーポリシー";
+  disclosure.append(" 詳細は ", privacyLink, " を確認してください。");
+
   if (embedUrl) {
     const overlay = document.createElement("div");
     overlay.className = "detail-video-overlay";
@@ -232,7 +241,7 @@ function renderVideoSection(archive) {
     actions.append(playButton, externalLink);
     overlay.append(copy, actions);
     shell.append(overlay);
-    videoPlayerEl.append(shell);
+    videoPlayerEl.append(shell, disclosure);
     return;
   }
 
@@ -258,7 +267,7 @@ function renderVideoSection(archive) {
 
   fallback.append(copy, externalLink);
   shell.append(fallback);
-  videoPlayerEl.append(shell);
+  videoPlayerEl.append(shell, disclosure);
 }
 
 function renderKeyPoints(archive) {

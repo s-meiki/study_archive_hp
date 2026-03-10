@@ -130,9 +130,87 @@
   color: #8c4f1f;
 }
 
+.legal-main {
+  display: grid;
+  gap: 18px;
+}
+
+.legal-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.legal-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.legal-panel {
+  padding: 28px;
+}
+
+.legal-hero h1 {
+  margin-top: 10px;
+}
+
+.legal-copy {
+  margin-top: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.legal-panel h2 {
+  margin-top: 10px;
+  font-size: 1.38rem;
+  letter-spacing: -0.03em;
+}
+
+.legal-panel h3 {
+  margin-top: 18px;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.legal-list {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding-left: 1.2rem;
+  line-height: 1.75;
+}
+
+.legal-list-compact {
+  gap: 8px;
+}
+
+.legal-list a,
+.legal-copy a,
+.legal-link-list a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.legal-link-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
 @media (max-width: 640px) {
   .contact-panel {
     padding: 22px;
+  }
+
+  .legal-panel {
+    padding: 22px;
+  }
+
+  .legal-grid {
+    grid-template-columns: 1fr;
   }
 
   .contact-turnstile-shell {

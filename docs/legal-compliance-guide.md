@@ -4,9 +4,10 @@
 
 このメモは、現在の実装を前提にした運用整理です。対象は次の機能です。
 
-- `public/` を GitHub Pages で公開する静的サイト
+- `public/` の静的ページを Next.js から配信する公開サイト
 - `admin/` でローカル編集し、`public/data/` と `public/uploads/` を更新する運用
 - YouTube URL の掲載と、詳細ページでの遅延埋め込み
+- `/contact` の問い合わせフォーム
 - PDF などの資料アップロード
 
 これは実務メモであり、最終的な法的判断そのものではありません。病院、薬局、法人の実名を出して運用する場合や、患者情報を扱う場合は、公開前に法務又は管理部門の確認を入れる前提で使ってください。
@@ -93,7 +94,30 @@
 - `再生する` を押した時だけ iframe を読み込む
 - 動画ブロックの近くに、YouTube 読み込みの注意文とプライバシーポリシーへのリンクを置く
 
-### 1-4. 著作権法
+### 1-4. 問い合わせフォームで扱う個人情報
+
+ひとことで言うと:
+問い合わせフォームで名前やメールアドレスを受け取るなら、その情報の使い道と送信先をきちんと説明しなければいけません。
+
+このサイトで関係する理由:
+
+- `/contact` で氏名、メールアドレス、問い合わせ内容を受け取る
+- Cloudflare Turnstile でボット判定をする
+- 送信内容を Discord Webhook へ通知する
+
+中学生向けの対策:
+
+- 何を入力してもらうかを最小限にする
+- どこへ送られるかを隠さない
+- 患者情報や未匿名化症例情報は送らないように書く
+
+運用で必ずやること:
+
+- フォームの近くに `Cloudflare Turnstile` と `Discord` 利用を明示する
+- プライバシーポリシーで送信先、送信情報、利用目的を書く
+- 受け取った問い合わせを長く放置しない
+
+### 1-5. 著作権法
 
 ひとことで言うと:
 他人が作った動画、スライド、論文図表、PDF、画像、ロゴを、勝手に載せたり配ったりしてはいけないというルールです。
@@ -118,7 +142,7 @@
 - 出典 URL と許可日を残す
 - 権利不明の PDF は公開しない
 
-### 1-5. 医療法の広告規制
+### 1-6. 医療法の広告規制
 
 条件:
 病院、診療所、薬局などの公式サイトの一部として公開し、一般向けの広告として評価されうる場合に特に重要です。
@@ -143,7 +167,7 @@
 - 個別治療の推奨と読まれる書き方を避ける
 - 医療機関の宣伝ページと同じ導線にする場合は、別途レビューする
 
-### 1-6. 薬機法の広告規制
+### 1-7. 薬機法の広告規制
 
 条件:
 一般向け画面で、特定の医薬品や医療機器の効能効果を宣伝する見え方になる場合に特に重要です。
@@ -170,20 +194,40 @@
 
 ## 2. 関連する利用規約・ポリシー
 
-### 2-1. GitHub Terms of Service / Acceptable Use / GitHub Pages limits
+### 2-1. Vercel Terms / Privacy Policy
 
 関係する理由:
 
-- このサイトは GitHub Pages で公開される
-- 公開リポジトリに置いたコンテンツは、GitHub 上で閲覧や fork の対象になる
+- このサイトは Next.js アプリとして Vercel 等のホスティング基盤で配信される場合がある
 
 気をつけること:
 
-- 権利のない資料を公開リポジトリに置かない
-- 秘密情報や個人情報を Git に載せない
-- GitHub Pages の容量や帯域制限を超える大きな配布にしない
+- 秘密情報や個人情報を公開コードや公開レスポンスへ載せない
+- ホスティング事業者が処理するログや通信情報をプライバシーポリシーで説明する
 
-### 2-2. YouTube Terms of Service / Embedded Player rules / Google Privacy Policy
+### 2-2. Cloudflare Turnstile Terms / Privacy Policy
+
+関係する理由:
+
+- 問い合わせフォームでボット判定に Turnstile を使う
+
+気をつけること:
+
+- フォーム画面で外部サービス利用を明示する
+- Cloudflare へ送信される情報と目的を説明する
+
+### 2-3. Discord Terms / Privacy Policy
+
+関係する理由:
+
+- 問い合わせ内容を Discord Webhook に送る
+
+気をつけること:
+
+- 問い合わせ内容が Discord に送られることを説明する
+- 患者情報や不要な個人情報を送らない運用にする
+
+### 2-4. YouTube Terms of Service / Embedded Player rules / Google Privacy Policy
 
 関係する理由:
 
@@ -235,12 +279,18 @@
   - https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/kokokukisei/index_00003.html
 - 厚生労働省 「医薬品等の広告規制について」
   - https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/koukokukisei/index.html
-- GitHub Docs 「GitHub Terms of Service」
-  - https://docs.github.com/en/site-policy/github-terms/github-terms-of-service
-- GitHub Docs 「GitHub Acceptable Use Policies」
-  - https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies
-- GitHub Docs 「GitHub Pages の制限」
-  - https://docs.github.com/ja/pages/getting-started-with-github-pages/github-pages-limits
+- Vercel Terms of Service
+  - https://vercel.com/legal/terms
+- Vercel Privacy Policy
+  - https://vercel.com/legal/privacy-policy
+- Cloudflare Turnstile
+  - https://developers.cloudflare.com/turnstile/
+- Cloudflare Privacy Policy
+  - https://www.cloudflare.com/privacypolicy/
+- Discord Terms of Service
+  - https://discord.com/terms
+- Discord Privacy Policy
+  - https://discord.com/privacy
 - YouTube Help 「Embed videos & playlists」
   - https://support.google.com/youtube/answer/171780
 - YouTube Terms of Service
