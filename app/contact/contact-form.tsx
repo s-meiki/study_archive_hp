@@ -17,7 +17,7 @@ type TurnstileRenderOptions = {
   theme?: "light" | "dark" | "auto";
   callback?: (token: string) => void;
   "expired-callback"?: () => void;
-  "error-callback"?: () => void;
+  "error-callback"?: (errorCode?: string | number) => boolean | void;
 };
 
 type TurnstileApi = {
@@ -43,6 +43,39 @@ function getErrorMessage(error: unknown) {
   }
 
   return "送信に失敗しました。時間をおいて再度お試しください。";
+}
+
+function getTurnstileErrorMessage(errorCode?: string | number) {
+  const normalizedCode = typeof errorCode === "number" ? String(errorCode) : errorCode ?? "";
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
+  switch (normalizedCode) {
+    case "110100":
+    case "110110":
+    case "400020":
+      return "Turnstile の site key 設定が不正です。Cloudflare Turnstile の widget 設定を確認してください。";
+    case "110200":
+      return `このドメイン (${hostname}) は Turnstile で許可されていません。Cloudflare Turnstile の Hostname Management に追加してください。`;
+    case "400070":
+      return "Turnstile の site key が無効化されています。Cloudflare Turnstile の widget 設定を確認してください。";
+    case "200500":
+      return "Turnstile の iframe 読み込みに失敗しました。広告ブロッカー、VPN、ネットワーク制限を確認してください。";
+    default: {
+      if (normalizedCode.startsWith("300") || normalizedCode.startsWith("600")) {
+        return "Turnstile のチャレンジに失敗しました。ページを再読み込みするか、別ブラウザや別ネットワークでお試しください。";
+      }
+
+      if (normalizedCode.startsWith("110")) {
+        return `Turnstile の設定エラーです。Cloudflare 側の設定を確認してください。${normalizedCode ? ` (code: ${normalizedCode})` : ""}`;
+      }
+
+      if (normalizedCode.startsWith("200")) {
+        return `Turnstile の読み込みに失敗しました。拡張機能、VPN、ネットワーク制限を確認してください。${normalizedCode ? ` (code: ${normalizedCode})` : ""}`;
+      }
+
+      return `Turnstile の読み込みに失敗しました。ページを再読み込みして再度お試しください。${normalizedCode ? ` (code: ${normalizedCode})` : ""}`;
+    }
+  }
 }
 
 export default function ContactForm({ siteKey }: ContactFormProps) {
@@ -78,12 +111,13 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
       "expired-callback": () => {
         setToken("");
       },
-      "error-callback": () => {
+      "error-callback": (errorCode) => {
         setToken("");
         setSubmitState({
           type: "error",
-          message: "Turnstile の読み込みに失敗しました。ページを再読み込みして再度お試しください。"
+          message: getTurnstileErrorMessage(errorCode)
         });
+        return true;
       }
     });
 
@@ -168,6 +202,12 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
         onLoad={() => setIsScriptReady(true)}
+        onError={() => {
+          setSubmitState({
+            type: "error",
+            message: "Turnstile のスクリプト読み込みに失敗しました。通信制限や広告ブロッカーを確認してください。"
+          });
+        }}
       />
 
       <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
