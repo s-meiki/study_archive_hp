@@ -77,3 +77,27 @@ python3 -m http.server 4173
 ```
 
 その後、ブラウザで `http://localhost:4173/public/` を開きます。
+
+## セキュリティ運用ルール
+- `public/data/site-content.js` と `public/uploads/` には、公開して問題ない情報だけを置く
+- メールアドレス、ログイン情報、氏名、施設名、内部メモ、限定公開URL、トークン、APIキーは公開データへ入れない
+- APIキー、環境変数、認証トークン、DB 接続情報は絶対にハードコードしない
+- 個人情報や機密情報を扱う処理はクライアントサイドではなくサーバーサイドで実装する
+- サーバーから返す JSON / HTML / API レスポンスは最小限にし、ブラウザの開発者ツールで見えても問題ない内容だけを返す
+- ユーザー入力や外部データを画面表示するときは、XSS を防ぐため HTML 注入を避け、エスケープまたはサニタイズを行う
+- 更新系 API を追加する場合は、CSRF トークン、`SameSite` Cookie、`Origin / Referer` 検証を前提にする
+- DB を使う機能を追加する場合は、SQL を文字列連結せず、プレースホルダや ORM のバインド機能を使う
+- 外部画像、外部埋め込み、外部スクリプト、外部 API を追加した時は、HTML の CSP も合わせて更新する
+
+## 公開前のセキュリティ確認
+1. `python3 scripts/check_public_security_basics.py` を実行し、公開データ内のメールアドレス、秘密っぽい値、危険な URL が検出されないことを確認する
+2. `python3 scripts/check_public_uploads_metadata.py` を実行し、`.DS_Store` や macOS 拡張属性、資料メタデータの異常がないことを確認する
+3. `public/data/site-content.js` に個人情報や機密情報が入っていないか確認する
+4. `public/uploads/` の PDF や資料ファイルに個人情報、コメント、埋め込みメタデータが残っていないか確認する
+5. ブラウザのネットワークタブでレスポンスを確認し、不要な個人情報や内部情報が返っていないか確認する
+6. 将来 API やログイン機能を追加した場合は、XSS / CSRF / SQL インジェクション対策の観点でレビューしてから公開する
+
+## macOS で資料を扱うときの注意
+- Finder で触った PDF やフォルダには、`com.apple.quarantine` や `kMDItemWhereFroms` などの拡張属性が付くことがあります
+- 公開前に `python3 scripts/check_public_uploads_metadata.py` で検出し、必要なら `xattr -cr public/uploads` で消してから確認し直します
+- `public/uploads/` 配下に `.DS_Store` が残っていないことも確認します

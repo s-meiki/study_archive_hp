@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2026年度 学会年会一覧 | 臨床学術ワーキンググループ</title>
+    <meta
+      name="description"
+      content="2026年度（2026年4月1日〜2027年3月31日）の主要学会年会情報を、公式サイトベースで一覧化したページです。"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script defer src="./data/annual-meetings-2026.js"></script>
+    <script defer src="./assets/annual-meetings-2026.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div class="brand-copy">
+            <span class="brand-label">Clinical Academic Working Group</span>
+            <span class="brand-name">臨床学術ワーキンググループ</span>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-note">2026年度 学会一覧</div>
+          <a class="topbar-link" href="./index.html">勉強会アーカイブへ戻る</a>
+          <a class="topbar-link" href="/contact">問い合わせ</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="panel meeting-simple-header" aria-labelledby="page-title">
+          <p class="meeting-period">2026年度 | 2026.04.01 - 2027.03.31</p>
+          <h1 id="page-title">2026年度 学会年会一覧</h1>
+          <p class="meeting-simple-copy">
+            2025年度の一覧にあった学会を、2026年3月9日時点の公式情報で整理しています。
+          </p>
+        </section>
+
+        <div class="notice meeting-simple-note" role="note">
+          <strong>確認日</strong>
+          <span id="meeting-last-verified"></span>
+        </div>
+
+        <div class="notice meeting-simple-note" id="meeting-pending-note" role="note" hidden></div>
+
+        <section class="meeting-groups" id="meeting-groups" aria-live="polite">
+          <div class="status-panel" id="meeting-status-panel" hidden></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

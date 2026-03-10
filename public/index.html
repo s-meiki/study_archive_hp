@@ -8,6 +8,10 @@
       name="description"
       content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-src https://www.youtube-nocookie.com; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="臨床学術ワーキンググループ" />
     <meta property="og:title" content="勉強会アーカイブ | 臨床学術ワーキンググループ" />
@@ -45,7 +49,11 @@
             <span class="brand-name">臨床学術ワーキンググループ</span>
           </div>
         </div>
-        <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
+        <div class="topbar-actions">
+          <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
+          <a class="topbar-link" href="./annual-meetings-2026.html">学会年会一覧へ</a>
+          <a class="topbar-link" href="/contact">問い合わせ</a>
+        </div>
       </header>
 
       <main>
@@ -61,6 +69,7 @@
             <div class="hero-actions">
               <a class="button button-primary" href="#entry-picks">おすすめから見る</a>
               <a class="button button-secondary" href="#themes">テーマから探す</a>
+              <a class="button button-secondary" href="./annual-meetings-2026.html">2026年度学会年会一覧</a>
               <a class="button button-secondary" href="/contact">問い合わせ</a>
             </div>
             <div class="hero-stats" id="hero-stats" aria-label="アーカイブの概要"></div>

@@ -24,6 +24,56 @@ const searchInputEl = document.querySelector("#search-input");
 const assetFilterEl = document.querySelector("#asset-filter");
 const clearFiltersEl = document.querySelector("#clear-filters");
 
+function clearElement(element) {
+  element.replaceChildren();
+}
+
+function createElement(tagName, options = {}) {
+  const { className = "", text = null } = options;
+  const element = document.createElement(tagName);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (text !== null) {
+    element.textContent = text;
+  }
+
+  return element;
+}
+
+function setThumbnailStyles(element, thumbnail) {
+  const fallback = dataUtils.getThemeColors("");
+  element.style.setProperty("--thumb-a", dataUtils.sanitizeColor(thumbnail?.start, fallback.start));
+  element.style.setProperty("--thumb-b", dataUtils.sanitizeColor(thumbnail?.end, fallback.end));
+}
+
+function normalizePublicUrl(url) {
+  const normalized = dataUtils.normalizeLinkUrl(url, { allowRelative: true, allowHash: false });
+  return normalized ? dataUtils.resolveSiteUrl(normalized, "./") : "";
+}
+
+function applyLinkAttributes(anchor, url) {
+  if (dataUtils.isExternalUrl(url)) {
+    anchor.target = "_blank";
+    anchor.rel = "noreferrer noopener";
+  }
+}
+
+function appendArchiveLink(container, url, label, className = "mini-link") {
+  const resolvedUrl = normalizePublicUrl(url);
+  if (!resolvedUrl) {
+    return false;
+  }
+
+  const anchor = createElement("a", { className, text: label });
+  anchor.href = resolvedUrl;
+  applyLinkAttributes(anchor, resolvedUrl);
+  container.append(anchor);
+  return true;
+}
+
 function applySiteData(data) {
   themes = data.themes;
   archives = data.archives;
@@ -49,8 +99,16 @@ function setStatus(message = "") {
 }
 
 function resetYearOptions() {
-  yearFilterEl.innerHTML = '<option value="all">年度</option>';
-  const yearOptions = [...new Set(archives.map((archive) => archive.date.slice(0, 4)))].sort((a, b) => b.localeCompare(a));
+  clearElement(yearFilterEl);
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "all";
+  defaultOption.textContent = "年度";
+  yearFilterEl.append(defaultOption);
+
+  const yearOptions = [...new Set(archives.map((archive) => String(archive.date ?? "").slice(0, 4)).filter(Boolean))].sort((a, b) =>
+    b.localeCompare(a),
+  );
 
   yearOptions.forEach((year) => {
     const option = document.createElement("option");
@@ -67,20 +125,20 @@ function themeById(themeId) {
 function archivesForTheme(themeId) {
   return archives
     .filter((archive) => archive.themeId === themeId)
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")));
 }
 
 function allArchivesSorted() {
-  return [...archives].sort((a, b) => b.date.localeCompare(a.date));
+  return [...archives].sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")));
 }
 
 function filteredArchives() {
+  const searchTerm = state.search.toLowerCase();
+
   return archivesForTheme(state.themeId).filter((archive) => {
     const matchesSearch =
       state.search === "" ||
-      [archive.title, archive.summary, archive.speaker].some((value) =>
-        value.toLowerCase().includes(state.search.toLowerCase()),
-      );
+      [archive.title, archive.summary, archive.speaker].some((value) => String(value ?? "").toLowerCase().includes(searchTerm));
 
     const matchesAsset =
       state.asset === "all" ||
@@ -89,7 +147,7 @@ function filteredArchives() {
       (state.asset === "notes" && archive.assets.notes) ||
       (state.asset === "references" && archive.assets.references);
 
-    const matchesYear = state.year === "all" || archive.date.startsWith(state.year);
+    const matchesYear = state.year === "all" || String(archive.date ?? "").startsWith(state.year);
 
     return matchesSearch && matchesAsset && matchesYear;
   });
@@ -100,56 +158,68 @@ function featuredArchiveForTheme(themeId) {
   return themeArchives.find((archive) => archive.featured) ?? themeArchives[0];
 }
 
-function linkAttributes(url) {
-  const isExternal = /^https?:\/\//.test(url);
-  return isExternal ? ' target="_blank" rel="noreferrer"' : "";
-}
-
 function archiveDetailUrl(archive) {
   return dataUtils.getArchiveDetailUrl(archive, "./archive/");
 }
 
+function createStatChip(text) {
+  return createElement("span", { className: "stat-chip", text });
+}
+
 function renderHeroStats() {
+  clearElement(heroStatsEl);
+
   const totalArchives = archives.length;
   const themeCount = themes.length;
   const recordingCount = archives.filter((archive) => archive.assets.recording).length;
   const referenceCount = archives.filter((archive) => archive.assets.references).length;
 
-  heroStatsEl.innerHTML = `
-    <span class="stat-chip">${themeCount}テーマ</span>
-    <span class="stat-chip">${totalArchives}件のアーカイブ</span>
-    <span class="stat-chip">録画あり ${recordingCount}件</span>
-    <span class="stat-chip">参考資料あり ${referenceCount}件</span>
-  `;
+  heroStatsEl.append(
+    createStatChip(`${themeCount}テーマ`),
+    createStatChip(`${totalArchives}件のアーカイブ`),
+    createStatChip(`録画あり ${recordingCount}件`),
+    createStatChip(`参考資料あり ${referenceCount}件`),
+  );
 }
 
 function renderFeatured() {
+  clearElement(featuredCardEl);
+
   const theme = themeById(state.themeId);
   const featured = featuredArchiveForTheme(state.themeId);
 
   if (!featured || !theme) {
-    featuredCardEl.innerHTML = "";
     return;
   }
 
-  featuredCardEl.innerHTML = `
-    <div class="feature-media" style="--thumb-a: ${featured.thumbnail.start}; --thumb-b: ${featured.thumbnail.end};">
-      <span class="feature-badge">Featured</span>
-      <span class="play-button" aria-hidden="true"></span>
-      <span class="duration">${featured.duration}</span>
-    </div>
-    <div class="feature-copy-block">
-      <div>
-        <h2><a class="archive-title-link feature-title-link" href="${archiveDetailUrl(featured)}">${featured.title}</a></h2>
-        <p>${theme.name}テーマで最初に確認したい1件です。</p>
-      </div>
-      <div class="feature-meta">
-        <span>${theme.name}</span>
-        <span>${formatDate(featured.date)}</span>
-        <span>${featured.speaker}</span>
-      </div>
-    </div>
-  `;
+  const media = createElement("div", { className: "feature-media" });
+  setThumbnailStyles(media, featured.thumbnail);
+  media.append(
+    createElement("span", { className: "feature-badge", text: "Featured" }),
+    createElement("span", { className: "play-button" }),
+    createElement("span", { className: "duration", text: featured.duration || "未記載" }),
+  );
+  media.querySelector(".play-button").setAttribute("aria-hidden", "true");
+
+  const copyBlock = createElement("div", { className: "feature-copy-block" });
+  const primary = document.createElement("div");
+  const heading = document.createElement("h2");
+  const titleLink = createElement("a", { className: "archive-title-link feature-title-link", text: featured.title || "無題" });
+  titleLink.href = archiveDetailUrl(featured);
+  heading.append(titleLink);
+
+  const intro = createElement("p", { text: `${theme.name}テーマで最初に確認したい1件です。` });
+  primary.append(heading, intro);
+
+  const meta = createElement("div", { className: "feature-meta" });
+  meta.append(
+    createElement("span", { text: theme.name }),
+    createElement("span", { text: formatDate(featured.date) }),
+    createElement("span", { text: featured.speaker || "講師未記載" }),
+  );
+
+  copyBlock.append(primary, meta);
+  featuredCardEl.append(media, copyBlock);
 }
 
 function syncFilterControls() {
@@ -205,42 +275,53 @@ function renderEntryPicks() {
     },
   ].filter((pick) => Boolean(pick.archive));
 
-  entryPicksEl.innerHTML = "";
+  clearElement(entryPicksEl);
 
   picks.forEach((pick) => {
     const archive = pick.archive;
-    const button = document.createElement("button");
+    const button = createElement("button", { className: "entry-pick" });
     button.type = "button";
-    button.className = "entry-pick";
-    button.innerHTML = `
-      <span class="entry-pick-label">${pick.label}</span>
-      <span class="entry-pick-title">${pick.title}</span>
-      <span class="entry-pick-meta">${archive.title}<br />${formatDate(archive.date)} / ${themeById(archive.themeId)?.name ?? archive.themeId}</span>
-      <span class="entry-pick-arrow">この入口を使う</span>
-    `;
+
+    const meta = createElement("span", { className: "entry-pick-meta" });
+    meta.append(document.createTextNode(archive.title || "無題"));
+    meta.append(document.createElement("br"));
+    meta.append(
+      document.createTextNode(`${formatDate(archive.date)} / ${themeById(archive.themeId)?.name ?? archive.themeId ?? "未分類"}`),
+    );
+
+    button.append(
+      createElement("span", { className: "entry-pick-label", text: pick.label }),
+      createElement("span", { className: "entry-pick-title", text: pick.title }),
+      meta,
+      createElement("span", { className: "entry-pick-arrow", text: "この入口を使う" }),
+    );
+
     button.addEventListener("click", () => {
       activateEntryPick(archive, pick.asset);
     });
+
     entryPicksEl.append(button);
   });
 }
 
 function renderThemes() {
-  themeListEl.innerHTML = "";
+  clearElement(themeListEl);
 
   themes.forEach((theme) => {
     const count = archivesForTheme(theme.id).length;
-    const button = document.createElement("button");
+    const button = createElement("button", {
+      className: `theme-button${state.themeId === theme.id ? " is-active" : ""}`,
+    });
     button.type = "button";
-    button.className = `theme-button${state.themeId === theme.id ? " is-active" : ""}`;
     button.dataset.themeId = theme.id;
-    button.innerHTML = `
-      <span>
-        <span class="theme-title">${theme.name}</span>
-        <span class="theme-copy">${theme.summary}</span>
-      </span>
-      <span class="theme-count">${count}件</span>
-    `;
+
+    const copyGroup = document.createElement("span");
+    copyGroup.append(
+      createElement("span", { className: "theme-title", text: theme.name || theme.id }),
+      createElement("span", { className: "theme-copy", text: theme.summary || "" }),
+    );
+
+    button.append(copyGroup, createElement("span", { className: "theme-count", text: `${count}件` }));
 
     button.addEventListener("click", () => {
       state.themeId = theme.id;
@@ -269,7 +350,7 @@ function renderArchiveHeader(items) {
 
 function renderArchives() {
   const items = filteredArchives();
-  archiveListEl.innerHTML = "";
+  clearElement(archiveListEl);
   renderArchiveHeader(items);
 
   if (items.length === 0) {
@@ -280,50 +361,64 @@ function renderArchives() {
   emptyStateEl.hidden = true;
 
   items.forEach((archive) => {
-    const card = document.createElement("article");
-    card.className = "panel archive-card";
+    const card = createElement("article", { className: "panel archive-card" });
 
-    const assetMeta = [];
-    if (archive.featured) assetMeta.push(`<span class="status">最新</span>`);
-    assetMeta.push(`<span>${formatDate(archive.date)}</span>`);
-    if (archive.assets.slides) assetMeta.push(`<span>スライドあり</span>`);
-    if (archive.assets.notes) assetMeta.push(`<span>要点メモあり</span>`);
-    if (archive.assets.references) assetMeta.push(`<span>参考文献あり</span>`);
+    const media = createElement("div", { className: "archive-media" });
+    setThumbnailStyles(media, archive.thumbnail);
+    const playButton = createElement("span", { className: "play-button" });
+    playButton.setAttribute("aria-hidden", "true");
+    media.append(playButton, createElement("span", { className: "duration", text: archive.duration || "未記載" }));
 
-    const links = [
-      archive.links.recording
-        ? `<a class="mini-link primary" href="${archive.links.recording}"${linkAttributes(archive.links.recording)}>再生する</a>`
-        : "",
-      archive.assets.slides && archive.links.slides
-        ? `<a class="mini-link" href="${archive.links.slides}"${linkAttributes(archive.links.slides)}>スライド</a>`
-        : "",
-      archive.assets.notes && archive.links.notes
-        ? `<a class="mini-link" href="${archive.links.notes}"${linkAttributes(archive.links.notes)}>要点メモ</a>`
-        : "",
-      archive.assets.references && archive.links.references
-        ? `<a class="mini-link" href="${archive.links.references}"${linkAttributes(archive.links.references)}>参考文献</a>`
-        : "",
-    ].filter(Boolean);
+    const content = createElement("div", { className: "archive-content" });
+    const meta = createElement("div", { className: "archive-meta" });
 
-    const linksMarkup =
-      links.length > 0 ? links.join("") : '<span class="mini-link is-muted">リンク準備中</span>';
+    if (archive.featured) {
+      meta.append(createElement("span", { className: "status", text: "最新" }));
+    }
 
-    card.innerHTML = `
-      <div class="archive-media" style="--thumb-a: ${archive.thumbnail.start}; --thumb-b: ${archive.thumbnail.end};">
-        <span class="play-button" aria-hidden="true"></span>
-        <span class="duration">${archive.duration}</span>
-      </div>
-      <div class="archive-content">
-        <div class="archive-meta">${assetMeta.join("")}</div>
-        <h3><a class="archive-title-link" href="${archiveDetailUrl(archive)}">${archive.title}</a></h3>
-        <p>${archive.summary}</p>
-        <div class="archive-footer">
-          <div class="archive-links">${linksMarkup}</div>
-          <div class="archive-note">${archive.speaker}</div>
-        </div>
-      </div>
-    `;
+    meta.append(createElement("span", { text: formatDate(archive.date) }));
 
+    if (archive.assets.slides) {
+      meta.append(createElement("span", { text: "スライドあり" }));
+    }
+    if (archive.assets.notes) {
+      meta.append(createElement("span", { text: "要点メモあり" }));
+    }
+    if (archive.assets.references) {
+      meta.append(createElement("span", { text: "参考文献あり" }));
+    }
+
+    const heading = document.createElement("h3");
+    const titleLink = createElement("a", { className: "archive-title-link", text: archive.title || "無題" });
+    titleLink.href = archiveDetailUrl(archive);
+    heading.append(titleLink);
+
+    const summary = createElement("p", { text: archive.summary || "概要は準備中です。" });
+    const footer = createElement("div", { className: "archive-footer" });
+    const links = createElement("div", { className: "archive-links" });
+
+    let hasLink = false;
+    hasLink = appendArchiveLink(links, archive.links?.recording, "再生する", "mini-link primary") || hasLink;
+
+    if (archive.assets.slides) {
+      hasLink = appendArchiveLink(links, archive.links?.slides, "スライド") || hasLink;
+    }
+
+    if (archive.assets.notes) {
+      hasLink = appendArchiveLink(links, archive.links?.notes, "要点メモ") || hasLink;
+    }
+
+    if (archive.assets.references) {
+      hasLink = appendArchiveLink(links, archive.links?.references, "参考文献") || hasLink;
+    }
+
+    if (!hasLink) {
+      links.append(createElement("span", { className: "mini-link is-muted", text: "リンク準備中" }));
+    }
+
+    footer.append(links, createElement("div", { className: "archive-note", text: archive.speaker || "講師未記載" }));
+    content.append(meta, heading, summary, footer);
+    card.append(media, content);
     archiveListEl.append(card);
   });
 }
@@ -374,10 +469,10 @@ function loadSiteData() {
   } catch (error) {
     console.error(error);
     emptyStateEl.hidden = true;
-    archiveListEl.innerHTML = "";
-    featuredCardEl.innerHTML = "";
-    heroStatsEl.innerHTML = "";
-    themeListEl.innerHTML = "";
+    clearElement(archiveListEl);
+    clearElement(featuredCardEl);
+    clearElement(heroStatsEl);
+    clearElement(themeListEl);
 
     setStatus("データを読み込めませんでした。data/site-content.js の内容を確認してください。");
   }
