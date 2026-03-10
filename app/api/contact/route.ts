@@ -13,6 +13,16 @@ type TurnstileResponse = {
   success: boolean;
 };
 
+class ContactRequestError extends Error {
+  status: number;
+
+  constructor(message: string, status = 500) {
+    super(message);
+    this.name = "ContactRequestError";
+    this.status = status;
+  }
+}
+
 const MAX_NAME_LENGTH = 80;
 const MAX_EMAIL_LENGTH = 120;
 const MAX_MESSAGE_LENGTH = 4000;
@@ -42,7 +52,7 @@ async function verifyTurnstile(token: string, ipAddress: string | null) {
   const secretKey = process.env.CF_SECRET_KEY;
 
   if (!secretKey) {
-    throw new Error("CF_SECRET_KEY is not configured.");
+    throw new ContactRequestError("サーバーの Turnstile 秘密鍵が設定されていません。", 500);
   }
 
   const requestBody = new URLSearchParams({
@@ -64,7 +74,7 @@ async function verifyTurnstile(token: string, ipAddress: string | null) {
   });
 
   if (!response.ok) {
-    throw new Error("Turnstile verification request failed.");
+    throw new ContactRequestError("Turnstile 検証リクエストに失敗しました。", 502);
   }
 
   return (await response.json()) as TurnstileResponse;
@@ -74,7 +84,7 @@ async function sendDiscordWebhook(name: string, email: string, message: string) 
   const webhookUrl = process.env.WEBHOOK_URL;
 
   if (!webhookUrl) {
-    throw new Error("WEBHOOK_URL is not configured.");
+    throw new ContactRequestError("サーバーの Webhook URL が設定されていません。", 500);
   }
 
   const response = await fetch(webhookUrl, {
@@ -110,7 +120,7 @@ async function sendDiscordWebhook(name: string, email: string, message: string) 
   });
 
   if (!response.ok) {
-    throw new Error("Webhook delivery failed.");
+    throw new ContactRequestError(`Discord Webhook 送信に失敗しました。(${response.status})`, 502);
   }
 }
 
@@ -157,6 +167,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[contact] request failed", error);
+
+    if (error instanceof ContactRequestError) {
+      return NextResponse.json(
+        {
+          error: error.message
+        },
+        { status: error.status }
+      );
+    }
 
     return NextResponse.json(
       {
