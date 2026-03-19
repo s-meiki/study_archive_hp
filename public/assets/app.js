@@ -42,10 +42,18 @@ function createElement(tagName, options = {}) {
   return element;
 }
 
-function setThumbnailStyles(element, thumbnail) {
+function setThumbnailStyles(element, thumbnail, archive = null) {
   const fallback = dataUtils.getThemeColors("");
   element.style.setProperty("--thumb-a", dataUtils.sanitizeColor(thumbnail?.start, fallback.start));
   element.style.setProperty("--thumb-b", dataUtils.sanitizeColor(thumbnail?.end, fallback.end));
+
+  const thumbnailUrl = archive ? dataUtils.getArchiveThumbnailUrl(archive, "./") : "";
+  if (thumbnailUrl) {
+    element.style.setProperty("--thumb-image", `url("${thumbnailUrl.replace(/"/g, '\\"')}")`);
+    return;
+  }
+
+  element.style.removeProperty("--thumb-image");
 }
 
 function normalizePublicUrl(url) {
@@ -158,7 +166,7 @@ function featuredArchiveForTheme(themeId) {
 }
 
 function archiveDetailUrl(archive) {
-  return dataUtils.getArchiveDetailUrl(archive, "./archive/");
+  return dataUtils.getArchiveDetailUrl(archive, "/archive");
 }
 
 function renderFeatured() {
@@ -172,13 +180,16 @@ function renderFeatured() {
   }
 
   const media = createElement("div", { className: "feature-media" });
-  setThumbnailStyles(media, featured.thumbnail);
-  media.append(
-    createElement("span", { className: "feature-badge", text: "Featured" }),
-    createElement("span", { className: "play-button" }),
-    createElement("span", { className: "duration", text: featured.duration || "未記載" }),
-  );
-  media.querySelector(".play-button").setAttribute("aria-hidden", "true");
+  setThumbnailStyles(media, featured.thumbnail, featured);
+  media.append(createElement("span", { className: "feature-badge", text: "Featured" }));
+
+  if (featured.assets?.recording) {
+    const playButton = createElement("span", { className: "play-button" });
+    playButton.setAttribute("aria-hidden", "true");
+    media.append(playButton);
+  }
+
+  media.append(createElement("span", { className: "duration", text: featured.duration || "未記載" }));
 
   const copyBlock = createElement("div", { className: "feature-copy-block" });
   const primary = document.createElement("div");
@@ -343,10 +354,13 @@ function renderArchives() {
     const card = createElement("article", { className: "panel archive-card" });
 
     const media = createElement("div", { className: "archive-media" });
-    setThumbnailStyles(media, archive.thumbnail);
-    const playButton = createElement("span", { className: "play-button" });
-    playButton.setAttribute("aria-hidden", "true");
-    media.append(playButton, createElement("span", { className: "duration", text: archive.duration || "未記載" }));
+    setThumbnailStyles(media, archive.thumbnail, archive);
+    if (archive.assets?.recording) {
+      const playButton = createElement("span", { className: "play-button" });
+      playButton.setAttribute("aria-hidden", "true");
+      media.append(playButton);
+    }
+    media.append(createElement("span", { className: "duration", text: archive.duration || "未記載" }));
 
     const content = createElement("div", { className: "archive-content" });
     const meta = createElement("div", { className: "archive-meta" });

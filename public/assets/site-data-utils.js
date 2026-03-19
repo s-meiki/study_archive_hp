@@ -378,6 +378,27 @@
     return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0` : "";
   }
 
+  function getYouTubeThumbnailUrl(url) {
+    const videoId = parseYouTubeVideoId(url);
+    return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "";
+  }
+
+  function getArchiveThumbnailUrl(archive, basePath = "./") {
+    const customImage =
+      normalizeLinkUrl(archive?.thumbnail?.image, { allowRelative: true, allowHash: false }) ||
+      normalizeLinkUrl(archive?.thumbnail?.imageUrl, { allowRelative: true, allowHash: false });
+
+    if (customImage) {
+      return resolveSiteUrl(customImage, basePath);
+    }
+
+    const recordingUrl = normalizeLinkUrl(archive?.detail?.video?.url || archive?.links?.recording, {
+      allowRelative: false,
+      allowHash: false,
+    });
+    return getYouTubeThumbnailUrl(recordingUrl);
+  }
+
   function getThemeColors(themeId) {
     return THEME_COLORS[themeId] ?? { start: "#365a5c", end: "#9dbab7" };
   }
@@ -671,10 +692,12 @@
     createArchiveSlug,
     createUploadPath,
     escapeHtml,
+    getArchiveThumbnailUrl,
     getSiteData,
     getArchiveDetailUrl,
     getThemeColors,
     getYouTubeEmbedUrl,
+    getYouTubeThumbnailUrl,
     isExternalUrl,
     normalizeLinkUrl,
     sanitizeColor,

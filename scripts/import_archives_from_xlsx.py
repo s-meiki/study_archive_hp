@@ -510,12 +510,20 @@ def build_archives(entries, existing_archives=None):
         existing_links = existing.get("links", {})
         existing_assets = existing.get("assets", {})
         existing_detail = existing.get("detail", {})
+        existing_thumbnail = existing.get("thumbnail", {})
         overview = normalize_multiline_text(existing_detail.get("overview")) or build_detail_overview(entry, theme_id, summary)
         key_points = [
             normalize_text(item)
             for item in existing_detail.get("keyPoints", [])
             if normalize_text(item)
         ] or build_detail_key_points(entry, theme_id)
+        thumbnail = {
+            "start": start,
+            "end": end,
+        }
+        thumbnail_image = normalize_link(existing_thumbnail.get("image")) or normalize_link(existing_thumbnail.get("imageUrl"))
+        if thumbnail_image:
+            thumbnail["image"] = thumbnail_image
 
         archives.append(
             {
@@ -540,10 +548,7 @@ def build_archives(entries, existing_archives=None):
                     "notes": normalize_link(existing_links.get("notes")),
                     "references": entry["references"] or normalize_link(existing_links.get("references")),
                 },
-                "thumbnail": {
-                    "start": start,
-                    "end": end,
-                },
+                "thumbnail": thumbnail,
                 "detail": {
                     **existing_detail,
                     "overview": overview,

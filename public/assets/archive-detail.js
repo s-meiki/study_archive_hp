@@ -27,10 +27,18 @@ function normalizeDetailUrl(url) {
   return normalized ? dataUtils.resolveSiteUrl(normalized, "../") : "";
 }
 
-function setThumbnailStyles(element, thumbnail) {
+function setThumbnailStyles(element, thumbnail, archive = null) {
   const fallback = dataUtils.getThemeColors("");
   element.style.setProperty("--thumb-a", dataUtils.sanitizeColor(thumbnail?.start, fallback.start));
   element.style.setProperty("--thumb-b", dataUtils.sanitizeColor(thumbnail?.end, fallback.end));
+
+  const thumbnailUrl = archive ? dataUtils.getArchiveThumbnailUrl(archive, "../") : "";
+  if (thumbnailUrl) {
+    element.style.setProperty("--thumb-image", `url("${thumbnailUrl.replace(/"/g, '\\"')}")`);
+    return;
+  }
+
+  element.style.removeProperty("--thumb-image");
 }
 
 function formatDate(dateString) {
@@ -187,7 +195,7 @@ function renderVideoSection(archive) {
 
   const shell = document.createElement("div");
   shell.className = "detail-video-shell";
-  setThumbnailStyles(shell, archive.thumbnail);
+  setThumbnailStyles(shell, archive.thumbnail, archive);
 
   const disclosure = document.createElement("p");
   disclosure.className = "detail-video-disclosure";

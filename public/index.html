@@ -8,6 +8,8 @@
       name="description"
       content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-src https://www.youtube-nocookie.com; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self';"
@@ -19,25 +21,20 @@
       property="og:description"
       content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
-    <meta property="og:url" content="https://s-meiki.github.io/study_archive_hp/" />
-    <meta property="og:image" content="https://s-meiki.github.io/study_archive_hp/images/ogp.png" />
-    <meta property="og:image:width" content="1536" />
-    <meta property="og:image:height" content="1024" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="勉強会アーカイブ | 臨床学術ワーキンググループ" />
     <meta
       name="twitter:description"
       content="臨床学術ワーキンググループの勉強会アーカイブ。テーマ別に録画や参考資料のある回を探せます。"
     />
-    <meta name="twitter:image" content="https://s-meiki.github.io/study_archive_hp/images/ogp.png" />
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-    <link rel="stylesheet" href="./assets/styles.css" />
-    <script defer src="./assets/site-data-utils.js"></script>
+    <link rel="stylesheet" href="./assets/styles.css?v=20260319-1" />
+    <script defer src="./assets/site-data-utils.js?v=20260319-1"></script>
     <script defer src="./data/site-content.js"></script>
-    <script defer src="./assets/app.js"></script>
+    <script defer src="./assets/app.js?v=20260319-1"></script>
   </head>
   <body>
     <div class="page-shell">
@@ -51,7 +48,7 @@
         </div>
         <div class="topbar-actions">
           <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
-          <a class="topbar-link" href="./annual-meetings-2026.html">学会年会一覧へ</a>
+          <a class="topbar-link" href="/annual-meetings-2026">学会年会一覧へ</a>
           <a class="topbar-link" href="/contact">問い合わせ</a>
         </div>
       </header>
@@ -69,7 +66,7 @@
             <div class="hero-actions">
               <a class="button button-primary" href="#entry-picks">おすすめから見る</a>
               <a class="button button-secondary" href="#themes">テーマから探す</a>
-              <a class="button button-secondary" href="./annual-meetings-2026.html">2026年度学会年会一覧</a>
+              <a class="button button-secondary" href="/annual-meetings-2026">2026年度学会年会一覧</a>
               <a class="button button-secondary" href="/contact">問い合わせ</a>
             </div>
             <div class="hero-stats" id="hero-stats" aria-label="アーカイブの概要"></div>
@@ -142,19 +139,11 @@
       </main>
 
       <footer class="panel site-footer">
-        <div class="site-footer-copy">
-          <div class="section-kicker">Site Policy</div>
-          <strong>関係者向け学習アーカイブ</strong>
-          <p class="site-footer-note">
-            本サイトは臨床学術ワーキンググループ ~精鋭たちの集い~ の関係者向け学習アーカイブです。インターネット公開環境で運用しているため、
-            個人情報や匿名化されていない症例情報は掲載しないでください。
-          </p>
-          <p class="site-footer-meta">運営: 臨床学術ワーキンググループ 運営事務局 / 所在地: 北海道札幌市東区</p>
-        </div>
+        <p class="site-footer-copy">© 2026 臨床学術ワーキンググループ. All rights reserved.</p>
         <div class="site-footer-links" aria-label="法務リンク">
-          <a class="topbar-link" href="/terms">利用規約</a>
-          <a class="topbar-link" href="/privacy">プライバシーポリシー</a>
-          <a class="topbar-link" href="/contact">問い合わせ</a>
+          <a class="site-footer-link" href="/terms">利用規約</a>
+          <a class="site-footer-link" href="/privacy">プライバシーポリシー</a>
+          <a class="site-footer-link" href="/contact">問い合わせ</a>
         </div>
       </footer>
     </div>

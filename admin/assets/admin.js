@@ -50,6 +50,7 @@ const elements = {
     detailChapters: document.querySelector("#field-detail-chapters"),
     detailMaterials: document.querySelector("#field-detail-materials"),
     recording: document.querySelector("#field-recording"),
+    thumbnailImage: document.querySelector("#field-thumbnail-image"),
     slides: document.querySelector("#field-slides"),
     notes: document.querySelector("#field-notes"),
     references: document.querySelector("#field-references"),
@@ -107,6 +108,22 @@ function normalizeArchiveLink(kind, value) {
     allowRelative: kind !== "recording",
     allowHash: false,
   });
+}
+
+function normalizeThumbnailImage(value) {
+  return dataUtils.normalizeLinkUrl(value, {
+    allowRelative: true,
+    allowHash: false,
+  });
+}
+
+function buildThumbnail(themeId, image = "") {
+  const thumbnail = { ...dataUtils.getThemeColors(themeId) };
+  if (image) {
+    thumbnail.image = image;
+  }
+
+  return thumbnail;
 }
 
 function getThemeName(themeId) {
@@ -253,7 +270,7 @@ function emptyArchiveDraft() {
       chapters: [],
       materials: [],
     },
-    thumbnail: dataUtils.getThemeColors(workingData.themes[0]?.id ?? ""),
+    thumbnail: buildThumbnail(workingData.themes[0]?.id ?? ""),
   };
 }
 
@@ -479,6 +496,7 @@ function populateForm(archive) {
   elements.fields.detailChapters.value = serializeChapters(detail.chapters);
   elements.fields.detailMaterials.value = serializeMaterials(detail.materials);
   elements.fields.recording.value = target.links?.recording ?? "";
+  elements.fields.thumbnailImage.value = target.thumbnail?.image ?? target.thumbnail?.imageUrl ?? "";
   elements.fields.slides.value = target.links?.slides ?? "";
   elements.fields.notes.value = target.links?.notes ?? "";
   elements.fields.references.value = target.links?.references ?? "";
@@ -571,6 +589,7 @@ function draftArchiveFromFields() {
     notes: normalizeArchiveLink("notes", elements.fields.notes.value),
     references: normalizeArchiveLink("references", elements.fields.references.value),
   };
+  const thumbnailImage = normalizeThumbnailImage(elements.fields.thumbnailImage.value);
 
   return {
     id: selectedArchiveId,
@@ -588,7 +607,7 @@ function draftArchiveFromFields() {
       references: Boolean(links.references || elements.files.references.files[0]),
     },
     links,
-    thumbnail: dataUtils.getThemeColors(themeId),
+    thumbnail: buildThumbnail(themeId, thumbnailImage),
   };
 }
 
@@ -630,13 +649,13 @@ function formToArchive() {
   const archiveId = previousId || dataUtils.createArchiveId(elements.fields.date.value, elements.fields.title.value);
   const themeId = elements.fields.themeId.value;
   const themeName = getThemeName(themeId);
-  const colors = dataUtils.getThemeColors(themeId);
   const links = {
     recording: normalizeArchiveLink("recording", elements.fields.recording.value),
     slides: normalizeArchiveLink("slides", elements.fields.slides.value),
     notes: normalizeArchiveLink("notes", elements.fields.notes.value),
     references: normalizeArchiveLink("references", elements.fields.references.value),
   };
+  const thumbnailImage = normalizeThumbnailImage(elements.fields.thumbnailImage.value);
 
   const currentArchive = workingData.archives.find((item) => item.id === previousId || item.id === archiveId);
   const archive = {
@@ -656,7 +675,7 @@ function formToArchive() {
       references: Boolean(links.references),
     },
     links,
-    thumbnail: colors,
+    thumbnail: buildThumbnail(themeId, thumbnailImage),
   };
   const detail = buildDetailFromFields(currentArchive?.detail ?? {});
   if (detail) {
@@ -690,6 +709,11 @@ function validateArchive(archive) {
   const recordingInput = String(elements.fields.recording.value ?? "").trim();
   if (recordingInput && !archive.links.recording) {
     throw new Error("アーカイブ URL は http:// または https:// から始まる安全な URL を入力してください。");
+  }
+
+  const thumbnailInput = String(elements.fields.thumbnailImage.value ?? "").trim();
+  if (thumbnailInput && !normalizeThumbnailImage(thumbnailInput)) {
+    throw new Error("サムネイル画像 URL は http:// / https:// またはサイト内相対パスだけを使ってください。");
   }
 
   FILE_KINDS.forEach((kind) => {
