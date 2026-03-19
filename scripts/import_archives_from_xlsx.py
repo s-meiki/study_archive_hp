@@ -30,6 +30,11 @@ THEMES = [
         "summary": "脳梗塞・脳卒中の病態と治療",
     },
     {
+        "id": "infectious",
+        "name": "感染症",
+        "summary": "感染症治療・抗菌薬の基本整理",
+    },
+    {
         "id": "foundations",
         "name": "基礎レクチャー",
         "summary": "輸液・導入講義・基礎整理",
@@ -49,6 +54,7 @@ THEMES = [
 THEME_COLORS = {
     "cardiology": ("#6b5548", "#c0a48f"),
     "neurology": ("#556070", "#98a4bb"),
+    "infectious": ("#4f6244", "#a7bc96"),
     "foundations": ("#5d5b47", "#b4b08c"),
     "research-career": ("#5b4c4c", "#baa09b"),
     "ai-utilization": ("#365a5c", "#9dbab7"),
@@ -88,6 +94,14 @@ THEME_DETAIL_TEMPLATES = {
             "病態の捉え方と初期評価のポイントを整理する",
             "治療方針の切り分けと薬物療法の役割を確認する",
             "再発予防や合併症管理につながる視点を押さえる",
+        ],
+    },
+    "infectious": {
+        "overview": "感染症診療の全体像と抗菌薬選択の基本を、病態理解と実務判断につなげて見直しやすい内容です。",
+        "key_points": [
+            "感染症診療で押さえる病態整理の基本を確認する",
+            "抗菌薬選択と初期対応の考え方を整理する",
+            "実務で迷いやすい評価と見直しの視点を押さえる",
         ],
     },
     "foundations": {
@@ -151,6 +165,15 @@ TOPIC_RULES = [
             "出血性脳卒中の病態と初期評価を整理する",
             "降圧や止血を含む治療方針の基本を確認する",
             "虚血性疾患との考え方の違いを押さえる",
+        ],
+    },
+    {
+        "keywords": ["感染症", "抗菌", "感染"],
+        "overview": "感染症治療の全体像を踏まえて、評価の進め方と抗菌薬選択の基本を整理しやすい回です。",
+        "key_points": [
+            "感染症診療で最初に確認すべき評価項目を整理する",
+            "抗菌薬選択と治療方針の基本的な考え方を確認する",
+            "治療効果判定と見直しの視点を押さえる",
         ],
     },
     {
@@ -372,6 +395,8 @@ def classify_theme(title):
         return "cardiology"
     if any(keyword in title for keyword in ["脳梗塞", "脳卒中", "出血性"]):
         return "neurology"
+    if any(keyword in title for keyword in ["感染症", "抗菌", "感染"]):
+        return "infectious"
     if any(keyword in title for keyword in ["輸液", "基礎"]):
         return "foundations"
     if "AI" in title:
@@ -389,6 +414,8 @@ def build_summary(title, theme_id):
         return "循環器領域の病態理解と薬物治療の要点を整理する勉強会。"
     if theme_id == "neurology":
         return "脳神経領域の病態と薬物治療を確認する勉強会。"
+    if theme_id == "infectious":
+        return "感染症治療の全体像と抗菌薬の考え方を整理する勉強会。"
     if theme_id == "foundations":
         return "日常業務の土台になる基礎事項を整理するレクチャー。"
     return "研究・認定・報告会に関する勉強会アーカイブ。"

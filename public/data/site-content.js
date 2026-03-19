@@ -11,6 +11,11 @@ window.STUDY_ARCHIVE_DATA = {
       "summary": "脳梗塞・脳卒中の病態と治療"
     },
     {
+      "id": "infectious",
+      "name": "感染症",
+      "summary": "感染症治療・抗菌薬の基本整理"
+    },
+    {
       "id": "foundations",
       "name": "基礎レクチャー",
       "summary": "輸液・導入講義・基礎整理"
@@ -27,6 +32,43 @@ window.STUDY_ARCHIVE_DATA = {
     }
   ],
   "archives": [
+    {
+      "id": "archive-20260318-1yp7m9p",
+      "themeId": "infectious",
+      "title": "感染症治療 ~総説~",
+      "summary": "感染症治療の全体像と抗菌薬の考え方を整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-03-18",
+      "updatedAt": "2026-03-19",
+      "duration": "未記載",
+      "featured": true,
+      "assets": {
+        "recording": false,
+        "slides": true,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "uploads/2026-03/archive-qo54y5/slides-slides-5a73nx.pdf",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#4f6244",
+        "end": "#a7bc96"
+      },
+      "detail": {
+        "overview": "感染症治療の全体像を総説として整理し、病態理解と抗菌薬選択の基本を見直しやすい回です。\nスライドを見返しながら、初期評価から治療方針の考え方まで順に確認できます。",
+        "keyPoints": [
+          "感染症診療で押さえる基本的な評価項目を整理する",
+          "抗菌薬選択と初期対応の考え方を確認する",
+          "治療効果判定と見直しの視点を押さえる"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
     {
       "id": "archive-20241206-a926c4365a",
       "themeId": "research-career",
