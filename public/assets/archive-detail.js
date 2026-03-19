@@ -112,7 +112,7 @@ function buildMaterialItems(archive) {
   }
 
   if (archive.assets?.slides) {
-    pushItem("スライド", archive.links?.slides);
+    pushItem(archive.detail?.slideLabel || "スライド", archive.links?.slides);
   }
 
   if (archive.assets?.notes) {
@@ -334,7 +334,7 @@ function renderMaterials(archive) {
     strong.textContent = item.label;
 
     const meta = document.createElement("span");
-    meta.textContent = dataUtils.isExternalUrl(item.url) ? "外部リンク" : "サイト内資料";
+    meta.textContent = dataUtils.isExternalUrl(item.url) ? "好きな形式でダウンロード可" : "サイト内資料";
 
     label.append(strong, meta);
 

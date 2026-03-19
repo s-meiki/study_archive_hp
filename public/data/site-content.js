@@ -50,23 +50,34 @@ window.STUDY_ARCHIVE_DATA = {
       },
       "links": {
         "recording": "",
-        "slides": "uploads/2026-03/archive-qo54y5/slides-slides-5a73nx.pdf",
+        "slides": "uploads/2026-03/archive-qo54y5/slides/",
         "notes": "",
         "references": ""
       },
       "thumbnail": {
         "start": "#4f6244",
-        "end": "#a7bc96"
+        "end": "#a7bc96",
+        "image": "uploads/2026-03/archive-qo54y5/slides/1.jpg"
       },
       "detail": {
         "overview": "感染症治療の全体像を総説として整理し、病態理解と抗菌薬選択の基本を見直しやすい回です。\nスライドを見返しながら、初期評価から治療方針の考え方まで順に確認できます。",
+        "slideLabel": "スライド（サイト内資料）",
         "keyPoints": [
           "感染症診療で押さえる基本的な評価項目を整理する",
           "抗菌薬選択と初期対応の考え方を確認する",
           "治療効果判定と見直しの視点を押さえる"
         ],
         "chapters": [],
-        "materials": []
+        "materials": [
+          {
+            "label": "スライド（ダウンロード用）",
+            "url": "https://docs.google.com/presentation/d/1G-g-nkft1mN6cspvLDfKfekgyE-DO18Gk3FBySmWPjk/edit?usp=sharing"
+          },
+          {
+            "label": "zip（JPEG形式）",
+            "url": "uploads/2026-03/archive-qo54y5/infectious-slides-jpeg.zip"
+          }
+        ]
       }
     },
     {
