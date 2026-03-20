@@ -14,6 +14,6 @@ export const siteLegal = {
 };
 
 export const siteNavigation = {
-  archiveUrl: "/index.html",
-  annualMeetingsUrl: "/annual-meetings-2026.html"
+  archiveUrl: "/",
+  annualMeetingsUrl: "/annual-meetings-2026"
 };

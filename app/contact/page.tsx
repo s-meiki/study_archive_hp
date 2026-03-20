@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import SiteFooter from "../site-footer";
-import { siteLegal } from "../site-legal";
+import { siteLegal, siteNavigation } from "../site-legal";
+import { absoluteSiteUrl } from "../site-url";
 import ContactForm from "./contact-form";
+
+export const metadata: Metadata = {
+  title: `問い合わせ | ${siteLegal.shortSiteName}`,
+  description: `${siteLegal.shortSiteName}への問い合わせフォームです。`,
+  alternates: absoluteSiteUrl("/contact")
+    ? {
+        canonical: absoluteSiteUrl("/contact") ?? undefined
+      }
+    : undefined
+};
 
 export default function ContactPage() {
   const siteKey = process.env.NEXT_PUBLIC_CF_SITE_KEY ?? "";
@@ -16,10 +28,10 @@ export default function ContactPage() {
           </div>
         </div>
         <div className="topbar-actions">
-          <a className="topbar-link" href="/index.html">
+          <a className="topbar-link" href={siteNavigation.archiveUrl}>
             アーカイブ一覧へ
           </a>
-          <a className="topbar-link" href="/annual-meetings-2026.html">
+          <a className="topbar-link" href={siteNavigation.annualMeetingsUrl}>
             学会年会一覧へ
           </a>
         </div>
@@ -41,7 +53,9 @@ export default function ContactPage() {
               <strong>外部サービス</strong>
               <span>
                 送信時は Cloudflare Turnstile でボット判定を行い、内容は Discord Webhook に通知されます。
-                詳細は <a href={siteLegal.privacyUrl}>プライバシーポリシー</a> を確認してください。
+                <span className="contact-note-tail">
+                  詳細は <a href={siteLegal.privacyUrl}>プライバシーポリシー</a> を確認してください。
+                </span>
               </span>
             </div>
             <ContactForm siteKey={siteKey} />

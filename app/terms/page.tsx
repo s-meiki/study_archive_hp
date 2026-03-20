@@ -1,169 +1,202 @@
 import type { Metadata } from "next";
-import SiteFooter from "../site-footer";
+import LegalPageShell from "../legal-page-shell";
 import { siteLegal, siteNavigation } from "../site-legal";
+import { absoluteSiteUrl } from "../site-url";
 
 export const metadata: Metadata = {
   title: `利用規約 | ${siteLegal.shortSiteName}`,
-  description: `${siteLegal.siteName} の利用規約です。`
+  description: `${siteLegal.siteName} の利用規約です。`,
+  alternates: absoluteSiteUrl("/terms")
+    ? {
+        canonical: absoluteSiteUrl("/terms") ?? undefined
+      }
+    : undefined
 };
+
+const summaryCards = [
+  {
+    title: "このサイトの位置づけ",
+    description: "教育用アーカイブとして録画や資料へアクセスしやすくするためのサイトで、個別の医療判断を置き換えるものではありません。"
+  },
+  {
+    title: "主な禁止事項",
+    description: "患者情報や機密情報の掲載、権利侵害、虚偽の問い合わせ、過剰アクセスや自動取得などを禁止します。"
+  },
+  {
+    title: "外部サービスと連絡",
+    description: "動画再生や問い合わせでは外部サービスを利用します。問題がある場合は問い合わせフォームから連絡できます。"
+  }
+];
+
+const navItems = [
+  { href: "#terms-purpose", label: "1. 目的" },
+  { href: "#terms-conditions", label: "2. 利用条件" },
+  { href: "#terms-third-party-services", label: "3. 外部サービス" },
+  { href: "#terms-disclaimer", label: "4. 免責" },
+  { href: "#terms-removal", label: "5. 修正・削除対応" },
+  { href: "#terms-updates", label: "6. 規約変更と準拠法" },
+  { href: "#terms-operator", label: "7. 運営者情報" }
+];
+
+const linkGroups = [
+  {
+    kicker: "Related",
+    title: "関連ページ",
+    links: [
+      { href: siteLegal.privacyUrl, label: "プライバシーポリシー" },
+      { href: siteLegal.contactUrl, label: "問い合わせフォーム" },
+      { href: siteNavigation.archiveUrl, label: "勉強会アーカイブ一覧" }
+    ]
+  }
+];
 
 export default function TermsPage() {
   return (
-    <div className="page-shell">
-      <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true"></span>
-          <div className="brand-copy">
-            <span className="brand-label">Clinical Academic Working Group</span>
-            <span className="brand-name">{siteLegal.shortSiteName}</span>
+    <LegalPageShell
+      intro={`${siteLegal.siteName} を学習用アーカイブとして安全に利用するためのルールを、要点を先に確認できる構成で整理しています。`}
+      linkGroups={linkGroups}
+      metaItems={[
+        { label: "対象サイト", value: siteLegal.siteName },
+        { label: "対象者", value: siteLegal.audienceLabel },
+        { label: "運営主体", value: siteLegal.operatorType },
+        { label: "窓口", value: siteLegal.contactOffice }
+      ]}
+      navItems={navItems}
+      pageLabel="Terms Of Use"
+      stats={[
+        { label: "対象", value: siteLegal.audienceLabel },
+        { label: "運営", value: siteLegal.contactOffice },
+        { label: "最終更新", value: siteLegal.updatedDate }
+      ]}
+      summaryCards={summaryCards}
+      title="利用規約"
+      titleId="terms-title"
+    >
+      <section className="legal-section" id="terms-purpose">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">01</span>
+          <div>
+            <h2>目的</h2>
+            <p className="legal-section-lead">本サイトは教育用アーカイブの整理と導線提供を目的とし、診療判断の代替を意図しません。</p>
           </div>
         </div>
-        <div className="topbar-actions">
-          <a className="topbar-link" href={siteNavigation.archiveUrl}>
-            アーカイブ一覧へ
-          </a>
-          <a className="topbar-link" href={siteNavigation.annualMeetingsUrl}>
-            学会年会一覧へ
-          </a>
-          <a className="topbar-link" href={siteLegal.contactUrl}>
-            問い合わせ
-          </a>
-        </div>
-      </header>
+        <p>本サイトは、勉強会、講義、研究会その他の教育用アーカイブを整理し、録画、資料、参考情報への導線を提供するためのものです。</p>
+        <p>本サイト上の情報は教育・学習支援を目的とするものであり、個別の診断、治療、服薬指導その他の医療判断の代替を目的としません。</p>
+      </section>
 
-      <main className="legal-main">
-        <section className="panel legal-panel legal-hero" aria-labelledby="terms-title">
-          <div className="section-kicker">Terms Of Use</div>
-          <h1 id="terms-title">利用規約</h1>
-          <p className="legal-copy">
-            このページは、{siteLegal.siteName} を利用する際のルールをまとめたものです。難しい言い方を避けると、
-            「学習用の資料置き場として安全に使うための約束」です。
-          </p>
-          <div className="hero-stats" aria-label="規約の基本情報">
-            <span className="stat-chip">対象: {siteLegal.audienceLabel}</span>
-            <span className="stat-chip">運営: {siteLegal.contactOffice}</span>
-            <span className="stat-chip">最終更新: {siteLegal.updatedDate}</span>
+      <section className="legal-section" id="terms-conditions">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">02</span>
+          <div>
+            <h2>利用条件</h2>
+            <p className="legal-section-lead">公開環境で運用される前提で、公開してよい情報だけを扱い、運営を妨げる行為を禁止します。</p>
           </div>
-        </section>
-
-        <div className="notice" role="note">
-          <strong>公開範囲の考え方</strong>
-          <span>
-            本サイトは関係者向けを想定していますが、インターネット上で配信されるため、公開してよい情報だけを扱う前提で利用してください。
-          </span>
         </div>
+        <ul className="legal-list">
+          <li>本サイトは関係者向けを想定していますが、インターネット公開環境で運用されています。公開してよい情報だけを扱ってください。</li>
+          <li>患者情報、匿名化されていない症例情報、機密情報を掲載、送信、共有してはいけません。</li>
+          <li>法令や公序良俗に反する利用、虚偽の問い合わせ、過剰アクセス、自動取得その他運営を妨げる行為をしてはいけません。</li>
+          <li>本サイト上の文章、画像、構成、データ、配布資料その他のコンテンツを、権利者の許可なく転載、再配布、販売、改変してはいけません。</li>
+        </ul>
+      </section>
 
-        <section className="legal-grid">
-          <div className="legal-stack">
-            <article className="panel legal-panel">
-              <div className="section-kicker">1. 目的</div>
-              <h2>学習アーカイブとして使うためのサイトです</h2>
-              <p className="legal-copy">
-                本サイトは、勉強会、講義、研究会その他の教育用アーカイブを整理し、録画、資料、参考情報への導線を提供することを目的とします。
-              </p>
-              <p className="legal-copy">
-                本サイト上の情報は教育・学習支援のためのものであり、個別の診断、治療、服薬指導その他の医療判断の代わりになるものではありません。
-              </p>
-            </article>
-
-            <article className="panel legal-panel">
-              <div className="section-kicker">2. 利用ルール</div>
-              <h2>やってはいけないこと</h2>
-              <ul className="legal-list">
-                <li>法令や公序良俗に反する使い方をすること</li>
-                <li>患者情報、匿名化されていない症例情報、機密情報を掲載、送信、共有すること</li>
-                <li>資料やページの内容を、権利者の許可なく転載、再配布、販売、改変すること</li>
-                <li>自動取得や大量アクセスで、本サイトや外部サービスに過度な負荷をかけること</li>
-                <li>削除依頼や問い合わせ窓口へ虚偽の情報を送ること</li>
-              </ul>
-            </article>
-
-            <article className="panel legal-panel">
-              <div className="section-kicker">3. 権利</div>
-              <h2>資料やページの権利について</h2>
-              <p className="legal-copy">
-                本サイトに掲載される文章、画像、構成、データ、配布資料その他のコンテンツに関する著作権その他の権利は、運営者又は正当な権利者に帰属します。
-              </p>
-              <p className="legal-copy">
-                利用者は、法令上認められる範囲を超えて、本サイトのコンテンツを複製、転載、再配布、販売又は改変してはなりません。
-              </p>
-            </article>
-
-            <article className="panel legal-panel">
-              <div className="section-kicker">4. 外部サービス</div>
-              <h2>動画再生や問い合わせでは外部サービスを使います</h2>
-              <ul className="legal-list">
-                <li>録画再生時には YouTube の埋め込みプレーヤーを読み込む場合があります</li>
-                <li>問い合わせフォームでは Cloudflare Turnstile によるボット判定を行います</li>
-                <li>問い合わせ内容は、担当者確認のため Discord Webhook に通知されます</li>
-                <li>本サイトは Vercel 等のホスティング基盤で配信される場合があります</li>
-              </ul>
-              <p className="legal-copy">
-                これらの外部サービスには、それぞれの利用規約、プライバシーポリシーその他の条件が適用されます。詳しくはプライバシーポリシーを確認してください。
-              </p>
-            </article>
-
-            <article className="panel legal-panel">
-              <div className="section-kicker">5. 免責</div>
-              <h2>保証しないこと</h2>
-              <ul className="legal-list">
-                <li>本サイトの情報は、公開時点の内容であり、常に最新、完全、正確であることを保証しません</li>
-                <li>外部リンク先、埋め込み先、配布資料は、変更、削除、停止される場合があります</li>
-                <li>本サイトの利用により生じた損害について、運営者に故意又は重過失がある場合を除き、責任を負いません</li>
-              </ul>
-            </article>
-
-            <article className="panel legal-panel">
-              <div className="section-kicker">6. 削除依頼</div>
-              <h2>修正や削除の連絡</h2>
-              <p className="legal-copy">
-                権利侵害、個人情報の掲載、匿名化不備、掲載ミスその他の問題がある場合、運営者は必要に応じてコンテンツの修正、非公開化又は削除を行います。
-              </p>
-              <p className="legal-copy">
-                連絡窓口は {siteLegal.contactOffice} です。連絡方法は <a href={siteLegal.contactUrl}>問い合わせフォーム</a> を使用してください。
-              </p>
-            </article>
+      <section className="legal-section" id="terms-third-party-services">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">03</span>
+          <div>
+            <h2>外部サービス</h2>
+            <p className="legal-section-lead">動画再生や問い合わせ機能では、配信や不正利用対策のために外部サービスを利用します。</p>
           </div>
+        </div>
+        <ul className="legal-list">
+          <li>録画再生時には YouTube の埋め込みプレーヤーを読み込む場合があります。</li>
+          <li>問い合わせフォームでは Cloudflare Turnstile によるボット判定を行います。</li>
+          <li>問い合わせ内容は Discord Webhook に通知されます。</li>
+          <li>本サイトは Vercel 等のホスティング基盤で配信される場合があります。</li>
+        </ul>
+        <p>
+          詳細は <a href={siteLegal.privacyUrl}>プライバシーポリシー</a> を確認してください。
+        </p>
+      </section>
 
-          <aside className="legal-stack">
-            <article className="panel legal-panel">
-              <div className="section-kicker">運営情報</div>
-              <h2>運営者</h2>
-              <ul className="legal-list legal-list-compact">
-                <li>サイト名: {siteLegal.siteName}</li>
-                <li>運営者名: {siteLegal.operatorName}</li>
-                <li>運営主体: {siteLegal.operatorType}</li>
-                <li>窓口: {siteLegal.contactOffice}</li>
-                <li>所在地: {siteLegal.location}</li>
-              </ul>
-            </article>
+      <section className="legal-section" id="terms-disclaimer">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">04</span>
+          <div>
+            <h2>免責</h2>
+            <p className="legal-section-lead">掲載情報や外部リンクの継続性を保証せず、故意又は重過失を除き責任を負いません。</p>
+          </div>
+        </div>
+        <ul className="legal-list">
+          <li>本サイトの情報は公開時点の内容であり、常に最新、完全、正確であることを保証しません。</li>
+          <li>外部リンク先、埋め込み先、配布資料は変更、削除、停止される場合があります。</li>
+          <li>本サイトの利用により生じた損害について、運営者に故意又は重過失がある場合を除き、責任を負いません。</li>
+        </ul>
+      </section>
 
-            <article className="panel legal-panel">
-              <div className="section-kicker">適用</div>
-              <h2>規約の変更と裁判所</h2>
-              <p className="legal-copy">
-                本規約は、必要に応じて変更されることがあります。変更後の規約は、本サイト上に掲載した時点又は別途定めた効力発生日から適用されます。
-              </p>
-              <p className="legal-copy">
-                本規約は日本法に準拠して解釈され、本サイト又は本規約に関する紛争については、{siteLegal.jurisdictionCourt}
-                を第一審の専属的合意管轄裁判所とします。
-              </p>
-            </article>
+      <section className="legal-section" id="terms-removal">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">05</span>
+          <div>
+            <h2>修正・削除対応</h2>
+            <p className="legal-section-lead">権利侵害や掲載ミスなどの問題がある場合は、必要に応じて修正、非公開化、削除を行います。</p>
+          </div>
+        </div>
+        <p>権利侵害、個人情報の掲載、匿名化不備、掲載ミスその他の問題がある場合、運営者は必要に応じて修正、非公開化又は削除を行います。</p>
+        <p>
+          連絡窓口は {siteLegal.contactOffice} です。連絡方法は <a href={siteLegal.contactUrl}>問い合わせフォーム</a> を使用してください。
+        </p>
+      </section>
 
-            <article className="panel legal-panel">
-              <div className="section-kicker">関連ページ</div>
-              <h2>あわせて見るページ</h2>
-              <div className="legal-link-list">
-                <a href={siteLegal.privacyUrl}>プライバシーポリシー</a>
-                <a href={siteLegal.contactUrl}>問い合わせフォーム</a>
-                <a href={siteNavigation.archiveUrl}>勉強会アーカイブ一覧</a>
-              </div>
-            </article>
-          </aside>
-        </section>
-      </main>
+      <section className="legal-section" id="terms-updates">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">06</span>
+          <div>
+            <h2>規約変更と準拠法</h2>
+            <p className="legal-section-lead">規約は必要に応じて更新され、日本法に基づいて解釈されます。</p>
+          </div>
+        </div>
+        <p>本規約は必要に応じて変更されることがあります。変更後の規約は、本サイト上に掲載した時点又は別途定めた効力発生日から適用されます。</p>
+        <p>本規約は日本法に準拠して解釈され、本サイト又は本規約に関する紛争については {siteLegal.jurisdictionCourt} を第一審の専属的合意管轄裁判所とします。</p>
+      </section>
 
-      <SiteFooter />
-    </div>
+      <section className="legal-section" id="terms-operator">
+        <div className="legal-section-heading">
+          <span className="legal-section-index">07</span>
+          <div>
+            <h2>運営者情報</h2>
+            <p className="legal-section-lead">運営主体、窓口、関連ページを一覧で確認できるようにしています。</p>
+          </div>
+        </div>
+        <dl className="legal-detail-grid">
+          <div>
+            <dt>サイト名</dt>
+            <dd>{siteLegal.siteName}</dd>
+          </div>
+          <div>
+            <dt>運営者名</dt>
+            <dd>{siteLegal.operatorName}</dd>
+          </div>
+          <div>
+            <dt>運営主体</dt>
+            <dd>{siteLegal.operatorType}</dd>
+          </div>
+          <div>
+            <dt>窓口</dt>
+            <dd>{siteLegal.contactOffice}</dd>
+          </div>
+          <div>
+            <dt>所在地</dt>
+            <dd>{siteLegal.location}</dd>
+          </div>
+          <div>
+            <dt>関連ページ</dt>
+            <dd>
+              <a href={siteLegal.privacyUrl}>プライバシーポリシー</a> / <a href={siteNavigation.archiveUrl}>勉強会アーカイブ一覧</a>
+            </dd>
+          </div>
+        </dl>
+      </section>
+    </LegalPageShell>
   );
 }
