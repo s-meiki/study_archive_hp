@@ -135,6 +135,25 @@ function archivesForTheme(themeId) {
     .sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")));
 }
 
+function compareUpdatedArchives(a, b) {
+  const updatedOrder = String(b.updatedAt ?? b.date ?? "").localeCompare(String(a.updatedAt ?? a.date ?? ""));
+  if (updatedOrder !== 0) {
+    return updatedOrder;
+  }
+
+  const dateOrder = String(b.date ?? "").localeCompare(String(a.date ?? ""));
+  if (dateOrder !== 0) {
+    return dateOrder;
+  }
+
+  return String(a.id ?? "").localeCompare(String(b.id ?? ""));
+}
+
+function latestUpdatedArchiveForTheme(themeId) {
+  const themeArchives = archivesForTheme(themeId);
+  return [...themeArchives].sort(compareUpdatedArchives)[0] ?? null;
+}
+
 function allArchivesSorted() {
   return [...archives].sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")));
 }
@@ -161,8 +180,7 @@ function filteredArchives() {
 }
 
 function featuredArchiveForTheme(themeId) {
-  const themeArchives = archivesForTheme(themeId);
-  return themeArchives.find((archive) => archive.featured) ?? themeArchives[0];
+  return latestUpdatedArchiveForTheme(themeId);
 }
 
 function archiveDetailUrl(archive) {
@@ -198,7 +216,7 @@ function renderFeatured() {
   titleLink.href = archiveDetailUrl(featured);
   heading.append(titleLink);
 
-  const intro = createElement("p", { text: `${theme.name}テーマで最初に確認したい1件です。` });
+  const intro = createElement("p", { text: `${theme.name}テーマで最新に更新された1件です。` });
   primary.append(heading, intro);
 
   const meta = createElement("div", { className: "feature-meta" });
@@ -324,7 +342,7 @@ function renderThemes() {
 
 function renderArchiveHeader(items) {
   const theme = themeById(state.themeId);
-  const latest = archivesForTheme(state.themeId)[0];
+  const latest = latestUpdatedArchiveForTheme(state.themeId);
 
   if (!theme) {
     archiveHeadingEl.textContent = "勉強会アーカイブ";
@@ -340,6 +358,7 @@ function renderArchiveHeader(items) {
 
 function renderArchives() {
   const items = filteredArchives();
+  const latestUpdatedId = latestUpdatedArchiveForTheme(state.themeId)?.id ?? "";
   clearElement(archiveListEl);
   renderArchiveHeader(items);
 
@@ -352,6 +371,7 @@ function renderArchives() {
 
   items.forEach((archive) => {
     const card = createElement("article", { className: "panel archive-card" });
+    const isLatestUpdated = latestUpdatedId === archive.id;
 
     const media = createElement("div", { className: "archive-media" });
     setThumbnailStyles(media, archive.thumbnail, archive);
@@ -365,7 +385,7 @@ function renderArchives() {
     const content = createElement("div", { className: "archive-content" });
     const meta = createElement("div", { className: "archive-meta" });
 
-    if (archive.featured) {
+    if (isLatestUpdated) {
       meta.append(createElement("span", { className: "status", text: "最新" }));
     }
 
