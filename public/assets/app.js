@@ -1,7 +1,7 @@
 let themes = [];
 let archives = [];
 const dataUtils = window.StudyArchiveDataUtils;
-const ARCHIVE_CALENDAR_PAGE_SIZE = 2;
+const ARCHIVE_CALENDAR_PAGE_SIZE = 1;
 
 const state = {
   themeId: "",
@@ -13,6 +13,9 @@ const state = {
 const archiveCalendarState = {
   monthKeys: [],
   startIndex: -1,
+};
+const homeViewState = {
+  activeTab: "list",
 };
 
 const themeListEl = document.querySelector("#theme-list");
@@ -29,9 +32,53 @@ const yearFilterEl = document.querySelector("#year-filter");
 const searchInputEl = document.querySelector("#search-input");
 const assetFilterEl = document.querySelector("#asset-filter");
 const clearFiltersEl = document.querySelector("#clear-filters");
+const homeTabButtons = [...document.querySelectorAll("[data-home-tab]")];
+const homeTabPanels = [...document.querySelectorAll("[data-home-panel]")];
 
 function clearElement(element) {
   element.replaceChildren();
+}
+
+function setActiveHomeTab(nextTab) {
+  homeViewState.activeTab = nextTab;
+
+  homeTabButtons.forEach((button) => {
+    const isActive = button.dataset.homeTab === nextTab;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+    button.tabIndex = isActive ? 0 : -1;
+  });
+
+  homeTabPanels.forEach((panel) => {
+    panel.hidden = panel.dataset.homePanel !== nextTab;
+  });
+}
+
+function setupHomeTabs() {
+  if (homeTabButtons.length === 0 || homeTabPanels.length === 0) {
+    return;
+  }
+
+  setActiveHomeTab(homeViewState.activeTab);
+
+  homeTabButtons.forEach((button, index) => {
+    button.addEventListener("click", () => {
+      setActiveHomeTab(button.dataset.homeTab || "list");
+    });
+
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+        return;
+      }
+
+      event.preventDefault();
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const nextIndex = (index + direction + homeTabButtons.length) % homeTabButtons.length;
+      const nextButton = homeTabButtons[nextIndex];
+      setActiveHomeTab(nextButton.dataset.homeTab || "list");
+      nextButton.focus();
+    });
+  });
 }
 
 function createElement(tagName, options = {}) {
@@ -335,21 +382,15 @@ function renderArchiveCalendar() {
     return;
   }
 
-  archiveCalendarEl.append(
-    createCalendarNavigation(monthKeys, archiveCalendarState.startIndex, (nextIndex) => {
-      archiveCalendarState.startIndex = clampCalendarIndex(nextIndex, archiveCalendarState.monthKeys.length);
-      renderArchiveCalendar();
-    }),
-  );
-
   const viewport = createElement("div", { className: "calendar-month-grid archive-calendar-grid" });
   monthKeys.slice(archiveCalendarState.startIndex, archiveCalendarState.startIndex + ARCHIVE_CALENDAR_PAGE_SIZE).forEach((monthKey) => {
     const monthDate = toCalendarDate(`${monthKey}-01`);
     const monthCard = createElement("section", { className: "calendar-month-card" });
-    const heading = createElement("h3", {
-      className: "calendar-month-title",
-      text: `${monthDate.getFullYear()}年${monthDate.getMonth() + 1}月`,
+    const navigation = createCalendarNavigation(monthKeys, archiveCalendarState.startIndex, (nextIndex) => {
+      archiveCalendarState.startIndex = clampCalendarIndex(nextIndex, archiveCalendarState.monthKeys.length);
+      renderArchiveCalendar();
     });
+    navigation.classList.add("calendar-nav-embedded");
     const weekdayRow = createElement("div", { className: "calendar-weekdays" });
     ["日", "月", "火", "水", "木", "金", "土"].forEach((weekday) => {
       weekdayRow.append(createElement("span", { text: weekday }));
@@ -385,7 +426,7 @@ function renderArchiveCalendar() {
       cursor.setDate(cursor.getDate() + 1);
     }
 
-    monthCard.append(heading, weekdayRow, grid);
+    monthCard.append(navigation, weekdayRow, grid);
     viewport.append(monthCard);
   });
 
@@ -606,6 +647,8 @@ function render() {
   renderArchives();
   setStatus("");
 }
+
+setupHomeTabs();
 
 searchInputEl.addEventListener("input", (event) => {
   state.search = event.target.value.trim();
