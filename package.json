@@ -2,9 +2,14 @@
   "name": "study-archive-hp",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "clean": "node -e \"const fs=require('fs');const p=process.env.NEXT_DIST_DIR||'.next';fs.rmSync(p,{recursive:true,force:true})\"",
+    "dev": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
+    "dev:clean": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
+    "build": "NEXT_DIST_DIR=.next-build npm run clean && NEXT_DIST_DIR=.next-build node scripts/run_next_with_server_chunk_fix.js build",
+    "build:clean": "NEXT_DIST_DIR=.next-build npm run clean && NEXT_DIST_DIR=.next-build node scripts/run_next_with_server_chunk_fix.js build",
+    "meetings:refresh": "node scripts/refresh_annual_meeting_windows.js",
+    "meetings:refresh:dry": "node scripts/refresh_annual_meeting_windows.js --dry-run",
+    "start": "NEXT_DIST_DIR=.next-build node scripts/run_next_with_server_chunk_fix.js start"
   },
   "dependencies": {
     "next": "^15.0.0",

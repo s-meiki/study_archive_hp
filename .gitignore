@@ -28,5 +28,8 @@ __pycache__/
 # Node / Next.js
 node_modules/
 .next/
+.next-build/
+.next-dev/
+.next_backup_*/
 .env.local
 .vercel/

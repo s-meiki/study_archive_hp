@@ -15,6 +15,8 @@ export type SiteArchive = {
   summary: string;
   speaker?: string;
   date?: string;
+  startAt?: string;
+  endAt?: string;
   updatedAt?: string;
   duration?: string;
   featured?: boolean;
@@ -46,6 +48,14 @@ export type AnnualMeeting = {
   startDate?: string;
   endDate?: string;
   note?: string;
+  milestones?: Array<{
+    id: string;
+    label: string;
+    category?: "abstract" | "registration" | "deadline" | "info";
+    startDate?: string;
+    endDate?: string;
+    note?: string;
+  }>;
 };
 
 export type AnnualMeetingsData = {

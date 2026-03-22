@@ -1,6 +1,7 @@
 let themes = [];
 let archives = [];
 const dataUtils = window.StudyArchiveDataUtils;
+const ARCHIVE_CALENDAR_PAGE_SIZE = 2;
 
 const state = {
   themeId: "",
@@ -9,11 +10,17 @@ const state = {
   year: "all",
 };
 
+const archiveCalendarState = {
+  monthKeys: [],
+  startIndex: -1,
+};
+
 const themeListEl = document.querySelector("#theme-list");
 const archiveListEl = document.querySelector("#archive-list");
 const archiveHeadingEl = document.querySelector("#archive-heading");
 const archiveDescriptionEl = document.querySelector("#archive-description");
 const archiveSummaryEl = document.querySelector("#archive-summary");
+const archiveCalendarEl = document.querySelector("#archive-calendar");
 const featuredCardEl = document.querySelector("#featured-card");
 const entryPicksEl = document.querySelector("#entry-picks");
 const emptyStateEl = document.querySelector("#empty-state");
@@ -92,6 +99,68 @@ function applySiteData(data) {
 function formatDate(dateString) {
   const date = new Date(dateString);
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function toCalendarDate(dateString) {
+  return new Date(`${dateString}T00:00:00+09:00`);
+}
+
+function pad(value) {
+  return String(value).padStart(2, "0");
+}
+
+function toIsoDate(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function monthKeyFromDate(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+function formatMonthLabel(monthKey) {
+  const monthDate = toCalendarDate(`${monthKey}-01`);
+  return `${monthDate.getFullYear()}年${monthDate.getMonth() + 1}月`;
+}
+
+function clampCalendarIndex(startIndex, monthCount) {
+  const maxStartIndex = Math.max(0, monthCount - ARCHIVE_CALENDAR_PAGE_SIZE);
+  return Math.min(Math.max(startIndex, 0), maxStartIndex);
+}
+
+function createCalendarNavStatus(monthKeys, startIndex) {
+  const visibleMonths = monthKeys.slice(startIndex, startIndex + ARCHIVE_CALENDAR_PAGE_SIZE);
+
+  if (visibleMonths.length === 0) {
+    return "";
+  }
+
+  if (visibleMonths.length === 1) {
+    return formatMonthLabel(visibleMonths[0]);
+  }
+
+  return `${formatMonthLabel(visibleMonths[0])} - ${formatMonthLabel(visibleMonths[visibleMonths.length - 1])}`;
+}
+
+function createCalendarNavigation(monthKeys, startIndex, onMove) {
+  const controls = createElement("div", { className: "calendar-nav" });
+  const prevButton = createElement("button", { className: "calendar-nav-button", text: "← 前の月" });
+  prevButton.type = "button";
+  prevButton.disabled = startIndex === 0;
+  prevButton.addEventListener("click", () => {
+    onMove(startIndex - ARCHIVE_CALENDAR_PAGE_SIZE);
+  });
+
+  const status = createElement("div", { className: "calendar-nav-status", text: createCalendarNavStatus(monthKeys, startIndex) });
+
+  const nextButton = createElement("button", { className: "calendar-nav-button", text: "次の月 →" });
+  nextButton.type = "button";
+  nextButton.disabled = startIndex + ARCHIVE_CALENDAR_PAGE_SIZE >= monthKeys.length;
+  nextButton.addEventListener("click", () => {
+    onMove(startIndex + ARCHIVE_CALENDAR_PAGE_SIZE);
+  });
+
+  controls.append(prevButton, status, nextButton);
+  return controls;
 }
 
 function setStatus(message = "") {
@@ -232,6 +301,95 @@ function renderFeatured() {
 
   copyBlock.append(primary, meta);
   featuredCardEl.append(media, copyBlock);
+}
+
+function renderArchiveCalendar() {
+  if (!archiveCalendarEl) {
+    return;
+  }
+
+  const datedArchives = archives
+    .filter((archive) => archive.date)
+    .sort((a, b) => String(a.date ?? "").localeCompare(String(b.date ?? "")));
+  const monthKeys = [...new Set(datedArchives.map((archive) => String(archive.date).slice(0, 7)))];
+  const archiveMap = new Map();
+
+  datedArchives.forEach((archive) => {
+    const key = String(archive.date ?? "");
+    if (!archiveMap.has(key)) {
+      archiveMap.set(key, []);
+    }
+    archiveMap.get(key).push(archive);
+  });
+
+  archiveCalendarState.monthKeys = monthKeys;
+  if (archiveCalendarState.startIndex < 0 && monthKeys.length > ARCHIVE_CALENDAR_PAGE_SIZE) {
+    archiveCalendarState.startIndex = Math.max(0, monthKeys.length - ARCHIVE_CALENDAR_PAGE_SIZE);
+  }
+  archiveCalendarState.startIndex = clampCalendarIndex(archiveCalendarState.startIndex, monthKeys.length);
+
+  clearElement(archiveCalendarEl);
+
+  if (monthKeys.length === 0) {
+    archiveCalendarEl.append(createElement("p", { className: "calendar-empty", text: "表示できる開催日データがありません。" }));
+    return;
+  }
+
+  archiveCalendarEl.append(
+    createCalendarNavigation(monthKeys, archiveCalendarState.startIndex, (nextIndex) => {
+      archiveCalendarState.startIndex = clampCalendarIndex(nextIndex, archiveCalendarState.monthKeys.length);
+      renderArchiveCalendar();
+    }),
+  );
+
+  const viewport = createElement("div", { className: "calendar-month-grid archive-calendar-grid" });
+  monthKeys.slice(archiveCalendarState.startIndex, archiveCalendarState.startIndex + ARCHIVE_CALENDAR_PAGE_SIZE).forEach((monthKey) => {
+    const monthDate = toCalendarDate(`${monthKey}-01`);
+    const monthCard = createElement("section", { className: "calendar-month-card" });
+    const heading = createElement("h3", {
+      className: "calendar-month-title",
+      text: `${monthDate.getFullYear()}年${monthDate.getMonth() + 1}月`,
+    });
+    const weekdayRow = createElement("div", { className: "calendar-weekdays" });
+    ["日", "月", "火", "水", "木", "金", "土"].forEach((weekday) => {
+      weekdayRow.append(createElement("span", { text: weekday }));
+    });
+
+    const grid = createElement("div", { className: "calendar-days" });
+    const month = monthDate.getMonth();
+    const offset = monthDate.getDay();
+    const cursor = new Date(monthDate);
+    cursor.setDate(1 - offset);
+
+    for (let index = 0; index < 42; index += 1) {
+      const cell = createElement("div", { className: `calendar-day${cursor.getMonth() !== month ? " is-outside" : ""}` });
+      cell.append(createElement("div", { className: "calendar-day-number", text: String(cursor.getDate()) }));
+
+      const dayArchives = archiveMap.get(toIsoDate(cursor)) || [];
+      if (dayArchives.length > 0) {
+        const list = createElement("div", { className: "calendar-day-entries" });
+        dayArchives.slice(0, 2).forEach((archive) => {
+          const link = createElement("a", { className: "calendar-entry is-archive", text: archive.title || "勉強会" });
+          link.href = archiveDetailUrl(archive);
+          list.append(link);
+        });
+
+        if (dayArchives.length > 2) {
+          list.append(createElement("span", { className: "calendar-more", text: `+${dayArchives.length - 2}` }));
+        }
+
+        cell.append(list);
+      }
+
+      grid.append(cell);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    monthCard.append(heading, weekdayRow, grid);
+    viewport.append(monthCard);
+  });
+
+  archiveCalendarEl.append(viewport);
 }
 
 function syncFilterControls() {
@@ -442,6 +600,7 @@ function renderArchives() {
 
 function render() {
   renderFeatured();
+  renderArchiveCalendar();
   renderThemes();
   renderEntryPicks();
   renderArchives();

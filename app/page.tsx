@@ -132,6 +132,17 @@ export default function HomePage() {
           <span>個別診療の代替ではないことと、症例情報は匿名化前提で公開することを固定表示する想定です。</span>
         </div>
 
+        <section className="panel calendar-panel" aria-labelledby="archive-calendar-heading">
+          <div className="calendar-panel-header">
+            <div>
+              <div className="section-kicker">Study Calendar</div>
+              <h2 id="archive-calendar-heading">勉強会カレンダー</h2>
+              <p className="calendar-panel-copy">開催日ベースでアーカイブを確認できます。日付内のリンクから該当回へ移動できます。</p>
+            </div>
+          </div>
+          <div className="calendar-browser" id="archive-calendar" aria-live="polite"></div>
+        </section>
+
         <div className="layout">
           <aside className="panel theme-panel" id="themes" aria-labelledby="theme-heading">
             <div className="section-kicker">Theme Library</div>

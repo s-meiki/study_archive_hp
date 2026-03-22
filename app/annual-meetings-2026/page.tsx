@@ -88,6 +88,22 @@ export default async function AnnualMeetingsPage() {
 
         <div className="notice meeting-simple-note" id="meeting-pending-note" role="note" hidden></div>
 
+        <section className="panel calendar-panel calendar-panel-expanded" aria-labelledby="meeting-calendar-heading">
+          <div className="calendar-panel-header">
+            <div>
+              <div className="section-kicker">Calendar</div>
+              <h2 id="meeting-calendar-heading">学会カレンダー</h2>
+              <p className="calendar-panel-copy">開催日と主要な募集日程を、月ごとに確認できます。</p>
+            </div>
+            <div className="calendar-legend" aria-label="カレンダー凡例">
+              <span className="calendar-legend-chip is-event">開催</span>
+              <span className="calendar-legend-chip is-abstract">演題募集</span>
+            </div>
+          </div>
+          <div className="notice calendar-inline-note" id="meeting-window-summary" role="note"></div>
+          <div className="calendar-browser" id="meeting-calendar" aria-live="polite"></div>
+        </section>
+
         <section className="meeting-groups" id="meeting-groups" aria-live="polite">
           <div className="status-panel" id="meeting-status-panel" hidden></div>
         </section>
@@ -95,8 +111,8 @@ export default async function AnnualMeetingsPage() {
 
       <SiteFooter />
 
-      <Script src="/data/annual-meetings-2026.js" strategy="afterInteractive" />
-      <Script src="/assets/annual-meetings-2026.js" strategy="afterInteractive" />
+      <Script src="/data/annual-meetings-2026.js" strategy="lazyOnload" />
+      <Script src="/assets/annual-meetings-2026.js" strategy="lazyOnload" />
     </div>
   );
 }
