@@ -249,17 +249,17 @@ window.STUDY_ARCHIVE_DATA = {
       "summary": "AI活用シリーズ第3回。継続運用を前提にした実践共有回。",
       "speaker": "須賀",
       "date": "2025-06-10",
-      "updatedAt": "2025-06-10",
+      "updatedAt": "2026-03-22",
       "duration": "未記載",
       "featured": false,
       "assets": {
-        "recording": false,
+        "recording": true,
         "slides": false,
         "notes": false,
         "references": false
       },
       "links": {
-        "recording": "",
+        "recording": "https://youtu.be/ysDbkzlmS0I",
         "slides": "",
         "notes": "",
         "references": ""
