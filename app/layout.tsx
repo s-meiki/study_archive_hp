@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "../public/assets/styles.css";
 import "./globals.css";
 import { siteUrl } from "./site-url";
 

@@ -154,6 +154,10 @@ function latestUpdatedArchiveForTheme(themeId) {
   return [...themeArchives].sort(compareUpdatedArchives)[0] ?? null;
 }
 
+function latestUpdatedArchive() {
+  return [...archives].sort(compareUpdatedArchives)[0] ?? null;
+}
+
 function allArchivesSorted() {
   return [...archives].sort((a, b) => String(b.date ?? "").localeCompare(String(a.date ?? "")));
 }
@@ -179,8 +183,8 @@ function filteredArchives() {
   });
 }
 
-function featuredArchiveForTheme(themeId) {
-  return latestUpdatedArchiveForTheme(themeId);
+function featuredArchive() {
+  return latestUpdatedArchive();
 }
 
 function archiveDetailUrl(archive) {
@@ -190,8 +194,8 @@ function archiveDetailUrl(archive) {
 function renderFeatured() {
   clearElement(featuredCardEl);
 
-  const theme = themeById(state.themeId);
-  const featured = featuredArchiveForTheme(state.themeId);
+  const featured = featuredArchive();
+  const theme = themeById(featured?.themeId ?? "");
 
   if (!featured || !theme) {
     return;
@@ -216,7 +220,7 @@ function renderFeatured() {
   titleLink.href = archiveDetailUrl(featured);
   heading.append(titleLink);
 
-  const intro = createElement("p", { text: `${theme.name}テーマで最新に更新された1件です。` });
+  const intro = createElement("p", { text: "アーカイブ全体で最新に追加・更新された1件です。" });
   primary.append(heading, intro);
 
   const meta = createElement("div", { className: "feature-meta" });

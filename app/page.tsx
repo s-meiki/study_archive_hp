@@ -165,9 +165,9 @@ export default function HomePage() {
 
       <SiteFooter />
 
-      <Script src="/assets/site-data-utils.js" strategy="afterInteractive" />
-      <Script src="/data/site-content.js" strategy="afterInteractive" />
-      <Script src="/assets/app.js" strategy="afterInteractive" />
+      <Script src="/assets/site-data-utils.js" strategy="lazyOnload" />
+      <Script src="/data/site-content.js" strategy="lazyOnload" />
+      <Script src="/assets/app.js" strategy="lazyOnload" />
     </div>
   );
 }

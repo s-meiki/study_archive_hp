@@ -1,3 +1,5 @@
+@import "../public/assets/styles.css";
+
 .contact-main {
   display: grid;
   gap: 18px;
