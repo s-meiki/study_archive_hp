@@ -8,15 +8,62 @@ const meetingGroupsEl = document.querySelector("#meeting-groups");
 const lastVerifiedEl = document.querySelector("#meeting-last-verified");
 const pendingNoteEl = document.querySelector("#meeting-pending-note");
 const statusPanelEl = document.querySelector("#meeting-status-panel");
+const meetingTabButtons = [...document.querySelectorAll("[data-meeting-tab]")];
+const meetingTabPanels = [...document.querySelectorAll("[data-meeting-panel]")];
 
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 const meetingCalendarState = {
   monthKeys: [],
   startIndex: 0,
 };
+const meetingViewState = {
+  activeTab: "list",
+};
 
 function clearElement(element) {
   element.replaceChildren();
+}
+
+function setActiveMeetingTab(nextTab) {
+  meetingViewState.activeTab = nextTab;
+
+  meetingTabButtons.forEach((button) => {
+    const isActive = button.dataset.meetingTab === nextTab;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+    button.tabIndex = isActive ? 0 : -1;
+  });
+
+  meetingTabPanels.forEach((panel) => {
+    panel.hidden = panel.dataset.meetingPanel !== nextTab;
+  });
+}
+
+function setupMeetingTabs() {
+  if (meetingTabButtons.length === 0 || meetingTabPanels.length === 0) {
+    return;
+  }
+
+  setActiveMeetingTab(meetingViewState.activeTab);
+
+  meetingTabButtons.forEach((button, index) => {
+    button.addEventListener("click", () => {
+      setActiveMeetingTab(button.dataset.meetingTab || "calendar");
+    });
+
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+        return;
+      }
+
+      event.preventDefault();
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const nextIndex = (index + direction + meetingTabButtons.length) % meetingTabButtons.length;
+      const nextButton = meetingTabButtons[nextIndex];
+      setActiveMeetingTab(nextButton.dataset.meetingTab || "calendar");
+      nextButton.focus();
+    });
+  });
 }
 
 function normalizeExternalUrl(value) {
@@ -798,4 +845,5 @@ function loadMeetingData() {
   }
 }
 
+setupMeetingTabs();
 loadMeetingData();

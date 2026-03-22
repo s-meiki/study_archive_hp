@@ -88,25 +88,70 @@ export default async function AnnualMeetingsPage() {
 
         <div className="notice meeting-simple-note" id="meeting-pending-note" role="note" hidden></div>
 
-        <section className="panel calendar-panel calendar-panel-expanded" aria-labelledby="meeting-calendar-heading">
-          <div className="calendar-panel-header">
-            <div>
-              <div className="section-kicker">Calendar</div>
-              <h2 id="meeting-calendar-heading">学会カレンダー</h2>
-              <p className="calendar-panel-copy">開催日と主要な募集日程を、月ごとに確認できます。</p>
-            </div>
-            <div className="calendar-legend" aria-label="カレンダー凡例">
-              <span className="calendar-legend-chip is-event">開催</span>
-              <span className="calendar-legend-chip is-abstract">演題募集</span>
-            </div>
+        <div className="meeting-tabs" aria-label="表示切り替え">
+          <div className="meeting-tab-list" role="tablist" aria-label="学会表示タブ">
+            <button
+              className="meeting-tab-button"
+              id="meeting-tab-calendar"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="meeting-panel-calendar"
+              data-meeting-tab="calendar"
+              tabIndex={-1}
+            >
+              学会カレンダー
+            </button>
+            <button
+              className="meeting-tab-button is-active"
+              id="meeting-tab-list"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              aria-controls="meeting-panel-list"
+              data-meeting-tab="list"
+            >
+              学会一覧
+            </button>
           </div>
-          <div className="notice calendar-inline-note" id="meeting-window-summary" role="note"></div>
-          <div className="calendar-browser" id="meeting-calendar" aria-live="polite"></div>
-        </section>
 
-        <section className="meeting-groups" id="meeting-groups" aria-live="polite">
-          <div className="status-panel" id="meeting-status-panel" hidden></div>
-        </section>
+          <div
+            id="meeting-panel-calendar"
+            className="meeting-tab-panel"
+            role="tabpanel"
+            aria-labelledby="meeting-tab-calendar"
+            data-meeting-panel="calendar"
+            hidden
+          >
+            <section className="panel calendar-panel calendar-panel-expanded" aria-labelledby="meeting-calendar-heading">
+              <div className="calendar-panel-header">
+                <div>
+                  <div className="section-kicker">Calendar</div>
+                  <h2 id="meeting-calendar-heading">学会カレンダー</h2>
+                  <p className="calendar-panel-copy">開催日と主要な募集日程を、月ごとに確認できます。</p>
+                </div>
+                <div className="calendar-legend" aria-label="カレンダー凡例">
+                  <span className="calendar-legend-chip is-event">開催</span>
+                  <span className="calendar-legend-chip is-abstract">演題募集</span>
+                </div>
+              </div>
+              <div className="notice calendar-inline-note" id="meeting-window-summary" role="note"></div>
+              <div className="calendar-browser" id="meeting-calendar" aria-live="polite"></div>
+            </section>
+          </div>
+
+          <div
+            id="meeting-panel-list"
+            className="meeting-tab-panel"
+            role="tabpanel"
+            aria-labelledby="meeting-tab-list"
+            data-meeting-panel="list"
+          >
+            <section className="meeting-groups" id="meeting-groups" aria-live="polite">
+              <div className="status-panel" id="meeting-status-panel" hidden></div>
+            </section>
+          </div>
+        </div>
       </main>
 
       <SiteFooter />
