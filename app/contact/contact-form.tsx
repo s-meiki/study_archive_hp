@@ -36,6 +36,8 @@ const initialState: SubmitState = {
   type: "idle",
   message: ""
 };
+const requiredFieldsMessage = "必須項目が入力されていません。赤い ** の付いた項目を確認してください。";
+const invalidFieldsMessage = "入力内容を確認してください。";
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error && error.message) {
@@ -90,6 +92,18 @@ function RequiredLabel({ htmlFor, children }: { htmlFor: string; children: strin
   );
 }
 
+function getValidationMessage(field: HTMLInputElement | HTMLTextAreaElement) {
+  if (field.validity.valueMissing) {
+    return "必須項目です。入力してください。";
+  }
+
+  if (field.validity.typeMismatch && field instanceof HTMLInputElement && field.type === "email") {
+    return "メールアドレスの形式で入力してください。";
+  }
+
+  return "入力内容を確認してください。";
+}
+
 export default function ContactForm({ siteKey }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
@@ -101,6 +115,40 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
   const [isScriptReady, setIsScriptReady] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>(initialState);
+
+  function clearClientValidationMessage() {
+    setSubmitState((currentState) => {
+      if (
+        currentState.type === "error" &&
+        (currentState.message === requiredFieldsMessage || currentState.message === invalidFieldsMessage)
+      ) {
+        return initialState;
+      }
+
+      return currentState;
+    });
+  }
+
+  function updateFieldValue(
+    nextValue: string,
+    setter: (value: string) => void,
+    field: HTMLInputElement | HTMLTextAreaElement
+  ) {
+    field.setCustomValidity("");
+    setter(nextValue);
+
+    if (field.validity.valid && formRef.current?.checkValidity()) {
+      clearClientValidationMessage();
+    }
+  }
+
+  function handleFieldInvalid(field: HTMLInputElement | HTMLTextAreaElement) {
+    field.setCustomValidity(getValidationMessage(field));
+    setSubmitState({
+      type: "error",
+      message: field.validity.valueMissing ? requiredFieldsMessage : invalidFieldsMessage
+    });
+  }
 
   useEffect(() => {
     if (!siteKey || !isScriptReady || !widgetContainerRef.current || !window.turnstile || widgetIdRef.current) {
@@ -233,7 +281,8 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
             placeholder="例: 山田 太郎"
             required
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onInvalid={(event) => handleFieldInvalid(event.currentTarget)}
+            onChange={(event) => updateFieldValue(event.target.value, setName, event.currentTarget)}
           />
         </div>
 
@@ -247,7 +296,8 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
             placeholder="example@example.com"
             required
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onInvalid={(event) => handleFieldInvalid(event.currentTarget)}
+            onChange={(event) => updateFieldValue(event.target.value, setEmail, event.currentTarget)}
           />
         </div>
 
@@ -259,7 +309,8 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
             placeholder="対象ページや確認したい点を記載してください"
             required
             value={message}
-            onChange={(event) => setMessage(event.target.value)}
+            onInvalid={(event) => handleFieldInvalid(event.currentTarget)}
+            onChange={(event) => updateFieldValue(event.target.value, setMessage, event.currentTarget)}
           />
         </div>
 
