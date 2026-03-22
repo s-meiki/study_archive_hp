@@ -58,6 +58,7 @@ export default function ContactPage() {
                 </span>
               </span>
             </div>
+            <p className="contact-required-note">赤い ** が付いた項目は必須です。</p>
             <ContactForm siteKey={siteKey} />
           </div>
         </section>

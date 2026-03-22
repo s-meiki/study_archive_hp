@@ -78,6 +78,18 @@ function getTurnstileErrorMessage(errorCode?: string | number) {
   }
 }
 
+function RequiredLabel({ htmlFor, children }: { htmlFor: string; children: string }) {
+  return (
+    <label htmlFor={htmlFor} className="contact-field-label">
+      <span>{children}</span>
+      <span className="contact-required-badge" aria-hidden="true">
+        **
+      </span>
+      <span className="contact-visually-hidden">必須項目</span>
+    </label>
+  );
+}
+
 export default function ContactForm({ siteKey }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
@@ -212,7 +224,7 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
 
       <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
         <div className="contact-field">
-          <label htmlFor="contact-name">お名前</label>
+          <RequiredLabel htmlFor="contact-name">お名前</RequiredLabel>
           <input
             id="contact-name"
             name="name"
@@ -226,7 +238,7 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
         </div>
 
         <div className="contact-field">
-          <label htmlFor="contact-email">メールアドレス</label>
+          <RequiredLabel htmlFor="contact-email">メールアドレス</RequiredLabel>
           <input
             id="contact-email"
             name="email"
@@ -240,7 +252,7 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
         </div>
 
         <div className="contact-field">
-          <label htmlFor="contact-message">お問い合わせ内容</label>
+          <RequiredLabel htmlFor="contact-message">お問い合わせ内容</RequiredLabel>
           <textarea
             id="contact-message"
             name="message"
