@@ -96,6 +96,48 @@ function createElement(tagName, options = {}) {
   return element;
 }
 
+function hexToRgb(hexColor) {
+  const value = String(hexColor ?? "").trim().replace("#", "");
+
+  if (!/^[0-9a-f]{6}$/i.test(value)) {
+    return null;
+  }
+
+  return {
+    r: Number.parseInt(value.slice(0, 2), 16),
+    g: Number.parseInt(value.slice(2, 4), 16),
+    b: Number.parseInt(value.slice(4, 6), 16),
+  };
+}
+
+function rgbaFromHex(hexColor, alpha) {
+  const rgb = hexToRgb(hexColor);
+
+  if (!rgb) {
+    return "";
+  }
+
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+
+function applyThemeAccent(element, themeId, variant = "soft") {
+  const colors = dataUtils.getThemeColors(themeId || "");
+  const start = dataUtils.sanitizeColor(colors.start, "#365a5c");
+  const end = dataUtils.sanitizeColor(colors.end, "#9dbab7");
+
+  if (variant === "button") {
+    element.style.setProperty("--theme-bg", `linear-gradient(135deg, ${rgbaFromHex(start, 0.16)}, ${rgbaFromHex(end, 0.28)})`);
+    element.style.setProperty("--theme-border", rgbaFromHex(start, 0.28));
+    element.style.setProperty("--theme-text", start);
+    element.style.setProperty("--theme-count-bg", rgbaFromHex(start, 0.08));
+    return;
+  }
+
+  element.style.setProperty("--calendar-entry-bg", `linear-gradient(135deg, ${rgbaFromHex(start, 0.15)}, ${rgbaFromHex(end, 0.24)})`);
+  element.style.setProperty("--calendar-entry-border", rgbaFromHex(start, 0.26));
+  element.style.setProperty("--calendar-entry-text", start);
+}
+
 function setThumbnailStyles(element, thumbnail, archive = null) {
   const fallback = dataUtils.getThemeColors("");
   element.style.setProperty("--thumb-a", dataUtils.sanitizeColor(thumbnail?.start, fallback.start));
@@ -412,6 +454,7 @@ function renderArchiveCalendar() {
         dayArchives.slice(0, 2).forEach((archive) => {
           const link = createElement("a", { className: "calendar-entry is-archive", text: archive.title || "勉強会" });
           link.href = archiveDetailUrl(archive);
+          applyThemeAccent(link, archive.themeId, "calendar");
           list.append(link);
         });
 
@@ -525,6 +568,7 @@ function renderThemes() {
     });
     button.type = "button";
     button.dataset.themeId = theme.id;
+    applyThemeAccent(button, theme.id, "button");
 
     const copyGroup = document.createElement("span");
     copyGroup.append(
