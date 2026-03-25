@@ -39,17 +39,17 @@ window.STUDY_ARCHIVE_DATA = {
       "summary": "感染症治療の全体像と抗菌薬の考え方を整理する勉強会。",
       "speaker": "須賀",
       "date": "2026-03-18",
-      "updatedAt": "2026-03-19",
+      "updatedAt": "2026-03-25",
       "duration": "未記載",
       "featured": true,
       "assets": {
-        "recording": false,
+        "recording": true,
         "slides": true,
         "notes": false,
         "references": false
       },
       "links": {
-        "recording": "",
+        "recording": "https://youtu.be/Fc-r7ND8iFU",
         "slides": "uploads/2026-03/archive-qo54y5/slides/",
         "notes": "",
         "references": ""
