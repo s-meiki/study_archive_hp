@@ -404,6 +404,16 @@
   }
 
   function getArchiveThumbnailUrl(archive, basePath = "./") {
+    const recordingUrl = normalizeLinkUrl(archive?.detail?.video?.url || archive?.links?.recording, {
+      allowRelative: false,
+      allowHash: false,
+    });
+    const recordingThumbnailUrl = getYouTubeThumbnailUrl(recordingUrl);
+
+    if (recordingThumbnailUrl) {
+      return recordingThumbnailUrl;
+    }
+
     const customImage =
       normalizeLinkUrl(archive?.thumbnail?.image, { allowRelative: true, allowHash: false }) ||
       normalizeLinkUrl(archive?.thumbnail?.imageUrl, { allowRelative: true, allowHash: false });
@@ -412,11 +422,7 @@
       return resolveSiteUrl(customImage, basePath);
     }
 
-    const recordingUrl = normalizeLinkUrl(archive?.detail?.video?.url || archive?.links?.recording, {
-      allowRelative: false,
-      allowHash: false,
-    });
-    return getYouTubeThumbnailUrl(recordingUrl);
+    return "";
   }
 
   function getThemeColors(themeId) {

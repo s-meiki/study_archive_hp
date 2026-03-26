@@ -17,6 +17,25 @@ const chaptersEl = document.querySelector("#detail-chapters");
 const materialsEl = document.querySelector("#detail-materials");
 const relatedPanelEl = document.querySelector("#detail-related-panel");
 const relatedEl = document.querySelector("#detail-related");
+const hasDetailPageShell = [
+  statusPanelEl,
+  breadcrumbCurrentEl,
+  heroEl,
+  titleEl,
+  leadEl,
+  metaEl,
+  layoutEl,
+  emptyEl,
+  overviewEl,
+  videoPlayerEl,
+  keypointsPanelEl,
+  keypointsEl,
+  chaptersPanelEl,
+  chaptersEl,
+  materialsEl,
+  relatedPanelEl,
+  relatedEl,
+].every(Boolean);
 
 function clearElement(element) {
   element.replaceChildren();
@@ -47,6 +66,10 @@ function formatDate(dateString) {
 }
 
 function setStatus(message = "") {
+  if (!statusPanelEl) {
+    return;
+  }
+
   if (!message) {
     statusPanelEl.hidden = true;
     statusPanelEl.textContent = "";
@@ -409,6 +432,10 @@ function showEmptyState(message) {
 }
 
 function loadArchivePage() {
+  if (!hasDetailPageShell) {
+    return;
+  }
+
   setStatus("アーカイブ詳細を読み込んでいます。");
 
   try {

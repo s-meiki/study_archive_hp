@@ -49,7 +49,7 @@ window.STUDY_ARCHIVE_DATA = {
         "references": false
       },
       "links": {
-        "recording": "https://youtu.be/Fc-r7ND8iFU",
+        "recording": "https://youtu.be/LJUqkw43Mfc",
         "slides": "uploads/2026-03/archive-qo54y5/slides/",
         "notes": "",
         "references": ""

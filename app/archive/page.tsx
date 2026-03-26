@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import SiteFooter from "../site-footer";
-import { findArchiveById } from "../site-data";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
 
@@ -18,12 +17,11 @@ function firstQueryValue(value: string | string[] | undefined) {
 export async function generateMetadata({ searchParams }: ArchivePageProps): Promise<Metadata> {
   const params = await searchParams;
   const archiveId = firstQueryValue(params.id) ?? "";
-  const archive = await findArchiveById(archiveId);
   const canonicalPath = archiveId ? `/archive?id=${encodeURIComponent(archiveId)}` : "/archive";
   const canonicalUrl = absoluteSiteUrl(canonicalPath);
   const ogImageUrl = absoluteSiteUrl("/images/ogp.png");
-  const title = archive ? `${archive.title} | ${siteLegal.shortSiteName}` : `勉強会アーカイブ詳細 | ${siteLegal.shortSiteName}`;
-  const description = archive?.summary || "勉強会アーカイブの詳細ページです。動画、資料、要点を確認できます。";
+  const title = `勉強会アーカイブ詳細 | ${siteLegal.shortSiteName}`;
+  const description = "勉強会アーカイブの詳細ページです。動画、資料、要点を確認できます。";
 
   return {
     title,
