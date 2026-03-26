@@ -2,6 +2,8 @@ let themes = [];
 let archives = [];
 const dataUtils = window.StudyArchiveDataUtils;
 const ARCHIVE_CALENDAR_PAGE_SIZE = 1;
+const SITE_DATA_RETRY_LIMIT = 40;
+const SITE_DATA_RETRY_DELAY_MS = 100;
 
 const state = {
   themeId: "",
@@ -719,24 +721,41 @@ clearFiltersEl.addEventListener("click", () => {
 
 function loadSiteData() {
   setStatus("データを読み込んでいます。");
+  const attemptLoad = (attempt = 0) => {
+    try {
+      if (!dataUtils?.hasValidSiteData || !dataUtils?.cloneSiteData) {
+        if (attempt < SITE_DATA_RETRY_LIMIT) {
+          window.setTimeout(() => attemptLoad(attempt + 1), SITE_DATA_RETRY_DELAY_MS);
+          return;
+        }
 
-  try {
-    const data = window.STUDY_ARCHIVE_DATA;
+        throw new Error("Site data utils not ready");
+      }
 
-    if (!dataUtils.hasValidSiteData(data)) {
-      throw new Error("Invalid data shape");
+      const data = window.STUDY_ARCHIVE_DATA;
+
+      if (!dataUtils.hasValidSiteData(data)) {
+        if (attempt < SITE_DATA_RETRY_LIMIT) {
+          window.setTimeout(() => attemptLoad(attempt + 1), SITE_DATA_RETRY_DELAY_MS);
+          return;
+        }
+
+        throw new Error("Invalid data shape");
+      }
+
+      applySiteData(dataUtils.cloneSiteData(data));
+    } catch (error) {
+      console.error(error);
+      emptyStateEl.hidden = true;
+      clearElement(archiveListEl);
+      clearElement(featuredCardEl);
+      clearElement(themeListEl);
+
+      setStatus("データを読み込めませんでした。data/site-content.js の内容を確認してください。");
     }
+  };
 
-    applySiteData(dataUtils.cloneSiteData(data));
-  } catch (error) {
-    console.error(error);
-    emptyStateEl.hidden = true;
-    clearElement(archiveListEl);
-    clearElement(featuredCardEl);
-    clearElement(themeListEl);
-
-    setStatus("データを読み込めませんでした。data/site-content.js の内容を確認してください。");
-  }
+  attemptLoad();
 }
 
 loadSiteData();

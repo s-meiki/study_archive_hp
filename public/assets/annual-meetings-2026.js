@@ -1,6 +1,8 @@
 let meetingData = null;
 let meetings = [];
 const MEETING_CALENDAR_PAGE_SIZE = 1;
+const MEETING_DATA_RETRY_LIMIT = 40;
+const MEETING_DATA_RETRY_DELAY_MS = 100;
 
 const meetingCalendarEl = document.querySelector("#meeting-calendar");
 const meetingWindowSummaryEl = document.querySelector("#meeting-window-summary");
@@ -829,20 +831,28 @@ function applyMeetingData(data) {
 
 function loadMeetingData() {
   setStatus("データを読み込んでいます。");
+  const attemptLoad = (attempt = 0) => {
+    try {
+      const data = window.ANNUAL_MEETINGS_2026_DATA;
 
-  try {
-    const data = window.ANNUAL_MEETINGS_2026_DATA;
+      if (!hasValidMeetingData(data)) {
+        if (attempt < MEETING_DATA_RETRY_LIMIT) {
+          window.setTimeout(() => attemptLoad(attempt + 1), MEETING_DATA_RETRY_DELAY_MS);
+          return;
+        }
 
-    if (!hasValidMeetingData(data)) {
-      throw new Error("Invalid meeting data");
+        throw new Error("Invalid meeting data");
+      }
+
+      applyMeetingData(cloneMeetingData(data));
+    } catch (error) {
+      console.error(error);
+      clearElement(meetingGroupsEl);
+      setStatus("データを読み込めませんでした。data/annual-meetings-2026.js の内容を確認してください。");
     }
+  };
 
-    applyMeetingData(cloneMeetingData(data));
-  } catch (error) {
-    console.error(error);
-    clearElement(meetingGroupsEl);
-    setStatus("データを読み込めませんでした。data/annual-meetings-2026.js の内容を確認してください。");
-  }
+  attemptLoad();
 }
 
 setupMeetingTabs();
