@@ -33,6 +33,118 @@ window.STUDY_ARCHIVE_DATA = {
   ],
   "archives": [
     {
+      "id": "archive-20260515-4799a9755a",
+      "themeId": "foundations",
+      "title": "病院薬剤師の仕事",
+      "summary": "病院薬剤師の役割と日常業務の全体像を整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-05-15",
+      "updatedAt": "2026-05-21",
+      "duration": "未記載",
+      "featured": true,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/DkLGmSEnxtE",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5d5b47",
+        "end": "#b4b08c"
+      },
+      "detail": {
+        "overview": "病院薬剤師の仕事をテーマに、病棟・調剤・医薬品管理など日常業務の全体像を見直しやすい回です。\n薬剤師の役割を整理しながら、チーム医療の中でどこに関わるかを確認できます。",
+        "keyPoints": [
+          "病院薬剤師の主な業務と役割を整理する",
+          "患者対応やチーム医療で求められる視点を確認する",
+          "日常業務の流れと学習課題をつなげて考える"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
+    {
+      "id": "archive-20260424-7f508bbae8",
+      "themeId": "infectious",
+      "title": "感染症治療~肺炎~",
+      "summary": "肺炎をテーマに感染症治療の考え方と抗菌薬選択を確認する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-04-24",
+      "updatedAt": "2026-05-21",
+      "duration": "未記載",
+      "featured": true,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/blU0L_9E2fk",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#4f6244",
+        "end": "#a7bc96"
+      },
+      "detail": {
+        "overview": "感染症治療のうち肺炎に焦点を当て、初期評価から抗菌薬選択までを復習しやすい回です。\n感染症治療の総説回とあわせて見返すことで、肺炎診療で確認したい判断点を整理できます。",
+        "keyPoints": [
+          "肺炎の評価で確認すべき臨床情報を整理する",
+          "想定される原因菌と抗菌薬選択の考え方を確認する",
+          "治療効果判定と見直しのタイミングを押さえる"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
+    {
+      "id": "archive-20260408-3a9fc4db6d",
+      "themeId": "foundations",
+      "title": "poly pharmacyについて",
+      "summary": "ポリファーマシーの考え方と実務での見直しポイントを整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-04-08",
+      "updatedAt": "2026-05-22",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": true,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/PL22Uv4glpI",
+        "slides": "https://docs.google.com/presentation/d/1lJ-mFa7dktfPYh2yd0R8ClLQ9JRPJy045IlH-lzXVzQ/edit?usp=sharing",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5d5b47",
+        "end": "#b4b08c"
+      },
+      "detail": {
+        "overview": "ポリファーマシーをテーマに、薬剤数だけでなく患者背景や治療目的から処方を見直す視点を整理する回です。\n日常業務で処方全体を確認するときの着眼点を復習できます。",
+        "slideLabel": "スライド（ダウンロード用）",
+        "keyPoints": [
+          "ポリファーマシーの考え方と問題点を整理する",
+          "処方見直しで確認する患者背景と治療目的を押さえる",
+          "多職種で共有しやすい介入ポイントを考える"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
+    {
       "id": "archive-20260318-1yp7m9p",
       "themeId": "infectious",
       "title": "感染症治療 ~総説~",
@@ -41,7 +153,7 @@ window.STUDY_ARCHIVE_DATA = {
       "date": "2026-03-18",
       "updatedAt": "2026-03-25",
       "duration": "未記載",
-      "featured": true,
+      "featured": false,
       "assets": {
         "recording": true,
         "slides": true,
@@ -467,7 +579,7 @@ window.STUDY_ARCHIVE_DATA = {
       "date": "2026-01-16",
       "updatedAt": "2026-01-16",
       "duration": "未記載",
-      "featured": true,
+      "featured": false,
       "assets": {
         "recording": false,
         "slides": false,

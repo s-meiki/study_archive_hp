@@ -77,6 +77,9 @@ SUMMARY_OVERRIDES = {
     "脳卒中（出血性疾患編）": "脳卒中のうち出血性疾患に焦点を当てて病態と治療を整理する回。",
     "「虚血性心疾患の薬物治療」": "虚血性心疾患に対する薬物治療の考え方を整理する勉強会。",
     "「心房細動の薬物治療」": "心房細動に対する薬物治療の基本と処方の見方を確認する勉強会。",
+    "poly pharmacyについて": "ポリファーマシーの考え方と実務での見直しポイントを整理する勉強会。",
+    "感染症治療~肺炎~": "肺炎をテーマに感染症治療の考え方と抗菌薬選択を確認する勉強会。",
+    "病院薬剤師の仕事": "病院薬剤師の役割と日常業務の全体像を整理する勉強会。",
 }
 
 THEME_DETAIL_TEMPLATES = {
@@ -397,7 +400,7 @@ def classify_theme(title):
         return "neurology"
     if any(keyword in title for keyword in ["感染症", "抗菌", "感染"]):
         return "infectious"
-    if any(keyword in title for keyword in ["輸液", "基礎"]):
+    if any(keyword in title for keyword in ["輸液", "基礎", "poly pharmacy", "ポリファーマシー", "病院薬剤師"]):
         return "foundations"
     if "AI" in title:
         return "ai-utilization"

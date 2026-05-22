@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-03-22",
+  "verifiedAt": "2026-05-21",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -28,6 +28,37 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "公式サイト",
           "url": "https://www.c-linkage.co.jp/yakugakutaikai73/"
+        },
+        {
+          "label": "一般演題募集",
+          "url": "https://www.c-linkage.co.jp/yakugakutaikai73/abstracts.html"
+        },
+        {
+          "label": "参加登録申込",
+          "url": "https://www.c-linkage.co.jp/yakugakutaikai73/registration.html"
+        }
+      ],
+      "milestones": [
+        {
+          "id": "hokkaido-pharma-73-registration-advance",
+          "label": "事前参加登録",
+          "category": "registration",
+          "startDate": "2026-03-03",
+          "endDate": "2026-05-08"
+        },
+        {
+          "id": "hokkaido-pharma-73-registration-late",
+          "label": "直前参加登録",
+          "category": "registration",
+          "startDate": "2026-05-09",
+          "endDate": "2026-05-29"
+        },
+        {
+          "id": "hokkaido-pharma-73-registration-onsite",
+          "label": "当日参加登録",
+          "category": "registration",
+          "startDate": "2026-05-30",
+          "endDate": "2026-05-31"
         }
       ]
     },
@@ -62,7 +93,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "id": "clinical-emergency-29-registration",
           "label": "参加登録",
           "category": "registration",
-          "note": "公式ページでは参加登録の案内は準備中です。"
+          "startDate": "2026-06-01",
+          "endDate": "2026-08-28"
         }
       ],
       "sources": [
@@ -104,13 +136,21 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "演題募集",
           "category": "abstract",
           "startDate": "2026-02-02",
-          "endDate": "2026-04-12"
+          "endDate": "2026-04-30"
         },
         {
-          "id": "medical-pharmacy-forum-2026-registration",
-          "label": "参加登録",
+          "id": "medical-pharmacy-forum-2026-registration-advance",
+          "label": "事前参加登録",
           "category": "registration",
-          "note": "公式ページでは参加登録は準備中です。"
+          "startDate": "2026-04-01",
+          "endDate": "2026-05-24"
+        },
+        {
+          "id": "medical-pharmacy-forum-2026-registration-onsite",
+          "label": "直前・当日参加登録",
+          "category": "registration",
+          "startDate": "2026-05-25",
+          "endDate": "2026-06-21"
         }
       ],
       "sources": [
@@ -154,6 +194,30 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "公式サイト",
           "url": "https://www.jsct48.jp/"
+        },
+        {
+          "label": "演題募集のご案内",
+          "url": "https://jsct48.jp/abstract.html"
+        },
+        {
+          "label": "参加登録",
+          "url": "https://jsct48.jp/registration.html"
+        }
+      ],
+      "milestones": [
+        {
+          "id": "jsct-48-abstract",
+          "label": "演題募集",
+          "category": "abstract",
+          "startDate": "2026-02-16",
+          "endDate": "2026-04-20",
+          "note": "公式ページでは締切済みと案内されています。"
+        },
+        {
+          "id": "jsct-48-registration",
+          "label": "参加登録",
+          "category": "registration",
+          "note": "公式ページでは参加登録は準備中です。"
         }
       ]
     },
@@ -174,7 +238,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "",
       "leadLabel": "会長 / 実行委員長",
       "lead": "寺田 智祐 / 中川 俊作（京都大学医学部附属病院 薬剤部）",
-      "note": "2026年3月9日時点で大会テーマの明記は未確認です。",
+      "note": "2026年5月21日時点で大会テーマの明記は未確認です。公式サイトでは2026年5月11日に採択演題一覧が掲載されています。",
       "milestones": [
         {
           "id": "tdm-42-abstract",
@@ -183,6 +247,20 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "startDate": "2025-12-24",
           "endDate": "2026-03-18",
           "note": "公式案内では締切延長後の期間として掲載されています。"
+        },
+        {
+          "id": "tdm-42-registration-early",
+          "label": "早期参加登録",
+          "category": "registration",
+          "startDate": "2026-04-08",
+          "endDate": "2026-06-24"
+        },
+        {
+          "id": "tdm-42-registration-standard",
+          "label": "通常参加登録",
+          "category": "registration",
+          "startDate": "2026-06-25",
+          "endDate": "2026-07-05"
         }
       ],
       "sources": [
@@ -197,6 +275,10 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "演題募集締切延長の案内",
           "url": "https://kwcs.jp/tdm2026/entyou.html"
+        },
+        {
+          "label": "参加登録",
+          "url": "https://kwcs.jp/tdm2026/reg.html"
         }
       ]
     },
@@ -286,6 +368,25 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "会長挨拶",
           "url": "https://www.c-linkage.co.jp/36jsphcs/greeting.html"
+        },
+        {
+          "label": "一般演題登録",
+          "url": "https://www.c-linkage.co.jp/36jsphcs/abstract.html"
+        }
+      ],
+      "milestones": [
+        {
+          "id": "jsphcs-36-abstract",
+          "label": "一般演題登録",
+          "category": "abstract",
+          "startDate": "2026-03-24",
+          "endDate": "2026-05-27"
+        },
+        {
+          "id": "jsphcs-36-registration",
+          "label": "参加登録",
+          "category": "registration",
+          "note": "公式ページでは参加登録は6月開始予定です。"
         }
       ]
     },
@@ -316,31 +417,58 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     },
     {
       "id": "stroke-2027",
-      "primaryUrl": "https://www.jsts.gr.jp/meeting/index.html",
-      "imageUrl": "https://www.jsts.gr.jp/asset/img/sp_top_logo.jpg",
+      "primaryUrl": "https://www.congre.co.jp/stroke2027/",
+      "imageUrl": "https://www.congre.co.jp/stroke2027/images/society-title.png",
       "imageFit": "contain",
       "scope": "national",
       "displayMonth": 3,
-      "status": "pending",
+      "status": "confirmed",
       "society": "日本脳卒中学会",
-      "eventName": "日本脳卒中学会学術集会（2027年開催分）",
-      "startDate": "",
-      "endDate": "",
-      "sortDate": "2027-03-31",
-      "city": "",
-      "venue": "",
-      "theme": "",
-      "leadLabel": "",
-      "lead": "",
-      "note": "2026年3月9日時点で、日本脳卒中学会の学術集会案内ページは第51回（2026年開催分）までの掲載で、2027年開催分の会期・会場は未公表です。",
+      "eventName": "STROKE 2027／第52回日本脳卒中学会学術集会",
+      "startDate": "2027-03-18",
+      "endDate": "2027-03-20",
+      "city": "東京",
+      "venue": "東京国際フォーラム",
+      "theme": "シン・脳卒中医療：未来への提言",
+      "leadLabel": "会長",
+      "lead": "平野 照之（杏林大学医学部 脳卒中医学・脳神経内科学）",
+      "note": "2026年度の3月枠として、2027年3月開催分を掲載しています。",
       "sources": [
+        {
+          "label": "STROKE2027 公式サイト",
+          "url": "https://www.congre.co.jp/stroke2027/"
+        },
+        {
+          "label": "開催概要",
+          "url": "https://www.congre.co.jp/stroke2027/outline.html"
+        },
+        {
+          "label": "演題募集",
+          "url": "https://www.congre.co.jp/stroke2027/cfa.html"
+        },
+        {
+          "label": "参加登録",
+          "url": "https://www.congre.co.jp/stroke2027/registration.html"
+        },
         {
           "label": "学術集会案内",
           "url": "https://www.jsts.gr.jp/meeting/index.html"
+        }
+      ],
+      "milestones": [
+        {
+          "id": "stroke-2027-abstract",
+          "label": "演題募集",
+          "category": "abstract",
+          "startDate": "2026-08-04",
+          "endDate": "2026-09-30",
+          "note": "演題募集ページは準備中ですが、公式サイトのトップ画像で募集期間が案内されています。"
         },
         {
-          "label": "学会トップ",
-          "url": "https://www.jsts.gr.jp/"
+          "id": "stroke-2027-registration",
+          "label": "参加登録",
+          "category": "registration",
+          "note": "公式ページでは参加登録の案内は準備中です。"
         }
       ]
     }
