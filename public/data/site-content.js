@@ -39,18 +39,18 @@ window.STUDY_ARCHIVE_DATA = {
       "summary": "病院薬剤師の役割と日常業務の全体像を整理する勉強会。",
       "speaker": "須賀",
       "date": "2026-05-15",
-      "updatedAt": "2026-05-21",
+      "updatedAt": "2026-05-22",
       "duration": "未記載",
       "featured": true,
       "assets": {
         "recording": true,
-        "slides": false,
+        "slides": true,
         "notes": false,
         "references": false
       },
       "links": {
         "recording": "https://youtu.be/DkLGmSEnxtE",
-        "slides": "",
+        "slides": "https://docs.google.com/presentation/d/13X7WCk9vxSNp8at0j2nsfYTEyMX12h9iUs4gR4ZMfIY/edit?usp=sharing",
         "notes": "",
         "references": ""
       },
@@ -60,6 +60,7 @@ window.STUDY_ARCHIVE_DATA = {
       },
       "detail": {
         "overview": "病院薬剤師の仕事をテーマに、病棟・調剤・医薬品管理など日常業務の全体像を見直しやすい回です。\n薬剤師の役割を整理しながら、チーム医療の中でどこに関わるかを確認できます。",
+        "slideLabel": "スライド（ダウンロード用）",
         "keyPoints": [
           "病院薬剤師の主な業務と役割を整理する",
           "患者対応やチーム医療で求められる視点を確認する",
