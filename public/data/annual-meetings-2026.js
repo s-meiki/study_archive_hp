@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-05-21",
+  "verifiedAt": "2026-05-26",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -306,7 +306,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "演題募集",
           "category": "abstract",
           "startDate": "2026-02-02",
-          "endDate": "2026-05-11"
+          "endDate": "2026-05-25",
+          "note": "公式ページでは締切が2026-05-25まで延長されています。"
         },
         {
           "id": "jasds-12-registration-early",
