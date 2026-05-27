@@ -67,7 +67,12 @@ window.STUDY_ARCHIVE_DATA = {
           "日常業務の流れと学習課題をつなげて考える"
         ],
         "chapters": [],
-        "materials": []
+        "materials": [
+          {
+            "label": "添付資料",
+            "url": "https://docs.google.com/presentation/d/1URW26NT-gxTtj-9KmXQuVO894_OhMbcmIuwtSPMfiB8/edit?usp=sharing"
+          }
+        ]
       }
     },
     {
