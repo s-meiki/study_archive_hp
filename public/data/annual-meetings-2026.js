@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-05-26",
+  "verifiedAt": "2026-06-02",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -13,7 +13,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "cover",
       "scope": "local",
       "displayMonth": 5,
-      "status": "confirmed",
+      "status": "past",
       "society": "北海道薬学大会",
       "eventName": "第73回北海道薬学大会",
       "startDate": "2026-05-30",
@@ -38,6 +38,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "url": "https://www.c-linkage.co.jp/yakugakutaikai73/registration.html"
         }
       ],
+      "archivedAt": "2026-06-02",
       "milestones": [
         {
           "id": "hokkaido-pharma-73-registration-advance",
@@ -306,8 +307,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "演題募集",
           "category": "abstract",
           "startDate": "2026-02-02",
-          "endDate": "2026-05-25",
-          "note": "公式ページでは締切が2026-05-25まで延長されています。"
+          "endDate": "2026-05-11"
         },
         {
           "id": "jasds-12-registration-early",
@@ -392,6 +392,31 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       ]
     },
     {
+      "id": "jsphcs-37",
+      "primaryUrl": "https://www.jsphcs.jp/event/annual-meeting/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 9,
+      "status": "confirmed",
+      "society": "日本医療薬学会",
+      "eventName": "第37回日本医療薬学会年会",
+      "startDate": "2027-09-18",
+      "endDate": "2027-09-20",
+      "city": "名古屋",
+      "venue": "名古屋国際会議場",
+      "theme": "",
+      "leadLabel": "年会長",
+      "lead": "大井 一弥",
+      "note": "学会公式の年会一覧で次年度以降の開催情報が公表されています。",
+      "sources": [
+        {
+          "label": "日本医療薬学会 年会一覧",
+          "url": "https://www.jsphcs.jp/event/annual-meeting/"
+        }
+      ]
+    },
+    {
       "id": "pharmacology-100",
       "primaryUrl": "https://pharmacol.or.jp/shukai/list",
       "imageUrl": "https://pharmacol.or.jp/cms/wp-content/themes/yakuri/img/catch.png",
@@ -409,6 +434,31 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "leadLabel": "年会長",
       "lead": "廣瀬 謙造（東京大・院医）",
       "note": "2026年度の3月枠として、2027年3月開催分を掲載しています。",
+      "sources": [
+        {
+          "label": "開催日程一覧",
+          "url": "https://pharmacol.or.jp/shukai/list"
+        }
+      ]
+    },
+    {
+      "id": "pharmacology-101",
+      "primaryUrl": "https://pharmacol.or.jp/shukai/list",
+      "imageUrl": "https://pharmacol.or.jp/cms/wp-content/themes/yakuri/img/catch.png",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 3,
+      "status": "confirmed",
+      "society": "日本薬理学会",
+      "eventName": "第101回日本薬理学会年会",
+      "startDate": "2028-03-12",
+      "endDate": "2028-03-14",
+      "city": "福岡",
+      "venue": "福岡国際会議場",
+      "theme": "",
+      "leadLabel": "年会長",
+      "lead": "津田 誠",
+      "note": "公式の開催日程一覧で次回年会まで公表されています。",
       "sources": [
         {
           "label": "開催日程一覧",
