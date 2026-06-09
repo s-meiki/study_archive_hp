@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-06-02",
+  "verifiedAt": "2026-06-10",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -307,7 +307,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "演題募集",
           "category": "abstract",
           "startDate": "2026-02-02",
-          "endDate": "2026-05-11"
+          "endDate": "2026-05-25",
+          "note": "公式サイトのWhat’s Newで2026-05-25までの締切延長が案内されています。"
         },
         {
           "id": "jasds-12-registration-early",
@@ -387,7 +388,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "id": "jsphcs-36-registration",
           "label": "参加登録",
           "category": "registration",
-          "note": "公式ページでは参加登録は6月開始予定です。"
+          "note": "日本医療薬学会の年会一覧では申込期間は未定です。"
         }
       ]
     },
@@ -408,6 +409,56 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "",
       "leadLabel": "年会長",
       "lead": "大井 一弥",
+      "note": "学会公式の年会一覧で次年度以降の開催情報が公表されています。",
+      "sources": [
+        {
+          "label": "日本医療薬学会 年会一覧",
+          "url": "https://www.jsphcs.jp/event/annual-meeting/"
+        }
+      ]
+    },
+    {
+      "id": "jsphcs-38",
+      "primaryUrl": "https://www.jsphcs.jp/event/annual-meeting/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 11,
+      "status": "confirmed",
+      "society": "日本医療薬学会",
+      "eventName": "第38回日本医療薬学会年会",
+      "startDate": "2028-11-03",
+      "endDate": "2028-11-04",
+      "city": "千葉",
+      "venue": "幕張メッセ ほか",
+      "theme": "",
+      "leadLabel": "年会長",
+      "lead": "石井 伊都子",
+      "note": "学会公式の年会一覧で次年度以降の開催情報が公表されています。",
+      "sources": [
+        {
+          "label": "日本医療薬学会 年会一覧",
+          "url": "https://www.jsphcs.jp/event/annual-meeting/"
+        }
+      ]
+    },
+    {
+      "id": "jsphcs-39",
+      "primaryUrl": "https://www.jsphcs.jp/event/annual-meeting/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 9,
+      "status": "confirmed",
+      "society": "日本医療薬学会",
+      "eventName": "第39回日本医療薬学会年会",
+      "startDate": "2029-09-29",
+      "endDate": "2029-09-30",
+      "city": "札幌",
+      "venue": "未定",
+      "theme": "",
+      "leadLabel": "年会長",
+      "lead": "田﨑 嘉一",
       "note": "学会公式の年会一覧で次年度以降の開催情報が公表されています。",
       "sources": [
         {

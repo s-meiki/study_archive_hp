@@ -141,7 +141,27 @@ function sortValue(item) {
   return item.sortDate || item.startDate || `${meetingData.period.end.slice(0, 4)}-${pad(item.displayMonth)}-31`;
 }
 
+function isPastMeeting(item) {
+  return item.status === "past";
+}
+
+function compareMeetingDisplay(left, right) {
+  const leftIsPast = isPastMeeting(left);
+  const rightIsPast = isPastMeeting(right);
+
+  if (leftIsPast !== rightIsPast) {
+    return leftIsPast ? 1 : -1;
+  }
+
+  const direction = leftIsPast ? -1 : 1;
+  return sortValue(left).localeCompare(sortValue(right)) * direction;
+}
+
 function groupLabel(item) {
+  if (isPastMeeting(item)) {
+    return "終了した学会";
+  }
+
   const [year, month] = sortValue(item).split("-");
   return `${year}年${Number(month)}月`;
 }
@@ -659,7 +679,7 @@ function createImageLink(item) {
 
 function createMeetingCard(item) {
   const article = document.createElement("article");
-  article.className = `panel meeting-card-simple${item.status === "pending" ? " is-pending" : ""}`;
+  article.className = `panel meeting-card-simple${item.status === "pending" ? " is-pending" : ""}${isPastMeeting(item) ? " is-past" : ""}`;
 
   const media = createImageLink(item);
   const body = document.createElement("div");
@@ -680,6 +700,13 @@ function createMeetingCard(item) {
     pendingChip.className = "meeting-card-badge is-pending";
     pendingChip.textContent = "未公表";
     labels.append(pendingChip);
+  }
+
+  if (isPastMeeting(item)) {
+    const pastChip = document.createElement("span");
+    pastChip.className = "meeting-card-badge is-past";
+    pastChip.textContent = "終了";
+    labels.append(pastChip);
   }
 
   if (labels.children.length > 0) {
@@ -820,7 +847,7 @@ function renderGroups() {
 
 function applyMeetingData(data) {
   meetingData = data;
-  meetings = [...data.meetings].sort((a, b) => sortValue(a).localeCompare(sortValue(b)));
+  meetings = [...data.meetings].sort(compareMeetingDisplay);
   lastVerifiedEl.textContent = `${formatVerifiedDate(data.verifiedAt)} 時点で確認。公開後に変更される可能性があります。`;
   renderPendingNote();
   summarizeMilestones();

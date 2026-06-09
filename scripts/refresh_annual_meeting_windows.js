@@ -163,6 +163,24 @@ function serializeData(data) {
   return `window.ANNUAL_MEETINGS_2026_DATA = ${JSON.stringify(data, null, 2)};\n`;
 }
 
+function refreshMeetingLifecycle(meeting, verifiedAt) {
+  const hasEnded = meeting.endDate && meeting.endDate < verifiedAt;
+
+  if (hasEnded) {
+    return {
+      ...meeting,
+      status: "past",
+      archivedAt: meeting.archivedAt || verifiedAt,
+    };
+  }
+
+  const { archivedAt, ...activeMeeting } = meeting;
+  return {
+    ...activeMeeting,
+    status: meeting.status === "pending" ? "pending" : "confirmed",
+  };
+}
+
 async function refreshClinicalEmergency29() {
   const [abstractPage, registrationPage] = await Promise.all([
     fetchPage("https://site.convention.co.jp/jsem29/abstract/"),
@@ -377,7 +395,8 @@ async function refreshJsct48() {
 }
 
 async function refreshJasds12() {
-  const [abstractPage, registrationPage] = await Promise.all([
+  const [homePage, abstractPage, registrationPage] = await Promise.all([
+    fetchPage("https://www.jasds2026.org/"),
     fetchPage("https://www.jasds2026.org/abstract.html"),
     fetchPage("https://www.jasds2026.org/registration.html"),
   ]);
@@ -399,13 +418,26 @@ async function refreshJasds12() {
     throw new Error("jasds-12: 演題募集または参加登録期間を抽出できませんでした。");
   }
 
+  const hasOfficialExtensionNotice =
+    /演題.{0,40}(?:締切|募集|登録).{0,40}5月\s*25日/u.test(homePage.text) ||
+    /5月\s*25日.{0,40}演題.{0,40}(?:締切|募集|登録)/u.test(homePage.text);
+  const finalAbstractRange = hasOfficialExtensionNotice
+    ? {
+        ...abstractRange,
+        endDate: "2026-05-25",
+      }
+    : abstractRange;
+
   return [
     {
       id: "jasds-12-abstract",
       label: "演題募集",
       category: "abstract",
-      startDate: abstractRange.startDate,
-      endDate: abstractRange.endDate,
+      startDate: finalAbstractRange.startDate,
+      endDate: finalAbstractRange.endDate,
+      note: hasOfficialExtensionNotice
+        ? "公式サイトのWhat’s Newで2026-05-25までの締切延長が案内されています。"
+        : "",
     },
     {
       id: "jasds-12-registration-early",
@@ -425,7 +457,10 @@ async function refreshJasds12() {
 }
 
 async function refreshJsphcs36() {
-  const abstractPage = await fetchPage("https://www.c-linkage.co.jp/36jsphcs/abstract.html");
+  const [abstractPage, annualMeetingPage] = await Promise.all([
+    fetchPage("https://www.c-linkage.co.jp/36jsphcs/abstract.html"),
+    fetchPage("https://www.jsphcs.jp/event/annual-meeting/"),
+  ]);
   const abstractRange = extractRangeFromSection(abstractPage.text, /演題登録受付期間/u, /申し込み方法/u, {
     defaultYear: 2026,
   });
@@ -446,7 +481,9 @@ async function refreshJsphcs36() {
       id: "jsphcs-36-registration",
       label: "参加登録",
       category: "registration",
-      note: abstractPage.text.includes("6月開始予定")
+      note: annualMeetingPage.text.includes("第36回日本医療薬学会年会") && annualMeetingPage.text.includes("申込期間") && annualMeetingPage.text.includes("未定")
+        ? "日本医療薬学会の年会一覧では申込期間は未定です。"
+        : abstractPage.text.includes("6月開始予定")
         ? "公式ページでは参加登録は6月開始予定です。"
         : "公式ページを確認してください。",
     },
@@ -475,13 +512,13 @@ async function main() {
   data.verifiedAt = VERIFIED_AT;
   data.meetings = data.meetings.map((meeting) => {
     if (!resultById.has(meeting.id)) {
-      return meeting;
+      return refreshMeetingLifecycle(meeting, VERIFIED_AT);
     }
 
-    return {
+    return refreshMeetingLifecycle({
       ...meeting,
       milestones: resultById.get(meeting.id),
-    };
+    }, VERIFIED_AT);
   });
 
   const output = serializeData(data);
