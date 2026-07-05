@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { siteUrl } from "./site-url";
+import { ProgressProvider } from "./learning/progress-context";
 
 export const metadata: Metadata = {
   title: "臨床学術ワーキンググループ",
@@ -23,7 +24,9 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <ProgressProvider>{children}</ProgressProvider>
+      </body>
     </html>
   );
 }
