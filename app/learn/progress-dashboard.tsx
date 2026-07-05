@@ -70,6 +70,19 @@ export default function ProgressDashboard({ themes, archives }: ProgressDashboar
         </a>
       </section>
 
+      {state.streak.current > 0 ? (
+        <section className="panel learn-streak" aria-labelledby="learn-streak-heading">
+          <div className="section-kicker">Streak</div>
+          <h2 id="learn-streak-heading" className="learn-visually-hidden">
+            連続学習日数
+          </h2>
+          <p className="learn-streak-copy">
+            連続学習 <span className="learn-streak-value">{state.streak.current}</span>
+            日（最長 <span className="learn-streak-value">{state.streak.longest}</span>日）
+          </p>
+        </section>
+      ) : null}
+
       {continueArchive ? (
         <section className="panel learn-continue-card" aria-labelledby="learn-continue-heading">
           <div className="section-kicker">続きから</div>

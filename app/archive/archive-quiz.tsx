@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { useProgress } from "../learning/progress-context";
 import { useLessonProgress } from "../learning/use-lesson-progress";
+import { bumpStreak } from "../learning/streak";
 import type { ArchiveQuiz as ArchiveQuizType, LessonProgress } from "../learning/types";
+
+// ローカルタイムの YYYY-MM-DD を返す（ストリーク判定の基準日）。
+function todayLocalDate(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 type ArchiveQuizProps = {
   archiveId: string;
@@ -69,10 +79,11 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
         status: existing?.status ?? "unwatched",
         quizBestScore: bestScore
       };
-      return {
+      const next = {
         ...current,
         lessons: { ...current.lessons, [archiveId]: nextLesson }
       };
+      return bumpStreak(next, todayLocalDate());
     });
 
     // 合格かつ未修了のときだけ修了に更新する（冪等: 既に completed なら completedAt を上書きしない）。

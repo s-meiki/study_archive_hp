@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import SiteFooter from "../site-footer";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
-import { loadSiteContent } from "../site-data";
+import { loadLearningContent, loadSiteContent } from "../site-data";
+import type { CourseBadgeSource } from "../learning/badge-engine";
 import ProgressDashboard from "./progress-dashboard";
+import BadgesPanel from "./badges-panel";
+import DataPortability from "./data-portability";
 
 const pageTitle = `学習ダッシュボード | ${siteLegal.shortSiteName}`;
 const pageDescription = "自分の学習進捗をテーマ別に確認できるダッシュボードです。";
@@ -23,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function LearnPage() {
-  const data = await loadSiteContent();
+  const [data, learningContent] = await Promise.all([loadSiteContent(), loadLearningContent()]);
 
   const themes = data.themes.map((theme) => ({
     id: theme.id,
@@ -35,6 +38,12 @@ export default async function LearnPage() {
     themeId: archive.themeId,
     title: archive.title,
     date: archive.date
+  }));
+
+  const courses: CourseBadgeSource[] = learningContent.courses.map((course) => ({
+    courseId: course.id,
+    title: course.title,
+    requiredArchiveIds: course.lessons.filter((lesson) => !lesson.optional).map((lesson) => lesson.archiveId)
   }));
 
   return (
@@ -59,6 +68,8 @@ export default async function LearnPage() {
 
       <main>
         <ProgressDashboard themes={themes} archives={archives} />
+        <BadgesPanel courses={courses} />
+        <DataPortability />
       </main>
 
       <SiteFooter />

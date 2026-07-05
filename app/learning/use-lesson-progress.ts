@@ -2,9 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import { useProgress } from "./progress-context";
+import { bumpStreak } from "./streak";
 import type { LessonProgress, LessonStatus } from "./types";
 
 const UNWATCHED_STATUS: LessonStatus = "unwatched";
+
+// ローカルタイムの YYYY-MM-DD を返す（ストリーク判定の基準日）。
+function todayLocalDate(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 export function useLessonProgress(archiveId: string) {
   const { state, update } = useProgress();
@@ -21,10 +31,11 @@ export function useLessonProgress(archiveId: string) {
         watchedAt: existing?.watchedAt ?? now
       };
 
-      return {
+      const next = {
         ...current,
         lessons: { ...current.lessons, [archiveId]: nextLesson }
       };
+      return bumpStreak(next, todayLocalDate());
     });
   }
 
@@ -39,10 +50,11 @@ export function useLessonProgress(archiveId: string) {
         completedAt: now
       };
 
-      return {
+      const next = {
         ...current,
         lessons: { ...current.lessons, [archiveId]: nextLesson }
       };
+      return bumpStreak(next, todayLocalDate());
     });
   }
 
