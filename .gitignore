@@ -33,3 +33,4 @@ node_modules/
 .next_backup_*/
 .env.local
 .vercel/
+tsconfig.tsbuildinfo
