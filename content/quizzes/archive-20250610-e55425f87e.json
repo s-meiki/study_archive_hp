@@ -1,0 +1,42 @@
+{
+  "archiveId": "archive-20250610-e55425f87e",
+  "passThreshold": 0.7,
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "この勉強会のタイトルとして正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "AIを活用する【第三回】" },
+        { "id": "b", "text": "AIを活用する【第一回】" },
+        { "id": "c", "text": "AI活用シリーズ 総集編" }
+      ],
+      "answerId": "a",
+      "explanation": "本回のタイトルは「AIを活用する【第三回】」です。"
+    },
+    {
+      "id": "q2",
+      "prompt": "この回の位置付けとして正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "AI活用シリーズの第3回にあたる回である" },
+        { "id": "b", "text": "AI活用シリーズの導入となる初回である" },
+        { "id": "c", "text": "AI活用とは別テーマを扱う単発の回である" }
+      ],
+      "answerId": "a",
+      "explanation": "タイトル・概要のとおり、本回はAI活用シリーズの第3回にあたります。"
+    },
+    {
+      "id": "q3",
+      "prompt": "概要（summary）で示されている本回の内容として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "継続運用を前提にした実践共有回である" },
+        { "id": "b", "text": "AI導入の是非を議論する回である" },
+        { "id": "c", "text": "AI活用シリーズを終了する報告回である" }
+      ],
+      "answerId": "a",
+      "explanation": "概要では、本回はAIの継続運用を前提にした実践共有の回であると説明されています。"
+    }
+  ],
+  "reviewStatus": "draft",
+  "generatedBy": "ai",
+  "updatedAt": "2026-07-05"
+}

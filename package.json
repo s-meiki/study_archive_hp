@@ -12,6 +12,8 @@
     "meetings:refresh:dry": "node scripts/refresh_annual_meeting_windows.js --dry-run",
     "learning:build": "node scripts/build_learning_content.js",
     "learning:build:dry": "node scripts/build_learning_content.js --dry-run",
+    "quiz:build": "node scripts/build_quiz_bank.js",
+    "quiz:build:dry": "node scripts/build_quiz_bank.js --dry-run",
     "start": "node scripts/run_next_with_server_chunk_fix.js start"
   },
   "dependencies": {

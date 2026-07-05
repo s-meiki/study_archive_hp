@@ -1,0 +1,45 @@
+{
+  "archiveId": "archive-20251219-07b09962fd",
+  "passThreshold": 0.7,
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "このアーカイブのタイトルが表す会の性質として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "医療薬学会に参加した内容を共有する帰還報告会" },
+        { "id": "b", "text": "新人薬剤師向けの導入研修" },
+        { "id": "c", "text": "院内感染対策委員会の定例会議" },
+        { "id": "d", "text": "外部講師を招いた症例検討会" }
+      ],
+      "answerId": "a",
+      "explanation": "タイトルは「帰還報告会(医療薬学会)」であり、医療薬学会に参加した後の報告会であることを示しています。"
+    },
+    {
+      "id": "q2",
+      "prompt": "この会の要約（summary）として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "医療薬学会参加後の学びと現場への示唆を共有する報告会" },
+        { "id": "b", "text": "抗菌薬の適正使用に関する院内講習" },
+        { "id": "c", "text": "在宅緩和ケアにおける疼痛管理のレクチャー" },
+        { "id": "d", "text": "薬剤師国家試験対策の勉強会" }
+      ],
+      "answerId": "a",
+      "explanation": "要約には、医療薬学会参加後の学びと現場への示唆を共有する報告会であると記載されています。"
+    },
+    {
+      "id": "q3",
+      "prompt": "このアーカイブが属するテーマ分類として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "循環器（cardiology）" },
+        { "id": "b", "text": "感染症（infectious）" },
+        { "id": "c", "text": "研究・認定（research-career）" },
+        { "id": "d", "text": "AI活用（ai-utilization）" }
+      ],
+      "answerId": "c",
+      "explanation": "本回のテーマ分類は研究・認定（research-career）に設定されており、学会報告に関する内容として位置づけられています。"
+    }
+  ],
+  "reviewStatus": "draft",
+  "generatedBy": "ai",
+  "updatedAt": "2026-07-05"
+}

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 
-import type { LearningContent } from "./learning/types";
+import type { ArchiveQuiz, LearningContent, QuizBank } from "./learning/types";
 
 export type SiteTheme = {
   id: string;
@@ -125,6 +125,40 @@ async function readLearningContent(): Promise<LearningContent> {
 export function loadLearningContent(): Promise<LearningContent> {
   learningContentPromise ??= readLearningContent();
   return learningContentPromise;
+}
+
+const EMPTY_QUIZ_BANK: QuizBank = { schemaVersion: 1, quizzes: [] };
+let quizBankPromise: Promise<QuizBank> | null = null;
+
+async function readQuizBank(): Promise<QuizBank> {
+  try {
+    const data = await readWindowAssignedJson<QuizBank>(
+      "public/data/quiz-bank.js",
+      "window.QUIZ_BANK"
+    );
+
+    if (!data || !Array.isArray(data.quizzes)) {
+      return EMPTY_QUIZ_BANK;
+    }
+
+    return { schemaVersion: 1, quizzes: data.quizzes };
+  } catch {
+    return EMPTY_QUIZ_BANK;
+  }
+}
+
+export function loadQuizBank(): Promise<QuizBank> {
+  quizBankPromise ??= readQuizBank();
+  return quizBankPromise;
+}
+
+export async function findQuizForArchive(archiveId: string): Promise<ArchiveQuiz | null> {
+  if (!archiveId) {
+    return null;
+  }
+
+  const bank = await loadQuizBank();
+  return bank.quizzes.find((quiz) => quiz.archiveId === archiveId) ?? null;
 }
 
 export async function findArchiveById(archiveId: string) {

@@ -3,6 +3,8 @@ import Script from "next/script";
 import SiteFooter from "../site-footer";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
+import { findQuizForArchive } from "../site-data";
+import ArchiveQuiz from "./archive-quiz";
 import LessonProgressControls from "./lesson-progress-controls";
 
 type ArchivePageProps = {
@@ -61,6 +63,7 @@ export async function generateMetadata({ searchParams }: ArchivePageProps): Prom
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
   const archiveId = firstQueryValue(params.id);
+  const quiz = archiveId ? await findQuizForArchive(archiveId) : null;
 
   return (
     <div className="page-shell">
@@ -146,6 +149,8 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
             </div>
           </aside>
         </div>
+
+        {archiveId ? <ArchiveQuiz archiveId={archiveId} quiz={quiz} /> : null}
 
         <div className="empty-state detail-empty" id="detail-empty" hidden>
           <h2>アーカイブを表示できませんでした</h2>

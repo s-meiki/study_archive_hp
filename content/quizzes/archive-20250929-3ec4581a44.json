@@ -1,0 +1,45 @@
+{
+  "archiveId": "archive-20250929-3ec4581a44",
+  "passThreshold": 0.7,
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "この勉強会が主なテーマとして扱っているのはどれですか。",
+      "choices": [
+        { "id": "a", "text": "脳梗塞の病態理解と薬物治療の要点" },
+        { "id": "b", "text": "心房細動に対する抗凝固療法の選択" },
+        { "id": "c", "text": "感染症治療における抗菌薬の選び方" },
+        { "id": "d", "text": "在宅医療での服薬指導の進め方" }
+      ],
+      "answerId": "a",
+      "explanation": "本回は脳梗塞の病態理解と薬物治療の要点を確認する勉強会として紹介されています。"
+    },
+    {
+      "id": "q2",
+      "prompt": "このアーカイブが属するテーマ分類として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "循環器（cardiology）" },
+        { "id": "b", "text": "脳神経（neurology）" },
+        { "id": "c", "text": "感染症（infectious）" },
+        { "id": "d", "text": "研究・キャリア（research-career）" }
+      ],
+      "answerId": "b",
+      "explanation": "本回のテーマ分類は脳神経（neurology）に設定されています。"
+    },
+    {
+      "id": "q3",
+      "prompt": "この勉強会の要約（summary）として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "脳梗塞の病態理解と薬物治療の要点を確認する勉強会" },
+        { "id": "b", "text": "出血性疾患を中心に脳卒中の病態と治療を整理する勉強会" },
+        { "id": "c", "text": "ポリファーマシーの考え方と処方見直しを整理する勉強会" },
+        { "id": "d", "text": "輸液の基礎を押さえ直すレクチャー" }
+      ],
+      "answerId": "a",
+      "explanation": "要約には脳梗塞の病態理解と薬物治療の要点を確認する勉強会であると記載されています。"
+    }
+  ],
+  "reviewStatus": "draft",
+  "generatedBy": "ai",
+  "updatedAt": "2026-07-05"
+}

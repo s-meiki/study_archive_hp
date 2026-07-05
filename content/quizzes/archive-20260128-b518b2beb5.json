@@ -1,0 +1,45 @@
+{
+  "archiveId": "archive-20260128-b518b2beb5",
+  "passThreshold": 0.7,
+  "questions": [
+    {
+      "id": "q1",
+      "prompt": "この勉強会が主なテーマとして扱っているのはどれですか。",
+      "choices": [
+        { "id": "a", "text": "脳卒中のうち出血性疾患の病態と治療の整理" },
+        { "id": "b", "text": "脳卒中のうち虚血性疾患（脳梗塞）の薬物治療" },
+        { "id": "c", "text": "心房細動に対する抗凝固療法の選択" },
+        { "id": "d", "text": "在宅医療での服薬指導の進め方" }
+      ],
+      "answerId": "a",
+      "explanation": "本回は「脳卒中（出血性疾患編）」として、出血性疾患に焦点を当てて病態と治療を整理する回です。"
+    },
+    {
+      "id": "q2",
+      "prompt": "このアーカイブが属するテーマ分類として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "循環器（cardiology）" },
+        { "id": "b", "text": "脳神経（neurology）" },
+        { "id": "c", "text": "感染症（infectious）" },
+        { "id": "d", "text": "研究・キャリア（research-career）" }
+      ],
+      "answerId": "b",
+      "explanation": "本回のテーマ分類は脳神経（neurology）に設定されています。"
+    },
+    {
+      "id": "q3",
+      "prompt": "この勉強会の要約（summary）として正しいものはどれですか。",
+      "choices": [
+        { "id": "a", "text": "脳卒中のうち出血性疾患に焦点を当てて病態と治療を整理する回" },
+        { "id": "b", "text": "脳梗塞の病態理解と薬物治療の要点を確認する勉強会" },
+        { "id": "c", "text": "ポリファーマシーの考え方と処方見直しを整理する勉強会" },
+        { "id": "d", "text": "輸液の基礎を押さえ直すレクチャー" }
+      ],
+      "answerId": "a",
+      "explanation": "要約には、脳卒中のうち出血性疾患に焦点を当てて病態と治療を整理する回であると記載されています。"
+    }
+  ],
+  "reviewStatus": "draft",
+  "generatedBy": "ai",
+  "updatedAt": "2026-07-05"
+}
