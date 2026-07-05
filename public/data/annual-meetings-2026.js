@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-06-10",
+  "verifiedAt": "2026-06-24",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -120,7 +120,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "cover",
       "scope": "national",
       "displayMonth": 6,
-      "status": "confirmed",
+      "status": "past",
       "society": "医療薬学フォーラム",
       "eventName": "医療薬学フォーラム2026／第34回クリニカルファーマシーシンポジウム",
       "startDate": "2026-06-20",
@@ -167,7 +167,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "参加登録",
           "url": "https://www.k-gakkai.jp/cps2026/registration.html"
         }
-      ]
+      ],
+      "archivedAt": "2026-06-24"
     },
     {
       "id": "jsct-48",
@@ -218,7 +219,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "id": "jsct-48-registration",
           "label": "参加登録",
           "category": "registration",
-          "note": "公式ページでは参加登録は準備中です。"
+          "startDate": "2026-06-12",
+          "endDate": "2026-07-25"
         }
       ]
     },
@@ -388,7 +390,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "id": "jsphcs-36-registration",
           "label": "参加登録",
           "category": "registration",
-          "note": "日本医療薬学会の年会一覧では申込期間は未定です。"
+          "note": "日本医療薬学会の年会一覧では申込期間は未定です。一方、一般演題登録ページには参加登録は6月開始予定と記載があります。"
         }
       ]
     },

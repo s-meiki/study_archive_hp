@@ -65,6 +65,11 @@ function formatDate(dateString) {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
 }
 
+function displayDuration(duration) {
+  const value = String(duration ?? "").trim();
+  return value && value !== "未記載" ? value : "";
+}
+
 function setStatus(message = "") {
   if (!statusPanelEl) {
     return;
@@ -179,8 +184,9 @@ function renderHero(archive, theme) {
     metaEl.append(createMetaChip(archive.speaker));
   }
 
-  if (archive.duration) {
-    metaEl.append(createMetaChip(archive.duration));
+  const duration = displayDuration(archive.duration);
+  if (duration) {
+    metaEl.append(createMetaChip(duration));
   }
 
   if (archive.assets?.recording) {
@@ -372,36 +378,102 @@ function renderMaterials(archive) {
   });
 }
 
-function renderRelatedArchives(archive, archives, themes) {
-  const relatedArchives = dataUtils.rankRelatedArchives(archive, archives, themes, { limit: 3 });
+function createRelatedEntry(item, theme, reasons = []) {
+  const row = document.createElement("a");
+  row.className = "detail-related-item";
+  row.href = dataUtils.getArchiveDetailUrl(item, "./");
 
-  clearElement(relatedEl);
-  relatedPanelEl.hidden = relatedArchives.length === 0;
+  const title = document.createElement("strong");
+  title.textContent = item.title;
 
-  if (relatedArchives.length === 0) {
-    return;
+  const meta = document.createElement("span");
+  const themeName = theme?.name || item.themeId;
+  const metaParts = [formatDate(item.date), themeName, ...reasons.slice(0, 2)];
+  meta.textContent = metaParts.filter(Boolean).join(" / ");
+
+  row.append(title, meta);
+  return row;
+}
+
+function sortArchivesByDateDesc(items) {
+  return [...items].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+}
+
+function renderRelatedGroup(title, entries, seenIds) {
+  const uniqueEntries = [];
+
+  entries.some((entry) => {
+    const id = entry.archive?.id;
+    if (!id || seenIds.has(id)) {
+      return false;
+    }
+
+    seenIds.add(id);
+    uniqueEntries.push(entry);
+    return uniqueEntries.length >= 3;
+  });
+
+  if (uniqueEntries.length === 0) {
+    return false;
   }
 
-  relatedArchives.forEach((entry) => {
-    const item = entry.archive;
-    const row = document.createElement("a");
-    row.className = "detail-related-item";
-    row.href = dataUtils.getArchiveDetailUrl(item, "./");
+  const group = document.createElement("section");
+  group.className = "detail-related-group";
 
-    const title = document.createElement("strong");
-    title.textContent = item.title;
+  const heading = document.createElement("h3");
+  heading.textContent = title;
 
-    const meta = document.createElement("span");
-    const themeName = entry.theme?.name || themeById(themes, item.themeId)?.name || item.themeId;
-    const metaParts = [formatDate(item.date), themeName];
-    if (entry.reasons.length > 0) {
-      metaParts.push(entry.reasons.slice(0, 2).join("・"));
-    }
-    meta.textContent = metaParts.join(" / ");
+  const list = document.createElement("div");
+  list.className = "detail-related-group-list";
 
-    row.append(title, meta);
-    relatedEl.append(row);
+  uniqueEntries.forEach((entry) => {
+    list.append(createRelatedEntry(entry.archive, entry.theme, entry.reasons));
   });
+
+  group.append(heading, list);
+  relatedEl.append(group);
+  return true;
+}
+
+function renderRelatedArchives(archive, archives, themes) {
+  const rankedRelated = dataUtils.rankRelatedArchives(archive, archives, themes, { limit: 6 });
+  const sameThemeEntries = sortArchivesByDateDesc(archives)
+    .filter((item) => item.id !== archive.id && item.themeId === archive.themeId)
+    .map((item) => ({
+      archive: item,
+      theme: themeById(themes, item.themeId),
+      reasons: ["同じテーマ"],
+    }));
+  const materialEntries = sortArchivesByDateDesc(archives)
+    .filter(
+      (item) =>
+        item.id !== archive.id &&
+        (item.assets?.recording || item.assets?.slides || item.assets?.notes || item.assets?.references),
+    )
+    .map((item) => {
+      const reasons = [];
+      if (item.assets?.recording) {
+        reasons.push("録画あり");
+      }
+      if (item.assets?.slides || item.assets?.notes || item.assets?.references) {
+        reasons.push("資料あり");
+      }
+
+      return {
+        archive: item,
+        theme: themeById(themes, item.themeId),
+        reasons,
+      };
+    });
+
+  clearElement(relatedEl);
+
+  const seenIds = new Set();
+  const hasRanked = renderRelatedGroup("次に見る候補", rankedRelated, seenIds);
+  const hasSameTheme = renderRelatedGroup("同じテーマを続ける", sameThemeEntries, seenIds);
+  const hasMaterials = renderRelatedGroup("資料・録画あり", materialEntries, seenIds);
+
+  relatedPanelEl.hidden = !hasRanked && !hasSameTheme && !hasMaterials;
 }
 
 function renderArchivePage(data, archive) {

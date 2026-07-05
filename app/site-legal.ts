@@ -14,6 +14,7 @@ export const siteLegal = {
 };
 
 export const siteNavigation = {
+  aboutUrl: "/about",
   archiveUrl: "/",
   annualMeetingsUrl: "/annual-meetings-2026"
 };

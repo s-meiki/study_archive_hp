@@ -28,6 +28,7 @@ const archiveSummaryEl = document.querySelector("#archive-summary");
 const archiveCalendarEl = document.querySelector("#archive-calendar");
 const featuredCardEl = document.querySelector("#featured-card");
 const entryPicksEl = document.querySelector("#entry-picks");
+const heroStatsEl = document.querySelector("#hero-stats");
 const emptyStateEl = document.querySelector("#empty-state");
 const statusPanelEl = document.querySelector("#status-panel");
 const yearFilterEl = document.querySelector("#year-filter");
@@ -179,10 +180,15 @@ function appendArchiveLink(container, url, label, className = "mini-link") {
   return true;
 }
 
+function displayDuration(duration) {
+  const value = String(duration ?? "").trim();
+  return value && value !== "未記載" ? value : "";
+}
+
 function applySiteData(data) {
   themes = data.themes;
   archives = data.archives;
-  state.themeId = themes[0]?.id ?? "";
+  state.themeId = "";
   resetYearOptions();
   render();
 }
@@ -324,11 +330,14 @@ function allArchivesSorted() {
 
 function filteredArchives() {
   const searchTerm = state.search.toLowerCase();
+  const sourceArchives = state.themeId ? archivesForTheme(state.themeId) : allArchivesSorted();
 
-  return archivesForTheme(state.themeId).filter((archive) => {
+  return sourceArchives.filter((archive) => {
     const matchesSearch =
       state.search === "" ||
-      [archive.title, archive.summary, archive.speaker].some((value) => String(value ?? "").toLowerCase().includes(searchTerm));
+      [archive.title, archive.summary, archive.speaker, archive.detail?.overview, ...(archive.detail?.keyPoints ?? [])].some((value) =>
+        String(value ?? "").toLowerCase().includes(searchTerm),
+      );
 
     const matchesAsset =
       state.asset === "all" ||
@@ -371,7 +380,10 @@ function renderFeatured() {
     media.append(playButton);
   }
 
-  media.append(createElement("span", { className: "duration", text: featured.duration || "未記載" }));
+  const duration = displayDuration(featured.duration);
+  if (duration) {
+    media.append(createElement("span", { className: "duration", text: duration }));
+  }
 
   const copyBlock = createElement("div", { className: "feature-copy-block" });
   const primary = document.createElement("div");
@@ -391,7 +403,32 @@ function renderFeatured() {
   );
 
   copyBlock.append(primary, meta);
-  featuredCardEl.append(media, copyBlock);
+
+  const action = createElement("a", { className: "mini-link primary feature-detail-link", text: "この回を見る" });
+  action.href = archiveDetailUrl(featured);
+  featuredCardEl.append(media, copyBlock, action);
+}
+
+function renderHeroStats() {
+  if (!heroStatsEl) {
+    return;
+  }
+
+  clearElement(heroStatsEl);
+
+  const recordingCount = archives.filter((archive) => archive.assets?.recording).length;
+  const materialCount = archives.filter(
+    (archive) => archive.assets?.slides || archive.assets?.notes || archive.assets?.references,
+  ).length;
+
+  [
+    `${archives.length}件のアーカイブ`,
+    `${recordingCount}件の録画`,
+    `${materialCount}件の資料付き`,
+    `${themes.length}テーマ`,
+  ].forEach((label) => {
+    heroStatsEl.append(createElement("span", { className: "stat-chip", text: label }));
+  });
 }
 
 function renderArchiveCalendar() {
@@ -505,7 +542,9 @@ function renderEntryPicks() {
 
   const latest = allArchivesSorted()[0];
   const recording = allArchivesSorted().find((archive) => archive.assets.recording);
-  const references = allArchivesSorted().find((archive) => archive.assets.references);
+  const materials = allArchivesSorted().find((archive) => archive.assets.slides || archive.assets.references || archive.assets.notes);
+  const foundations = allArchivesSorted().find((archive) => archive.themeId === "foundations");
+  const ai = allArchivesSorted().find((archive) => archive.themeId === "ai-utilization");
 
   const picks = [
     {
@@ -514,6 +553,7 @@ function renderEntryPicks() {
       title: "最新の回から見る",
       archive: latest,
       asset: "all",
+      themeId: "",
     },
     {
       id: "recording",
@@ -521,13 +561,31 @@ function renderEntryPicks() {
       title: "録画ありの回から見る",
       archive: recording,
       asset: "recording",
+      themeId: "",
     },
     {
-      id: "references",
-      label: "Reference",
-      title: "参考資料ありの回から見る",
-      archive: references,
-      asset: "references",
+      id: "materials",
+      label: "Materials",
+      title: "資料ありの回から見る",
+      archive: materials,
+      asset: "all",
+      themeId: "",
+    },
+    {
+      id: "foundations",
+      label: "Starter",
+      title: "基礎から見直す",
+      archive: foundations,
+      asset: "all",
+      themeId: "foundations",
+    },
+    {
+      id: "ai",
+      label: "AI",
+      title: "AI活用から見る",
+      archive: ai,
+      asset: "all",
+      themeId: "ai-utilization",
     },
   ].filter((pick) => Boolean(pick.archive));
 
@@ -549,11 +607,17 @@ function renderEntryPicks() {
       createElement("span", { className: "entry-pick-label", text: pick.label }),
       createElement("span", { className: "entry-pick-title", text: pick.title }),
       meta,
-      createElement("span", { className: "entry-pick-arrow", text: "この入口を使う" }),
+      createElement("span", { className: "entry-pick-arrow", text: "該当する回を表示" }),
     );
 
     button.addEventListener("click", () => {
-      activateEntryPick(archive, pick.asset);
+      state.themeId = pick.themeId ?? archive.themeId;
+      state.search = "";
+      state.asset = pick.asset;
+      state.year = "all";
+      syncFilterControls();
+      render();
+      archiveHeadingEl.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     entryPicksEl.append(button);
@@ -562,6 +626,28 @@ function renderEntryPicks() {
 
 function renderThemes() {
   clearElement(themeListEl);
+
+  const allButton = createElement("button", {
+    className: `theme-button${state.themeId === "" ? " is-active" : ""}`,
+  });
+  allButton.type = "button";
+  allButton.dataset.themeId = "";
+  allButton.append(
+    (() => {
+      const copyGroup = document.createElement("span");
+      copyGroup.append(
+        createElement("span", { className: "theme-title", text: "すべて" }),
+        createElement("span", { className: "theme-copy", text: "テーマをまたいで横断検索" }),
+      );
+      return copyGroup;
+    })(),
+    createElement("span", { className: "theme-count", text: `${archives.length}件` }),
+  );
+  allButton.addEventListener("click", () => {
+    state.themeId = "";
+    render();
+  });
+  themeListEl.append(allButton);
 
   themes.forEach((theme) => {
     const count = archivesForTheme(theme.id).length;
@@ -595,8 +681,8 @@ function renderArchiveHeader(items) {
 
   if (!theme) {
     archiveHeadingEl.textContent = "勉強会アーカイブ";
-    archiveDescriptionEl.textContent = "テーマを選ぶと、ここに該当アーカイブを新しい順で並べます。";
-    archiveSummaryEl.textContent = "";
+    archiveDescriptionEl.textContent = "すべてのテーマから、キーワードや資料種別で必要な回を探せます。";
+    archiveSummaryEl.textContent = `${items.length}件 / 全テーマ`;
     return;
   }
 
@@ -607,7 +693,7 @@ function renderArchiveHeader(items) {
 
 function renderArchives() {
   const items = filteredArchives();
-  const latestUpdatedId = latestUpdatedArchiveForTheme(state.themeId)?.id ?? "";
+  const latestUpdatedId = (state.themeId ? latestUpdatedArchiveForTheme(state.themeId) : latestUpdatedArchive())?.id ?? "";
   clearElement(archiveListEl);
   renderArchiveHeader(items);
 
@@ -629,7 +715,15 @@ function renderArchives() {
       playButton.setAttribute("aria-hidden", "true");
       media.append(playButton);
     }
-    media.append(createElement("span", { className: "duration", text: archive.duration || "未記載" }));
+    const duration = displayDuration(archive.duration);
+    if (duration) {
+      media.append(createElement("span", { className: "duration", text: duration }));
+    }
+
+    const mediaLink = createElement("a", { className: "archive-media-link" });
+    mediaLink.href = archiveDetailUrl(archive);
+    mediaLink.setAttribute("aria-label", `${archive.title || "アーカイブ"}の詳細を見る`);
+    mediaLink.append(media);
 
     const content = createElement("div", { className: "archive-content" });
     const meta = createElement("div", { className: "archive-meta" });
@@ -659,8 +753,12 @@ function renderArchives() {
     const footer = createElement("div", { className: "archive-footer" });
     const links = createElement("div", { className: "archive-links" });
 
-    let hasLink = false;
-    hasLink = appendArchiveLink(links, archive.links?.recording, "再生する", "mini-link primary") || hasLink;
+    const detailLink = createElement("a", { className: "mini-link primary", text: "この回を見る" });
+    detailLink.href = archiveDetailUrl(archive);
+    links.append(detailLink);
+
+    let hasLink = true;
+    hasLink = appendArchiveLink(links, archive.links?.recording, "動画") || hasLink;
 
     if (archive.assets.slides) {
       hasLink = appendArchiveLink(links, archive.links?.slides, "スライド") || hasLink;
@@ -680,12 +778,13 @@ function renderArchives() {
 
     footer.append(links, createElement("div", { className: "archive-note", text: archive.speaker || "講師未記載" }));
     content.append(meta, heading, summary, footer);
-    card.append(media, content);
+    card.append(mediaLink, content);
     archiveListEl.append(card);
   });
 }
 
 function render() {
+  renderHeroStats();
   renderFeatured();
   renderArchiveCalendar();
   renderThemes();

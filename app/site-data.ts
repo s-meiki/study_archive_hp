@@ -43,10 +43,12 @@ export type AnnualMeeting = {
   id: string;
   eventName: string;
   society: string;
+  status?: "confirmed" | "pending" | "past";
   primaryUrl?: string;
   imageUrl?: string;
   startDate?: string;
   endDate?: string;
+  archivedAt?: string;
   note?: string;
   milestones?: Array<{
     id: string;

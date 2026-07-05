@@ -53,8 +53,11 @@ export default function HomePage() {
             <span className="brand-name">{siteLegal.shortSiteName}</span>
           </div>
         </div>
-          <div className="topbar-actions">
-            <div className="topbar-note">薬剤師向け勉強会アーカイブ</div>
+        <div className="topbar-actions">
+          <div className="topbar-note">薬剤師向け勉強会アーカイブ</div>
+          <a className="topbar-link" href={siteNavigation.aboutUrl}>
+            このサイトについて
+          </a>
           <a className="topbar-link" href={siteNavigation.annualMeetingsUrl}>
             学会年会一覧へ
           </a>

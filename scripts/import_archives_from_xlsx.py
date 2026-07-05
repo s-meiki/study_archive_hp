@@ -80,6 +80,7 @@ SUMMARY_OVERRIDES = {
     "poly pharmacyについて": "ポリファーマシーの考え方と実務での見直しポイントを整理する勉強会。",
     "感染症治療~肺炎~": "肺炎をテーマに感染症治療の考え方と抗菌薬選択を確認する勉強会。",
     "病院薬剤師の仕事": "病院薬剤師の役割と日常業務の全体像を整理する勉強会。",
+    "血液製剤": "血液製剤の種類と適正使用の基本を整理する勉強会。",
 }
 
 THEME_DETAIL_TEMPLATES = {
@@ -189,6 +190,15 @@ TOPIC_RULES = [
         ],
     },
     {
+        "keywords": ["血液製剤", "輸血", "血漿分画"],
+        "overview": "輸血や血漿分画製剤の位置付けを確認しながら、日常業務で押さえたい注意点を見直しやすい回です。",
+        "key_points": [
+            "血液製剤の種類と特徴を整理する",
+            "適正使用と投与時の注意点を確認する",
+            "副作用や管理上の確認事項を押さえる",
+        ],
+    },
+    {
         "keywords": ["臨床研究", "研究"],
         "overview": "研究に取り組む意味や進め方を、現場の課題設定と結び付けて理解しやすい回です。",
         "key_points": [
@@ -282,7 +292,10 @@ def workbook_targets(archive):
     targets = {}
     for sheet in workbook.find("main:sheets", NS):
         rel_id = sheet.attrib[f"{{{NS['rel']}}}id"]
-        targets[sheet.attrib["name"]] = "xl/" + rel_map[rel_id]
+        target = rel_map[rel_id].lstrip("/")
+        if not target.startswith("xl/"):
+            target = "xl/" + target
+        targets[sheet.attrib["name"]] = target
     return targets
 
 
@@ -400,7 +413,7 @@ def classify_theme(title):
         return "neurology"
     if any(keyword in title for keyword in ["感染症", "抗菌", "感染"]):
         return "infectious"
-    if any(keyword in title for keyword in ["輸液", "基礎", "poly pharmacy", "ポリファーマシー", "病院薬剤師"]):
+    if any(keyword in title for keyword in ["輸液", "基礎", "poly pharmacy", "ポリファーマシー", "病院薬剤師", "血液製剤", "輸血", "血漿分画"]):
         return "foundations"
     if "AI" in title:
         return "ai-utilization"
@@ -528,13 +541,19 @@ def build_archives(entries, existing_archives=None):
         for archive in existing_archives
         if archive.get("id")
     }
+    existing_by_identity = {
+        (archive.get("date"), archive.get("title")): archive
+        for archive in existing_archives
+        if archive.get("date") and archive.get("title")
+    }
     archives = []
     imported_ids = set()
 
     for entry in entries:
         theme_id = classify_theme(entry["title"])
-        archive_key = archive_id(entry["date"], entry["title"])
-        existing = existing_by_id.get(archive_key, {})
+        generated_archive_key = archive_id(entry["date"], entry["title"])
+        existing = existing_by_id.get(generated_archive_key) or existing_by_identity.get((entry["date"], entry["title"]), {})
+        archive_key = existing.get("id") or generated_archive_key
         start, end = THEME_COLORS[theme_id]
         summary = normalize_text(existing.get("summary")) or build_summary(entry["title"], theme_id)
         existing_links = existing.get("links", {})
@@ -603,6 +622,7 @@ def build_archives(entries, existing_archives=None):
             }
         )
         imported_ids.add(archive_key)
+        imported_ids.add(generated_archive_key)
 
     for archive in existing_archives:
         if archive.get("id") not in imported_ids:

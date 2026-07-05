@@ -33,6 +33,43 @@ window.STUDY_ARCHIVE_DATA = {
   ],
   "archives": [
     {
+      "id": "archive-20260526-c57ee27d13",
+      "themeId": "foundations",
+      "title": "血液製剤",
+      "summary": "血液製剤の種類と適正使用の基本を整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-05-26",
+      "updatedAt": "2026-05-27",
+      "duration": "未記載",
+      "featured": true,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5d5b47",
+        "end": "#b4b08c"
+      },
+      "detail": {
+        "overview": "血液製剤の種類と適正使用の基本を整理する勉強会です。\n輸血や血漿分画製剤の位置付けを確認しながら、日常業務で押さえたい注意点を見直しやすい回です。",
+        "keyPoints": [
+          "血液製剤の種類と特徴を整理する",
+          "適正使用と投与時の注意点を確認する",
+          "副作用や管理上の確認事項を押さえる"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
+    {
       "id": "archive-20260515-4799a9755a",
       "themeId": "foundations",
       "title": "病院薬剤師の仕事",
@@ -41,7 +78,7 @@ window.STUDY_ARCHIVE_DATA = {
       "date": "2026-05-15",
       "updatedAt": "2026-05-22",
       "duration": "未記載",
-      "featured": true,
+      "featured": false,
       "assets": {
         "recording": true,
         "slides": true,
@@ -141,6 +178,43 @@ window.STUDY_ARCHIVE_DATA = {
       "detail": {
         "overview": "ポリファーマシーをテーマに、薬剤数だけでなく患者背景や治療目的から処方を見直す視点を整理する回です。\n日常業務で処方全体を確認するときの着眼点を復習できます。",
         "slideLabel": "スライド（ダウンロード用）",
+        "keyPoints": [
+          "ポリファーマシーの考え方と問題点を整理する",
+          "処方見直しで確認する患者背景と治療目的を押さえる",
+          "多職種で共有しやすい介入ポイントを考える"
+        ],
+        "chapters": [],
+        "materials": []
+      }
+    },
+    {
+      "id": "archive-20260327-6e372ec019",
+      "themeId": "foundations",
+      "title": "poly pharmacyについて",
+      "summary": "ポリファーマシーの考え方と実務での見直しポイントを整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-03-27",
+      "updatedAt": "2026-05-27",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5d5b47",
+        "end": "#b4b08c"
+      },
+      "detail": {
+        "overview": "ポリファーマシーをテーマに、薬剤数だけでなく患者背景や治療目的から処方を見直す視点を整理する回です。\n日常業務で処方全体を確認するときの着眼点を復習できます。",
         "keyPoints": [
           "ポリファーマシーの考え方と問題点を整理する",
           "処方見直しで確認する患者背景と治療目的を押さえる",

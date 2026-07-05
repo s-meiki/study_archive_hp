@@ -486,6 +486,325 @@
   line-height: 1.55;
 }
 
+.about-page {
+  --about-gutter: clamp(22px, 4vw, 42px);
+}
+
+.about-main {
+  display: grid;
+  gap: 22px;
+}
+
+.about-hero {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: clamp(420px, 58vh, 560px);
+  overflow: hidden;
+  border-radius: 30px;
+  background:
+    linear-gradient(90deg, rgba(255, 253, 249, 0.96) 0%, rgba(255, 253, 249, 0.86) 34%, rgba(255, 253, 249, 0.18) 64%, rgba(255, 253, 249, 0) 100%),
+    url("/images/lp-hero-study-session.webp") center / cover no-repeat;
+  box-shadow: var(--shadow);
+  isolation: isolate;
+}
+
+.about-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  width: min(100%, 650px);
+  padding: var(--about-gutter);
+}
+
+.about-hero h1 {
+  margin: 0;
+  max-width: 13ch;
+  font-size: clamp(2.6rem, 5.6vw, 5.4rem);
+  line-height: 1.01;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.about-hero p {
+  max-width: 42rem;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.6vw, 1.12rem);
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+
+.about-hero-actions,
+.about-join-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-proof-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.about-proof-list span,
+.about-meeting-tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(36, 52, 59, 0.12);
+  background: rgba(255, 253, 249, 0.72);
+  color: var(--primary);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.about-section {
+  padding: clamp(28px, 5vw, 54px) 0;
+  border-top: 1px solid rgba(36, 52, 59, 0.08);
+}
+
+.about-section h2 {
+  margin-top: 8px;
+  max-width: 18ch;
+  font-size: clamp(1.75rem, 3.2vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.about-section p {
+  color: var(--muted);
+  line-height: 1.82;
+  text-wrap: pretty;
+}
+
+.about-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(18px, 4vw, 56px);
+  align-items: start;
+}
+
+.about-intro p {
+  max-width: 56rem;
+  color: var(--ink);
+  font-size: 1.03rem;
+}
+
+.about-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.about-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.about-theme-card,
+.about-meeting-card {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 253, 249, 0.74);
+}
+
+.about-theme-card {
+  display: grid;
+  gap: 8px;
+  min-height: 150px;
+  padding: 22px;
+}
+
+.about-theme-card h3,
+.about-feature-item h3,
+.about-meeting-card h3 {
+  font-size: 1.08rem;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.about-theme-card p,
+.about-feature-item p,
+.about-meeting-card p {
+  font-size: 0.94rem;
+}
+
+.about-feature-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(18px, 4vw, 42px);
+  align-items: start;
+}
+
+.about-feature-section .about-section-head {
+  margin: 0;
+}
+
+.about-feature-list {
+  display: grid;
+  gap: 10px;
+}
+
+.about-feature-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-feature-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.about-feature-item > span {
+  color: var(--accent);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.about-join-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 320px);
+  gap: clamp(20px, 5vw, 54px);
+  align-items: center;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(54, 90, 92, 0.12);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(229, 239, 238, 0.86), rgba(255, 253, 249, 0.9) 55%, rgba(250, 246, 239, 0.96)),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.about-join-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.about-join-copy h2 {
+  margin-top: 0;
+  max-width: 16ch;
+}
+
+.about-join-copy p {
+  max-width: 58rem;
+  color: var(--ink);
+}
+
+.about-qr-block {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 16px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 249, 0.78);
+}
+
+.about-qr-block img {
+  display: block;
+  width: min(100%, 240px);
+  height: auto;
+  border-radius: 14px;
+}
+
+.about-qr-block p {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.about-meeting-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.about-meeting-card {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.34fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.about-meeting-date {
+  display: grid;
+  gap: 5px;
+  align-content: center;
+  padding: 20px 22px;
+  background: var(--primary);
+  color: #fff;
+}
+
+.about-meeting-date span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.88;
+}
+
+.about-meeting-date strong {
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.about-meeting-body {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px;
+}
+
+.about-meeting-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.about-meeting-tags span {
+  background: var(--surface-muted);
+}
+
+.about-value-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(18px, 4vw, 54px);
+  align-items: start;
+}
+
+.about-value-copy {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+
+.about-value-copy p {
+  color: var(--ink);
+  font-size: 1.03rem;
+}
+
+.about-notice {
+  margin-top: 2px;
+}
+
 @media (max-width: 640px) {
   .contact-panel {
     padding: 22px;
@@ -545,5 +864,68 @@
 
   .contact-submit {
     width: 100%;
+  }
+
+  .about-hero {
+    min-height: 500px;
+    background:
+      linear-gradient(180deg, rgba(255, 253, 249, 0.96) 0%, rgba(255, 253, 249, 0.9) 48%, rgba(255, 253, 249, 0.24) 100%),
+      url("/images/lp-hero-study-session.webp") center bottom / cover no-repeat;
+  }
+
+  .about-hero-content {
+    align-self: start;
+    padding: 24px;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(2.45rem, 12vw, 3.4rem);
+  }
+
+  .about-hero-actions,
+  .about-join-actions,
+  .about-section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .about-hero-actions .button,
+  .about-join-actions .button,
+  .about-section-head .button,
+  .about-value-copy .button {
+    width: 100%;
+  }
+
+  .about-intro,
+  .about-feature-section,
+  .about-join-section,
+  .about-value-section,
+  .about-meeting-card {
+    grid-template-columns: 1fr;
+  }
+
+  .about-theme-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-section {
+    padding: 32px 0;
+  }
+
+  .about-section h2 {
+    max-width: none;
+  }
+
+  .about-join-section {
+    padding: 22px;
+  }
+
+  .about-meeting-date {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: flex-end;
+  }
+
+  .about-qr-block img {
+    width: min(100%, 220px);
   }
 }

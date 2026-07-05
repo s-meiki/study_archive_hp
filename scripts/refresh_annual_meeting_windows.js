@@ -371,9 +371,12 @@ async function refreshJsct48() {
   const abstractRange = extractRangeFromSection(abstractPage.text, /募集期間/u, /発表資格/u, {
     defaultYear: 2026,
   });
+  const registrationRange = extractRangeFromSection(registrationPage.text, /参加登録期間/u, /参加費について/u, {
+    defaultYear: 2026,
+  });
 
-  if (!abstractRange) {
-    throw new Error("jsct-48: 演題募集期間を抽出できませんでした。");
+  if (!abstractRange || !registrationRange) {
+    throw new Error("jsct-48: 演題募集または参加登録期間を抽出できませんでした。");
   }
 
   return [
@@ -389,7 +392,8 @@ async function refreshJsct48() {
       id: "jsct-48-registration",
       label: "参加登録",
       category: "registration",
-      note: registrationPage.text.includes("準備中") ? "公式ページでは参加登録は準備中です。" : "公式ページを確認してください。",
+      startDate: registrationRange.startDate,
+      endDate: registrationRange.endDate,
     },
   ];
 }
@@ -482,7 +486,9 @@ async function refreshJsphcs36() {
       label: "参加登録",
       category: "registration",
       note: annualMeetingPage.text.includes("第36回日本医療薬学会年会") && annualMeetingPage.text.includes("申込期間") && annualMeetingPage.text.includes("未定")
-        ? "日本医療薬学会の年会一覧では申込期間は未定です。"
+        ? abstractPage.text.includes("6月開始予定")
+          ? "日本医療薬学会の年会一覧では申込期間は未定です。一方、一般演題登録ページには参加登録は6月開始予定と記載があります。"
+          : "日本医療薬学会の年会一覧では申込期間は未定です。"
         : abstractPage.text.includes("6月開始予定")
         ? "公式ページでは参加登録は6月開始予定です。"
         : "公式ページを確認してください。",

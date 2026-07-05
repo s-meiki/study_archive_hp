@@ -233,6 +233,26 @@
   margin-top: 14px;
 }
 
+.detail-related-group {
+  display: grid;
+  gap: 8px;
+}
+
+.detail-related-group + .detail-related-group {
+  margin-top: 6px;
+}
+
+.detail-related-group h3 {
+  color: var(--detail-copy);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+}
+
+.detail-related-group-list {
+  display: grid;
+  gap: 10px;
+}
+
 .detail-link-row {
   display: flex;
   align-items: center;

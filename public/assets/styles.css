@@ -262,6 +262,8 @@ h1 {
 }
 
 .hero-feature {
+  display: grid;
+  gap: 12px;
   padding: 16px;
 }
 
@@ -359,6 +361,11 @@ h1 {
   color: var(--muted);
   font-size: 0.86rem;
   text-align: right;
+}
+
+.feature-detail-link {
+  width: fit-content;
+  margin-left: 4px;
 }
 
 .controls {
@@ -508,7 +515,7 @@ h1 {
 
 .entry-picks {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
 }
 
@@ -588,6 +595,11 @@ h1 {
   gap: 18px;
   padding: 18px;
   transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.archive-media-link {
+  display: block;
+  color: inherit;
 }
 
 .archive-media {
@@ -1474,6 +1486,17 @@ a.calendar-entry {
   border-color: rgba(151, 114, 75, 0.24);
 }
 
+.meeting-card-simple.is-past {
+  border-color: rgba(104, 119, 122, 0.2);
+  background: rgba(248, 250, 249, 0.72);
+}
+
+.meeting-card-simple.is-past .meeting-card-media,
+.meeting-card-simple.is-past .meeting-card-facts-simple div,
+.meeting-card-simple.is-past .meeting-milestone-item {
+  filter: saturate(0.82);
+}
+
 .meeting-card-simple:hover,
 .meeting-card-simple:focus-within {
   transform: translateY(-3px);
@@ -1591,6 +1614,11 @@ a.calendar-entry {
 .meeting-card-badge.is-pending {
   background: rgba(151, 114, 75, 0.14);
   color: var(--accent);
+}
+
+.meeting-card-badge.is-past {
+  background: rgba(104, 119, 122, 0.12);
+  color: #526164;
 }
 
 .meeting-card-title {
