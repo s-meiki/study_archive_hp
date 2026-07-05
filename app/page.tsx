@@ -61,6 +61,9 @@ export default function HomePage() {
           <a className="topbar-link" href={siteNavigation.annualMeetingsUrl}>
             学会年会一覧へ
           </a>
+          <a className="topbar-link" href="/learn">
+            学習ダッシュボード
+          </a>
           <a className="topbar-link" href={siteLegal.contactUrl}>
             問い合わせ
           </a>

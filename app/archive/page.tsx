@@ -3,6 +3,7 @@ import Script from "next/script";
 import SiteFooter from "../site-footer";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
+import LessonProgressControls from "./lesson-progress-controls";
 
 type ArchivePageProps = {
   searchParams: Promise<{
@@ -57,7 +58,10 @@ export async function generateMetadata({ searchParams }: ArchivePageProps): Prom
   };
 }
 
-export default function ArchivePage() {
+export default async function ArchivePage({ searchParams }: ArchivePageProps) {
+  const params = await searchParams;
+  const archiveId = firstQueryValue(params.id);
+
   return (
     <div className="page-shell">
       <header className="topbar">
@@ -93,6 +97,8 @@ export default function ArchivePage() {
           <p className="detail-lead" id="detail-lead"></p>
           <div className="detail-meta" id="detail-meta"></div>
         </section>
+
+        <LessonProgressControls archiveId={archiveId} />
 
         <div className="detail-layout" id="detail-layout" hidden>
           <section className="detail-main">
