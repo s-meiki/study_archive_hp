@@ -64,6 +64,9 @@ export default function HomePage() {
           <a className="topbar-link" href="/learn">
             学習ダッシュボード
           </a>
+          <a className="topbar-link" href="/courses">
+            学習コース
+          </a>
           <a className="topbar-link" href={siteLegal.contactUrl}>
             問い合わせ
           </a>

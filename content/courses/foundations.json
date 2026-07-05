@@ -1,0 +1,35 @@
+{
+  "id": "course-foundations",
+  "themeId": "foundations",
+  "title": "薬剤師業務の土台を固める",
+  "summary": "輸液・ポリファーマシー・血液製剤など、日常業務で前提となる基礎知識をひととおり見直す入門コースです。まず最初に取り組み、他テーマの理解を支える足場をつくります。",
+  "level": "入門",
+  "order": 1,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20250728-b72431442d",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20260116-3692b9f7d3",
+      "order": 2
+    },
+    {
+      "archiveId": "archive-20260327-6e372ec019",
+      "order": 3
+    },
+    {
+      "archiveId": "archive-20260408-3a9fc4db6d",
+      "order": 4
+    },
+    {
+      "archiveId": "archive-20260515-4799a9755a",
+      "order": 5
+    },
+    {
+      "archiveId": "archive-20260526-c57ee27d13",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "course-ai-utilization",
+  "themeId": "ai-utilization",
+  "title": "AIを業務と学習に活かす",
+  "summary": "AI活用シリーズを第一回から順にたどり、日常業務や学習への取り入れ方を段階的に身につけるコースです。",
+  "level": "標準",
+  "order": 5,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20250419-93d5ff6ad9",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20250512-f649d5f0a6",
+      "order": 2
+    },
+    {
+      "archiveId": "archive-20250610-e55425f87e",
+      "order": 3
+    },
+    {
+      "archiveId": "archive-20250723-869987a4ad",
+      "order": 4
+    }
+  ]
+}

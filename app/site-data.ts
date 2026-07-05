@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 
+import type { LearningContent } from "./learning/types";
+
 export type SiteTheme = {
   id: string;
   name: string;
@@ -98,6 +100,31 @@ export function loadAnnualMeetingsData() {
     "window.ANNUAL_MEETINGS_2026_DATA"
   );
   return annualMeetingsPromise;
+}
+
+const EMPTY_LEARNING_CONTENT: LearningContent = { schemaVersion: 1, courses: [] };
+let learningContentPromise: Promise<LearningContent> | null = null;
+
+async function readLearningContent(): Promise<LearningContent> {
+  try {
+    const data = await readWindowAssignedJson<LearningContent>(
+      "public/data/learning-content.js",
+      "window.LEARNING_CONTENT"
+    );
+
+    if (!data || !Array.isArray(data.courses)) {
+      return EMPTY_LEARNING_CONTENT;
+    }
+
+    return { schemaVersion: 1, courses: data.courses };
+  } catch {
+    return EMPTY_LEARNING_CONTENT;
+  }
+}
+
+export function loadLearningContent(): Promise<LearningContent> {
+  learningContentPromise ??= readLearningContent();
+  return learningContentPromise;
 }
 
 export async function findArchiveById(archiveId: string) {

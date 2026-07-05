@@ -1,0 +1,35 @@
+{
+  "id": "course-research-career",
+  "themeId": "research-career",
+  "title": "臨床研究と専門認定への一歩",
+  "summary": "臨床研究の意義や専門認定制度、学会報告の実例をたどり、研究とキャリア形成の入口を確認するコースです。",
+  "level": "標準",
+  "order": 6,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20241206-a926c4365a",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20241210-c9374cc04a",
+      "order": 2
+    },
+    {
+      "archiveId": "archive-20250418-5f6b4f5075",
+      "order": 3
+    },
+    {
+      "archiveId": "archive-20250529-6d09b4f125",
+      "order": 4
+    },
+    {
+      "archiveId": "archive-20251219-07b09962fd",
+      "order": 5
+    },
+    {
+      "archiveId": "archive-20260109-8e6dd8e413",
+      "order": 6
+    }
+  ]
+}

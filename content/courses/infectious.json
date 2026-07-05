@@ -1,0 +1,19 @@
+{
+  "id": "course-infectious",
+  "themeId": "infectious",
+  "title": "感染症治療と抗菌薬選択の基本",
+  "summary": "感染症治療の総説から入り、肺炎を題材に初期評価から抗菌薬選択までの考え方をたどるコースです。",
+  "level": "標準",
+  "order": 4,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20260318-1yp7m9p",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20260424-7f508bbae8",
+      "order": 2
+    }
+  ]
+}

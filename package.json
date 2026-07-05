@@ -3,12 +3,15 @@
   "private": true,
   "scripts": {
     "clean": "node -e \"const fs=require('fs');const p=process.env.NEXT_DIST_DIR||'.next';fs.rmSync(p,{recursive:true,force:true})\"",
-    "dev": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
-    "dev:clean": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
+    "dev": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev",
+    "dev:clean": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev",
+    "dev:turbo": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
     "build": "npm run clean && node scripts/run_next_with_server_chunk_fix.js build",
     "build:clean": "npm run clean && node scripts/run_next_with_server_chunk_fix.js build",
     "meetings:refresh": "node scripts/refresh_annual_meeting_windows.js",
     "meetings:refresh:dry": "node scripts/refresh_annual_meeting_windows.js --dry-run",
+    "learning:build": "node scripts/build_learning_content.js",
+    "learning:build:dry": "node scripts/build_learning_content.js --dry-run",
     "start": "node scripts/run_next_with_server_chunk_fix.js start"
   },
   "dependencies": {

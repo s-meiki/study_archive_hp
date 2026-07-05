@@ -65,6 +65,9 @@ export default function ProgressDashboard({ themes, archives }: ProgressDashboar
         <div className="section-kicker">Learning Dashboard</div>
         <h1>学習ダッシュボード</h1>
         <p className="learn-header-copy">これまでの視聴・修了状況をテーマ別に確認できます。</p>
+        <a className="button button-secondary learn-courses-nav-link" href="/courses">
+          学習コース一覧を見る
+        </a>
       </section>
 
       {continueArchive ? (

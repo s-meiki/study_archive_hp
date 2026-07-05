@@ -1,0 +1,19 @@
+{
+  "id": "course-cardiology",
+  "themeId": "cardiology",
+  "title": "循環器の薬物療法を学ぶ",
+  "summary": "虚血性心疾患と心房細動を軸に、循環器領域の薬物治療の考え方と処方の見方を整理するコースです。",
+  "level": "標準",
+  "order": 2,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20260210-90b833c4a5",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20260224-f1f9a4cdfb",
+      "order": 2
+    }
+  ]
+}

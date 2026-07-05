@@ -1,0 +1,29 @@
+{
+  "id": "course-neurology",
+  "themeId": "neurology",
+  "title": "脳梗塞・脳卒中の病態と治療を押さえる",
+  "summary": "脳梗塞の病態と薬物治療を繰り返し確認し、出血性脳卒中まで視野を広げて脳神経領域の要点を整理するコースです。",
+  "level": "標準",
+  "order": 3,
+  "updatedAt": "2026-07-05",
+  "lessons": [
+    {
+      "archiveId": "archive-20250929-3ec4581a44",
+      "order": 1
+    },
+    {
+      "archiveId": "archive-20251022-fcc96394fa",
+      "order": 2,
+      "optional": true
+    },
+    {
+      "archiveId": "archive-20251031-2aeb4782dd",
+      "order": 3,
+      "optional": true
+    },
+    {
+      "archiveId": "archive-20260128-b518b2beb5",
+      "order": 4
+    }
+  ]
+}
