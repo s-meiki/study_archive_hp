@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import io
 import re
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 
@@ -37,6 +39,84 @@ SUSPICIOUS_XATTRS = {
     "com.apple.FinderInfo",
     "com.apple.macl",
 }
+JPEG_EXTENSIONS = {".jpg", ".jpeg"}
+# Metadata-bearing JPEG segments that can leak author names, tool/account IDs
+# (Canva, Adobe), or C2PA provenance manifests. Publishable images should not
+# contain any of these; scripts/strip_upload_image_metadata.py removes them.
+JPEG_METADATA_MARKERS = {
+    0xE1: "APP1 (Exif/XMP)",
+    0xEB: "APP11 (JUMBF/C2PA)",
+    0xED: "APP13 (Photoshop IRB)",
+    0xFE: "COM comment",
+}
+PNG_METADATA_CHUNKS = {b"tEXt", b"zTXt", b"iTXt", b"eXIf"}
+
+
+def find_jpeg_metadata_segments(data):
+    """Walk JPEG segments up to SOS and return labels of metadata segments."""
+    if data[:2] != b"\xff\xd8":
+        return []
+
+    found = []
+    pos = 2
+    while pos + 4 <= len(data):
+        if data[pos] != 0xFF:
+            break
+        marker = data[pos + 1]
+        if marker == 0xDA:  # start of scan: entropy data follows
+            break
+        if marker == 0x01 or 0xD0 <= marker <= 0xD9:
+            pos += 2
+            continue
+        if marker in JPEG_METADATA_MARKERS:
+            found.append(JPEG_METADATA_MARKERS[marker])
+        pos += 2 + int.from_bytes(data[pos + 2:pos + 4], "big")
+    return found
+
+
+def check_image_bytes(data, label, issues):
+    for segment in find_jpeg_metadata_segments(data):
+        issues.append(f"{label}: JPEG metadata segment detected ({segment})")
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        for chunk in PNG_METADATA_CHUNKS:
+            if chunk in data:
+                issues.append(f"{label}: PNG metadata chunk detected ({chunk.decode('ascii')})")
+
+
+def check_image_contents(paths):
+    issues = []
+    for path in paths:
+        if path.suffix.lower() not in JPEG_EXTENSIONS | {".png"}:
+            continue
+        try:
+            data = path.read_bytes()
+        except OSError as error:
+            issues.append(f"{path.relative_to(ROOT)}: failed to read ({error})")
+            continue
+        check_image_bytes(data, str(path.relative_to(ROOT)), issues)
+    return issues
+
+
+def check_zip_contents(paths):
+    issues = []
+    for path in paths:
+        if path.suffix.lower() != ".zip":
+            continue
+        try:
+            archive = zipfile.ZipFile(io.BytesIO(path.read_bytes()))
+        except (OSError, zipfile.BadZipFile) as error:
+            issues.append(f"{path.relative_to(ROOT)}: failed to open zip ({error})")
+            continue
+        for member in archive.namelist():
+            name = Path(member).name
+            label = f"{path.relative_to(ROOT)}!{member}"
+            if name in DISALLOWED_FILES:
+                issues.append(f"{label}: disallowed file inside zip")
+            if any(name.startswith(prefix) for prefix in DISALLOWED_PREFIXES):
+                issues.append(f"{label}: AppleDouble metadata file inside zip")
+            if Path(member).suffix.lower() in JPEG_EXTENSIONS | {".png"}:
+                check_image_bytes(archive.read(member), label, issues)
+    return issues
 
 
 def list_upload_files():
@@ -122,6 +202,8 @@ def main():
     issues = []
     issues.extend(check_file_names(upload_files))
     issues.extend(check_pdf_contents(upload_files))
+    issues.extend(check_image_contents(upload_files))
+    issues.extend(check_zip_contents(upload_files))
     issues.extend(check_xattrs(upload_files))
 
     if issues:
