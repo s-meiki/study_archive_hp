@@ -1,0 +1,7 @@
+{
+  "projectId": "93a7a2a2-e50d-4848-99c0-ae99531d00af",
+  "projectName": "臨床学術WG Design System",
+  "shape": "off-script",
+  "localDir": "design-system",
+  "note": "Hand-authored, self-contained HTML preview bundle (each preview carries a first-line @dsCard marker). No dist/, no Storybook, no component compile — uploaded directly, not via the converter."
+}
