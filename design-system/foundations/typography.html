@@ -1,0 +1,121 @@
+<!-- @dsCard group="Foundations" name="タイポグラフィ" subtitle="大見出し〜統計数値・eyebrowラベルの実寸見本" width="900" height="720" -->
+<!--
+  使い方 (AI向け):
+  - サイズ・行間・字間・太さは表の値を厳守する。似た値への微調整はしない。
+  - 見出し系は字間を締める(負の値)、eyebrowラベルは字間を開く(+0.08em)+大文字+太字で使い分ける。
+  - 統計数値は必ず1.9rem以上/800で、下にmuted色の説明を添えるタイル形式にする(単独で置かない)。
+  - フォントは "Hiragino Sans", "Yu Gothic", sans-serif のみ。Webフォントを足さない。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タイポグラフィ — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --surface: #fffdf9;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-soft: #e5efee;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-lg: 20px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    width: 100%; margin: 24px 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-label:first-child { margin-top: 0; }
+
+  .type-block {
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 18px 22px; margin-bottom: 14px;
+  }
+  .type-sample { color: var(--ink); margin: 0; }
+  .type-spec {
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
+    font-size: 0.76rem; color: var(--muted); line-height: 1.7;
+  }
+
+  .h1-sample {
+    font-size: clamp(2.2rem, 4.4vw, 3.9rem); line-height: 1.04;
+    letter-spacing: -0.05em; font-weight: 600;
+  }
+  .h2-sample { font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; font-weight: 700; }
+  .h3-sample { font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; font-weight: 700; }
+  .body-sample { font-size: 1rem; line-height: 1.8; font-weight: 400; }
+  .lead-sample { font-size: 1rem; line-height: 1.72; font-weight: 400; color: var(--ink); }
+  .eyebrow-sample {
+    display: inline-block; padding: 6px 14px; border-radius: var(--radius-pill);
+    background: var(--primary-soft); color: var(--primary);
+    font-size: 0.76rem; line-height: 1; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .stat-tile { display: flex; gap: 28px; flex-wrap: wrap; }
+  .stat-item { min-width: 140px; }
+  .stat-number {
+    font-size: 1.9rem; line-height: 1.1; letter-spacing: -0.03em; font-weight: 800;
+    color: var(--ink);
+  }
+  .stat-caption { margin-top: 4px; font-size: 0.82rem; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="spec-label">大見出し (h1 / 表紙)</div>
+  <div class="type-block">
+    <p class="type-sample h1-sample">必要な勉強会に、<br>すぐ届く。</p>
+    <div class="type-spec">clamp(2.2rem, 4.4vw, 3.9rem) / 行間 1.04 / 字間 -0.05em / 太さ 通常〜600</div>
+  </div>
+
+  <div class="spec-label">セクション見出し (h2)</div>
+  <div class="type-block">
+    <p class="type-sample h2-sample">循環器アーカイブ</p>
+    <div class="type-spec">1.64rem / 行間 1.2 / 字間 -0.03em / 太さ 700</div>
+  </div>
+
+  <div class="spec-label">カード見出し (h3)</div>
+  <div class="type-block">
+    <p class="type-sample h3-sample">抗凝固療法の実践ポイント</p>
+    <div class="type-spec">1.32rem / 行間 1.28 / 字間 -0.03em / 太さ 700</div>
+  </div>
+
+  <div class="spec-label">本文 / リード文</div>
+  <div class="type-block">
+    <p class="type-sample lead-sample">臨床学術ワーキンググループは、薬剤師・医療従事者が臨床・研究・基礎レクチャー・AI活用を学び合う勉強会です。月2回以上ハイブリッドで開催し、録画と資料をアーカイブとして公開しています。</p>
+    <div class="type-spec">リード文: 1rem / 行間 1.72 / 字間 0 / 太さ 400</div>
+    <p class="type-sample body-sample" style="margin-top:14px;">今回は直接経口抗凝固薬(DOAC)の選択基準と、腎機能低下時の減量判断について、症例(架空例)を交えて解説します。事前資料は開催3日前を目安に配布します。</p>
+    <div class="type-spec">本文: 0.95〜1rem / 行間 1.7〜1.85 / 字間 0 / 太さ 400</div>
+  </div>
+
+  <div class="spec-label">ラベル / eyebrow</div>
+  <div class="type-block">
+    <span class="eyebrow-sample">Theme Library</span>
+    <div class="type-spec">0.72〜0.78rem / 行間 1 / 字間 +0.08em・大文字 / 太さ 700。セクションや資料冒頭に置く署名的パーツ</div>
+  </div>
+
+  <div class="spec-label">統計数値</div>
+  <div class="type-block">
+    <div class="stat-tile">
+      <div class="stat-item">
+        <div class="stat-number">128</div>
+        <div class="stat-caption">延べ開催回数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">6</div>
+        <div class="stat-caption">テーマ分類数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">92%</div>
+        <div class="stat-caption">アーカイブ視聴率</div>
+      </div>
+    </div>
+    <div class="type-spec">1.9rem〜 / 行間 1.1 / 字間 -0.03em / 太さ 800。数値単体では置かず、下にmuted色の説明を添える</div>
+  </div>
+</body>
+</html>

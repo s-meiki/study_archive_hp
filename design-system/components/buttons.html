@@ -1,0 +1,73 @@
+<!-- @dsCard group="Components" name="ボタン" subtitle="Primary / Ghost / テキスト / 危険操作" width="760" height="420" -->
+<!--
+  使い方 (AI向け):
+  - 主要アクションは1画面に1つだけ .btn-primary。並べる場合、残りは .btn-ghost。
+  - 高さ46px・ピル型・font-weight:700 は固定。角丸や高さを変えない。
+  - 破壊的操作のみ .btn-danger。成功系の緑ボタンは作らない (緑はステータス表示専用)。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ボタン — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
+    --on-primary: #ffffff; --danger: #8a3f30; --danger-tint: rgba(150, 70, 55, 0.12);
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-pill: 999px; --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 0 0 10px; }
+  .spec-label {
+    width: 100%; margin: 18px 0 8px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-label:first-child { margin-top: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 0 18px; border-radius: var(--radius-pill);
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+    font-family: inherit; font-size: 0.93rem; font-weight: 700; cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--primary); border-color: transparent; color: var(--on-primary); }
+  .btn-ghost { background: var(--surface-muted); }
+  .btn-text {
+    min-height: auto; padding: 4px 2px; border: none; border-radius: 0;
+    background: none; color: var(--primary); text-decoration: underline;
+    text-underline-offset: 4px; font-size: 0.9rem;
+  }
+  .btn-danger { background: var(--danger-tint); border-color: transparent; color: var(--danger); }
+  .btn-small { min-height: 38px; padding: 0 14px; font-size: 0.86rem; }
+</style>
+</head>
+<body>
+  <div class="spec-label">主要 + 併記 (primaryは1つだけ)</div>
+  <div class="spec-row">
+    <a class="btn btn-primary" href="#">アーカイブを見る</a>
+    <a class="btn btn-ghost" href="#">参加方法を確認</a>
+    <a class="btn btn-text" href="#">開催カレンダーへ</a>
+  </div>
+
+  <div class="spec-label">サイズ (標準46px / 小38px)</div>
+  <div class="spec-row">
+    <button class="btn btn-primary">録画を再生</button>
+    <button class="btn btn-primary btn-small">資料を開く</button>
+    <button class="btn btn-ghost btn-small">あとで見る</button>
+  </div>
+
+  <div class="spec-label">危険操作 (破壊的操作のみ)</div>
+  <div class="spec-row">
+    <button class="btn btn-danger">学習データを初期化</button>
+  </div>
+</body>
+</html>

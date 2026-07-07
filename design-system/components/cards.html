@@ -1,0 +1,220 @@
+<!-- @dsCard group="Components" name="カード" subtitle="アーカイブ/コース/パネル" width="1000" height="900" -->
+<!--
+  使い方 (AI向け):
+  - アーカイブカード (.panel.archive-card) はアーカイブ一覧のメイン部品。サムネ260px+本文の2カラム固定。
+  - コースカード (.learn-course-card) は学習コース一覧用。レベルpill(primary-soft)とテーマpill(茶系)を必ず両方置く。
+  - .panel は共通の土台。padding や見出し構成は用途ごとの子クラス (.hero-copy 等) で足す。単体では余白を持たない。
+  - テーマ分類チップは .learn-course-pill--theme を流用しており、アーカイブカード内でもコースカードと同じ見た目で揃える。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カード — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --surface: #fffdf9;
+    --surface-muted: #faf6ef;
+    --ink: #24343b;
+    --muted: #6b7b82;
+    --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c;
+    --primary-soft: #e5efee;
+    --accent: #97724b;
+    --accent-strong: #8c4f1f;
+    --accent-tint: rgba(151, 114, 75, 0.14);
+    --on-primary: #ffffff;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    margin: 0 0 12px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-block + .spec-label { margin-top: 28px; }
+
+  /* ===== 基底パネル ===== */
+  .panel {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+  }
+  .base-panel { padding: 28px; display: grid; gap: 10px; max-width: 640px; }
+  .section-kicker {
+    color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .base-panel h2 { margin: 6px 0 0; font-size: 1.64rem; letter-spacing: -0.03em; }
+  .base-panel p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+  /* ===== テーマ/レベル分類チップ (コースカード・アーカイブカードで共通利用) ===== */
+  .learn-course-pill {
+    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
+    border-radius: var(--radius-pill); background: rgba(107, 123, 130, 0.14);
+    color: var(--muted); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .learn-course-pill--level { background: var(--primary-soft); color: var(--primary); }
+  .learn-course-pill--theme { background: var(--accent-tint); color: var(--accent-strong); }
+
+  /* ===== アーカイブカード ===== */
+  .archive-card {
+    display: grid; grid-template-columns: 260px 1fr; gap: 18px; padding: 18px;
+  }
+  .archive-media-link { display: block; color: inherit; }
+  .archive-media {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden;
+    background-image:
+      linear-gradient(155deg, rgba(23, 34, 40, 0.18), rgba(23, 34, 40, 0.06)),
+      linear-gradient(135deg, #35585b, #8ea9a2);
+    background-position: center; background-size: cover;
+  }
+  .archive-media::before {
+    content: ""; position: absolute; inset: 12px; border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .archive-media-caption {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 0 40px; text-align: center; color: rgba(255, 255, 255, 0.78);
+    font-size: 0.72rem; line-height: 1.5;
+  }
+  .archive-media .play-button {
+    position: absolute; left: 14px; bottom: 14px; width: 46px; height: 46px;
+    border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 14px 28px rgba(23, 34, 40, 0.16);
+  }
+  .archive-media .play-button::before {
+    content: ""; position: absolute; left: 18px; top: 14px;
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--primary);
+  }
+  .archive-media .duration {
+    position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center;
+    min-height: 28px; padding: 0 12px; border-radius: var(--radius-pill);
+    background: rgba(23, 34, 40, 0.56); color: #ffffff; font-size: 0.78rem;
+  }
+  .archive-content { display: flex; flex-direction: column; justify-content: center; }
+  .archive-meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+    color: var(--muted); font-size: 0.84rem;
+  }
+  .archive-meta .status { color: var(--accent); font-weight: 700; }
+  .archive-content h3 { margin-top: 10px; font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; }
+  .archive-title-link { color: inherit; text-decoration: none; }
+  .archive-content p { margin-top: 10px; color: var(--muted); line-height: 1.72; }
+  .archive-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
+  .archive-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .mini-link {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px;
+    border-radius: var(--radius-pill); border: 1px solid var(--line);
+    background: var(--surface-muted); font-size: 0.87rem; font-weight: 700; color: var(--ink);
+    text-decoration: none;
+  }
+  .mini-link.primary { background: var(--primary); border-color: transparent; color: #ffffff; }
+  .archive-note { color: var(--muted); font-size: 0.85rem; }
+
+  /* ===== コースカード ===== */
+  .course-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .learn-course-card {
+    display: grid; gap: 10px; padding: 22px; border: 1px solid var(--line);
+    border-radius: var(--radius-lg); background: var(--surface); color: inherit; text-decoration: none;
+  }
+  .learn-course-card-head { display: flex; flex-wrap: wrap; gap: 8px; }
+  .learn-course-title { margin: 0; font-size: 1.1rem; line-height: 1.45; letter-spacing: -0.01em; }
+  .learn-course-summary { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.68; }
+  .learn-course-card-foot {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 10px; margin-top: 4px; color: var(--muted); font-size: 0.82rem;
+  }
+  .learn-course-lesson-count { color: var(--muted); font-size: 0.86rem; }
+  .learn-course-progress-badge {
+    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
+    font-size: 0.8rem; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+  <div class="spec-block">
+    <div class="spec-label">アーカイブカード (.panel.archive-card) — 一覧のメイン部品。サムネ16:9+内側白枠+再生ボタン+時間バッジ。本文は日付・テーマ・アセット有無をmeta行に、要約下にリンクと担当を配置。</div>
+    <article class="panel archive-card">
+      <a class="archive-media-link" href="#" aria-label="抗凝固療法の実践ポイントの詳細を見る">
+        <div class="archive-media">
+          <span class="archive-media-caption">写真: 勉強会の様子</span>
+          <span class="play-button" aria-hidden="true"></span>
+          <span class="duration">32:05</span>
+        </div>
+      </a>
+      <div class="archive-content">
+        <div class="archive-meta">
+          <span class="status">最新</span>
+          <span>2026-06-24</span>
+          <!-- テーマチップは学習コースの .learn-course-pill--theme と同じ見た目を流用 -->
+          <span class="learn-course-pill learn-course-pill--theme">循環器</span>
+          <span>スライドあり</span>
+        </div>
+        <h3><a class="archive-title-link" href="#">抗凝固療法の実践ポイント</a></h3>
+        <p>DOACとワルファリンの使い分け、周術期休薬の考え方を実臨床の質問形式で整理します。</p>
+        <div class="archive-footer">
+          <div class="archive-links">
+            <a class="mini-link primary" href="#">この回を見る</a>
+            <a class="mini-link" href="#">動画</a>
+            <a class="mini-link" href="#">スライド</a>
+          </div>
+          <div class="archive-note">担当: 事務局</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="spec-block">
+    <div class="spec-label">コースカード (.learn-course-card) — レベルpill+テーマpillを上部に、下部に「n/m レッスン」と進捗バッジ。進捗状態は文言のみ差し替え、色クラスは増やさない。</div>
+    <div class="course-card-grid">
+      <a class="learn-course-card" href="#">
+        <div class="learn-course-card-head">
+          <span class="learn-course-pill learn-course-pill--level">初級</span>
+          <span class="learn-course-pill learn-course-pill--theme">循環器</span>
+        </div>
+        <h3 class="learn-course-title">抗凝固療法の基礎を理解する</h3>
+        <p class="learn-course-summary">DOACとワルファリンの薬理・相互作用・モニタリングを、架空症例をもとに段階的に学びます。</p>
+        <div class="learn-course-card-foot">
+          <span class="learn-course-lesson-count">3/8 レッスン</span>
+          <span class="learn-course-progress-badge">学習中</span>
+        </div>
+      </a>
+      <a class="learn-course-card" href="#">
+        <div class="learn-course-card-head">
+          <span class="learn-course-pill learn-course-pill--level">中級</span>
+          <span class="learn-course-pill learn-course-pill--theme">感染症</span>
+        </div>
+        <h3 class="learn-course-title">抗菌薬適正使用の考え方</h3>
+        <p class="learn-course-summary">経験的治療から標的治療への移行判断と、デエスカレーションの実践ポイントを扱います。</p>
+        <div class="learn-course-card-foot">
+          <span class="learn-course-lesson-count">8/8 レッスン</span>
+          <span class="learn-course-progress-badge">完了</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <div class="spec-label">基底パネル (.panel) — カード/ヒーロー/統計等の共通土台。白縁1px+標準影+角丸28px。単体では余白を持たず、用途別クラス (.base-panel 等) でpaddingと構成を足す。</div>
+    <div class="panel base-panel">
+      <span class="section-kicker">開催案内</span>
+      <h2>会場とオンライン参加の案内</h2>
+      <p>ハイブリッド開催のため、会場参加・オンライン参加のいずれも録画をアーカイブとして後日公開します。当日参加できない場合も、資料とあわせて内容を確認できます。</p>
+    </div>
+  </div>
+
+</body>
+</html>

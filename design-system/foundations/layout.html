@@ -1,0 +1,169 @@
+<!-- @dsCard group="Foundations" name="余白・角丸・影" subtitle="角丸4段階・標準影・8px余白スケール・ボーダー比較" width="900" height="640" -->
+<!--
+  使い方 (AI向け):
+  - 角丸はパネル28px・カード20px・内部要素16px・ボタン/チップ/入力欄は完全ピル(999px)の4段階のみを使う。中間値を発明しない。
+  - 影は 0 12px 30px rgba(36,52,59,0.07) の一種類だけ。濃い影・多重影・カラー影は使わない。
+  - 余白は8px基調(8/12/16/24/28…)で組む。カードpadding18〜22px、パネルpadding24〜36pxが目安。
+  - ボーダーは通常 --line、写真やカラー面の上に白カードを重ねる時だけ白縁 rgba(255,255,255,0.92) を使う。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>余白・角丸・影 — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    width: 100%; margin: 24px 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-label:first-child { margin-top: 0; }
+  .spec-note { margin: -4px 0 12px; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  .radius-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .radius-item { text-align: center; }
+  .radius-box {
+    width: 108px; height: 84px; background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .radius-caption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); }
+  .radius-caption b { display: block; color: var(--ink); font-size: 0.86rem; }
+
+  .shadow-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .shadow-box {
+    width: 220px; height: 100px; background: var(--surface);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.86rem; font-weight: 700; color: var(--ink);
+  }
+  .shadow-caption { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .shadow-caption code {
+    font-family: var(--font-sans); background: var(--surface-muted);
+    padding: 2px 6px; border-radius: 6px; color: var(--ink);
+  }
+
+  .space-scale { display: grid; gap: 10px; max-width: 520px; }
+  .space-row { display: flex; align-items: center; gap: 14px; }
+  .space-bar { height: 16px; background: var(--primary); border-radius: 4px; }
+  .space-row .space-label {
+    width: 46px; flex: none; font-size: 0.82rem; font-weight: 700; color: var(--ink);
+  }
+  .space-row .space-usage { font-size: 0.78rem; color: var(--muted); }
+
+  .border-demo { display: flex; gap: 20px; flex-wrap: wrap; }
+  .border-plain-wrap {
+    width: 260px; padding: 20px; border-radius: var(--radius-lg);
+    background: var(--surface-muted);
+  }
+  .border-plain {
+    padding: 14px 16px; border-radius: var(--radius-md);
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 0.82rem;
+  }
+  .border-photo-wrap {
+    width: 260px; height: 150px; padding: 14px; border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #2f4d50, #7f9f99);
+    position: relative; display: flex; align-items: flex-start; justify-content: center;
+  }
+  .border-photo-label {
+    margin-top: 6px; color: rgba(255, 255, 255, 0.78); font-size: 0.74rem; letter-spacing: 0.04em;
+  }
+  .border-white {
+    position: absolute; left: 14px; right: 14px; bottom: 14px;
+    padding: 12px 14px; border-radius: var(--radius-md);
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    font-size: 0.8rem;
+  }
+  .border-caption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); text-align: center; }
+</style>
+</head>
+<body>
+  <div class="spec-label">角丸 4段階</div>
+  <div class="radius-row">
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:var(--radius-xl);"></div>
+      <div class="radius-caption"><b>28px</b>パネル</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:var(--radius-lg);"></div>
+      <div class="radius-caption"><b>20px</b>カード</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:var(--radius-md);"></div>
+      <div class="radius-caption"><b>16px</b>内部要素</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:var(--radius-pill);"></div>
+      <div class="radius-caption"><b>999px</b>ボタン・チップ・入力欄</div>
+    </div>
+  </div>
+
+  <div class="spec-label">影 (標準影のみ)</div>
+  <div class="shadow-row">
+    <div class="shadow-box">カード・パネル</div>
+    <div class="shadow-caption">
+      値は一種類のみ:<br><code>0 12px 30px rgba(36,52,59,0.07)</code><br>
+      濃い影・複数影・カラー影は使わない。
+    </div>
+  </div>
+
+  <div class="spec-label">スペーシングスケール (8px基調)</div>
+  <div class="space-scale">
+    <div class="space-row">
+      <div class="space-label">8px</div>
+      <div class="space-bar" style="width:8px;"></div>
+      <div class="space-usage">チップ内側の最小間隔</div>
+    </div>
+    <div class="space-row">
+      <div class="space-label">12px</div>
+      <div class="space-bar" style="width:12px;"></div>
+      <div class="space-usage">要素間の基本ギャップ</div>
+    </div>
+    <div class="space-row">
+      <div class="space-label">16px</div>
+      <div class="space-bar" style="width:16px;"></div>
+      <div class="space-usage">カード内padding下限</div>
+    </div>
+    <div class="space-row">
+      <div class="space-label">24px</div>
+      <div class="space-bar" style="width:24px;"></div>
+      <div class="space-usage">パネルpadding下限・セクション間隔</div>
+    </div>
+    <div class="space-row">
+      <div class="space-label">28px</div>
+      <div class="space-bar" style="width:28px;"></div>
+      <div class="space-usage">パネルpadding上限・カード最大padding</div>
+    </div>
+  </div>
+
+  <div class="spec-label">ボーダー: --line / 白縁</div>
+  <div class="border-demo">
+    <div>
+      <div class="border-plain-wrap">
+        <div class="border-plain">--line (標準) を使う通常のカード。地色との差が小さい面の上で使う。</div>
+      </div>
+      <div class="border-caption">1px solid var(--line)</div>
+    </div>
+    <div>
+      <div class="border-photo-wrap">
+        <span class="border-photo-label">写真: 勉強会の様子</span>
+        <div class="border-white">白縁カードは写真の上に重ねる時だけ使う。</div>
+      </div>
+      <div class="border-caption">1px solid rgba(255,255,255,0.92)</div>
+    </div>
+  </div>
+</body>
+</html>

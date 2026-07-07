@@ -1,0 +1,257 @@
+<!-- @dsCard group="Foundations" name="カラー" subtitle="コア10色・セマンティック配色・配分の目安・ロゴマークの色" width="900" height="640" -->
+<!--
+  使い方 (AI向け):
+  - 背景・面(--bg/--surface/--surface-muted)を地として使い、primaryは強調用途(ボタン・アクティブ状態)に1割弱だけ使う。accentは差し色のみで多用しない。
+  - セマンティック色(成功/注意/エラー)は状態表示専用。装飾目的の彩色には使わない。
+  - ロゴマーク(CAモノグラム)の色は--primary(A)と--accent(Cの弧)の2トークンのみ。旧・青系グラデ球体は廃止済みで使わない。
+  - 新しい色を作る前に、このページの10色+拡張色で表現できないか必ず確認する。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カラー — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --bg-soft: #efebe2;
+    --surface: #fffdf9;
+    --surface-muted: #faf6ef;
+    --ink: #24343b;
+    --muted: #6b7b82;
+    --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c;
+    --primary-soft: #e5efee;
+    --accent: #97724b;
+    --on-primary: #ffffff;
+    --accent-strong: #8c4f1f;
+    --accent-tint: rgba(151, 114, 75, 0.14);
+    --danger: #8a3f30;
+    --danger-tint: rgba(150, 70, 55, 0.12);
+    --success: #2d6c45;
+    --success-tint: rgba(56, 118, 78, 0.14);
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-lg: 20px;
+    --radius-md: 16px;
+    --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    width: 100%; margin: 22px 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-label:first-child { margin-top: 0; }
+  .spec-note {
+    margin: -4px 0 12px; font-size: 0.8rem; color: var(--muted); line-height: 1.6;
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+    gap: 12px;
+  }
+  .swatch-card {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 12px;
+  }
+  .swatch-fill {
+    height: 56px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    margin-bottom: 10px;
+  }
+  .swatch-name { font-size: 0.86rem; font-weight: 700; }
+  .swatch-hex {
+    margin-top: 2px; font-size: 0.76rem; color: var(--muted); font-weight: 400;
+  }
+  .swatch-usage {
+    margin-top: 6px; font-size: 0.76rem; color: var(--muted); line-height: 1.5;
+  }
+
+  .ratio-wrap {
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 18px 20px;
+  }
+  .ratio-bar {
+    display: flex; height: 46px; border-radius: var(--radius-md);
+    overflow: hidden; border: 1px solid var(--line);
+  }
+  .ratio-seg {
+    display: flex; align-items: center; justify-content: center; min-width: 0;
+    font-size: 0.74rem; font-weight: 700; color: var(--ink); overflow: hidden; white-space: nowrap;
+  }
+  .ratio-seg.bg { background: var(--bg); flex: 90 1 0; }
+  .ratio-seg.primary { background: var(--primary); color: var(--on-primary); flex: 8 1 0; }
+  .ratio-seg.accent { background: var(--accent); flex: 2 1 0; }
+  .ratio-legend {
+    display: flex; gap: 18px; margin-top: 10px; font-size: 0.78rem; color: var(--muted); flex-wrap: wrap;
+  }
+  .ratio-legend span { font-weight: 700; color: var(--ink); }
+
+  .logo-warning {
+    display: flex; gap: 18px; align-items: center;
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 16px 20px;
+  }
+  .logo-chip { width: 64px; height: 64px; flex: none; display: block; }
+  .logo-warning-body h3 {
+    margin: 0 0 4px; font-size: 0.95rem; font-weight: 700; color: var(--accent-strong);
+  }
+  .logo-warning-body p {
+    margin: 0; font-size: 0.8rem; color: var(--muted); line-height: 1.6;
+  }
+  .logo-warning-body .badge {
+    display: inline-block; margin-top: 8px; padding: 4px 12px;
+    border-radius: var(--radius-pill); background: var(--accent-tint);
+    color: var(--accent-strong); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+  <div class="spec-label">コア10色</div>
+  <div class="spec-note">背景・面が全体の9割を占める。primary・accentはこの上に少量だけ乗せる。</div>
+  <div class="swatch-grid">
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--bg)"></div>
+      <div class="swatch-name">--bg</div>
+      <div class="swatch-hex">#f6f3ec</div>
+      <div class="swatch-usage">ページ・スライドの地色。純白は使わない</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--bg-soft)"></div>
+      <div class="swatch-name">--bg-soft</div>
+      <div class="swatch-hex">#efebe2</div>
+      <div class="swatch-usage">背景内の区切り面・セクション帯</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--surface)"></div>
+      <div class="swatch-name">--surface</div>
+      <div class="swatch-hex">#fffdf9</div>
+      <div class="swatch-usage">アーカイブカード・パネルの面</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--surface-muted)"></div>
+      <div class="swatch-name">--surface-muted</div>
+      <div class="swatch-hex">#faf6ef</div>
+      <div class="swatch-usage">検索窓・引用・沈めた面</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--ink)"></div>
+      <div class="swatch-name">--ink</div>
+      <div class="swatch-hex">#24343b</div>
+      <div class="swatch-usage">見出し・本文の文字色</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--muted)"></div>
+      <div class="swatch-name">--muted</div>
+      <div class="swatch-hex">#6b7b82</div>
+      <div class="swatch-usage">日付・回数などの補助情報</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--surface-muted);border:1px solid var(--line)"></div>
+      <div class="swatch-name">--line</div>
+      <div class="swatch-hex">rgba(36,52,59,.1)</div>
+      <div class="swatch-usage">カード・入力欄の標準ボーダー</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--primary)"></div>
+      <div class="swatch-name">--primary</div>
+      <div class="swatch-hex">#365a5c</div>
+      <div class="swatch-usage">主要ボタン・アクティブ状態</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--primary-soft)"></div>
+      <div class="swatch-name">--primary-soft</div>
+      <div class="swatch-hex">#e5efee</div>
+      <div class="swatch-usage">eyebrowラベル・バッジの背景</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--accent)"></div>
+      <div class="swatch-name">--accent</div>
+      <div class="swatch-hex">#97724b</div>
+      <div class="swatch-usage">リンクhover・差し色のみ</div>
+    </div>
+  </div>
+
+  <div class="spec-label">拡張(セマンティック): 成功 / 注意・保留 / エラー</div>
+  <div class="spec-note">状態表示専用。装飾目的では使わない。各ペアは「濃色=文字・強調」「淡色=背景・チップ地」。</div>
+  <div class="swatch-grid">
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--success)"></div>
+      <div class="swatch-name">--success</div>
+      <div class="swatch-hex">#2d6c45</div>
+      <div class="swatch-usage">受講登録完了・クイズ正解</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--success-tint)"></div>
+      <div class="swatch-name">--success-tint</div>
+      <div class="swatch-hex">rgba(56,118,78,.14)</div>
+      <div class="swatch-usage">成功系チップ・バッジの背景</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--accent-strong)"></div>
+      <div class="swatch-name">--accent-strong</div>
+      <div class="swatch-hex">#8c4f1f</div>
+      <div class="swatch-usage">開催保留・注意喚起の文字</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--accent-tint)"></div>
+      <div class="swatch-name">--accent-tint</div>
+      <div class="swatch-hex">rgba(151,114,75,.14)</div>
+      <div class="swatch-usage">注意系チップの背景</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--danger)"></div>
+      <div class="swatch-name">--danger</div>
+      <div class="swatch-hex">#8a3f30</div>
+      <div class="swatch-usage">不正解表示・破壊的操作</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--danger-tint)"></div>
+      <div class="swatch-name">--danger-tint</div>
+      <div class="swatch-hex">rgba(150,70,55,.12)</div>
+      <div class="swatch-usage">危険操作ボタンの背景</div>
+    </div>
+  </div>
+
+  <div class="spec-label">配分の目安</div>
+  <div class="ratio-wrap">
+    <div class="ratio-bar">
+      <div class="ratio-seg bg">背景・面 約90%</div>
+      <div class="ratio-seg primary"></div>
+      <div class="ratio-seg accent"></div>
+    </div>
+    <div class="ratio-legend">
+      <div><span>背景・面</span> 約9割 (--bg / --surface / --surface-muted)</div>
+      <div><span>primary</span> 1割弱 (ボタン・強調のみ)</div>
+      <div><span>accent</span> 差し色のみ (hover・一部強調)</div>
+    </div>
+  </div>
+
+  <div class="spec-label">ロゴマークの色</div>
+  <div class="logo-warning">
+    <svg class="logo-chip" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+      </g>
+    </svg>
+    <div class="logo-warning-body">
+      <h3>CA モノグラム — 使用色は --primary と --accent のみ</h3>
+      <p>金の弧(C)=--accent #97724b、青緑のA=--primary #365a5c。パスデータ(foundations/brand.html が正)を改変しない。旧・青系グラデ球体は廃止済みで、いかなる用途にも使わない。</p>
+      <span class="badge">形・色の改変禁止</span>
+    </div>
+  </div>
+</body>
+</html>

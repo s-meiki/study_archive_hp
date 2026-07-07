@@ -1,0 +1,182 @@
+<!-- @dsCard group="Templates" name="SNS画像" subtitle="正方形告知/OGP横長" width="1200" height="1900" -->
+<!--
+  使い方 (AI向け):
+  - SNS告知は正方形 (実寸1080x1080)、リンク共有のOGPは横長 (実寸1200x630)。ここでは60%縮小で表示している。
+  - 書き出し時は .card-1080 / .card-og の実寸をそのまま使う。文言は短く、演題・日時・回数を優先する。
+  - 背景は --bg。装飾は右下の淡い primary-tint 円弧を単色で置くのみ。グラデ装飾は使わない (ロゴは例外)。
+  - 感嘆符・絵文字・誇大表現は使わない。日付は YYYY-MM-DD 形式。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNS画像 — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --bg-soft: #efebe2; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
+    --on-primary: #ffffff; --primary-tint: rgba(54, 90, 92, 0.12); --primary-tint-strong: rgba(54, 90, 92, 0.18);
+    --accent-tint: rgba(151, 114, 75, 0.14); --accent-strong: #8c4f1f;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px; width: 1200px;
+    font-family: var(--font-sans); color: var(--ink); background: var(--bg-soft);
+  }
+  .stage { display: grid; gap: 36px; justify-items: start; }
+  .stage-note {
+    margin: 0 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ---- 縮小ラッパ (実寸をtransformで60%表示) ---- */
+  .scale-square { width: 648px; height: 648px; overflow: hidden; }   /* 1080 * 0.6 */
+  .scale-og { width: 720px; height: 378px; overflow: hidden; }        /* 1200x630 * 0.6 */
+  .card-1080, .card-og { transform: scale(0.6); transform-origin: top left; }
+
+  /* ---- 共通パーツ ---- */
+  .eyebrow {
+    display: inline-flex; align-items: center; padding: 0 24px; min-height: 52px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
+    font-size: 1.28rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .lockup { display: inline-flex; align-items: center; gap: 20px; }
+  .lockup-mark { width: 68px; height: 68px; flex: none; display: block; }
+  .lockup-copy { display: grid; gap: 4px; }
+  .lockup-label { color: var(--muted); font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .lockup-name { color: var(--ink); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+
+  /* ---- (a) 正方形告知 1080x1080 ---- */
+  .card-1080 {
+    position: relative; width: 1080px; height: 1080px; overflow: hidden;
+    padding: 96px; background: var(--bg);
+    border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .card-1080 .arc {
+    position: absolute; right: -220px; bottom: -220px; width: 620px; height: 620px;
+    border-radius: var(--radius-pill); background: var(--primary-tint);
+  }
+  .card-1080 .arc-inner {
+    position: absolute; right: -120px; bottom: -120px; width: 400px; height: 400px;
+    border-radius: var(--radius-pill); background: var(--primary-tint-strong);
+  }
+  .sq-top { display: flex; align-items: center; gap: 20px; }
+  .sq-round {
+    display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px;
+    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
+    color: var(--muted); font-size: 1.24rem; font-weight: 700;
+  }
+  .sq-body { position: relative; margin-top: auto; }
+  .sq-theme {
+    display: inline-flex; align-items: center; min-height: 46px; padding: 0 22px;
+    border-radius: var(--radius-pill); background: var(--accent-tint); color: var(--accent-strong);
+    font-size: 1.16rem; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .sq-title {
+    margin: 28px 0 0; font-size: 4.6rem; line-height: 1.08; letter-spacing: -0.05em; font-weight: 600;
+    max-width: 18ch;
+  }
+  .sq-date { margin: 34px 0 0; color: var(--muted); font-size: 1.9rem; line-height: 1.5; }
+  .sq-foot { position: relative; margin-top: auto; padding-top: 56px; }
+
+  /* ---- (b) OGP横長 1200x630 ---- */
+  .card-og {
+    position: relative; width: 1200px; height: 630px; overflow: hidden;
+    padding: 72px 80px; background: var(--bg);
+    border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-og .arc {
+    position: absolute; right: -160px; bottom: -200px; width: 480px; height: 480px;
+    border-radius: var(--radius-pill); background: var(--primary-tint);
+  }
+  .og-top { position: relative; }
+  .og-name { color: var(--primary); font-size: 1.4rem; font-weight: 700; letter-spacing: 0.06em; }
+  .og-copy { margin: 20px 0 0; font-size: 3.6rem; line-height: 1.1; letter-spacing: -0.05em; font-weight: 600; max-width: 20ch; }
+  .og-bottom { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .og-themes { display: flex; flex-wrap: wrap; gap: 12px; }
+  .og-chip {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px;
+    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
+    color: var(--muted); font-size: 1.16rem; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <!-- (a) 正方形告知 -->
+    <div>
+      <p class="stage-note">正方形告知 — 実寸 1080×1080（表示は60%）</p>
+      <div class="scale-square">
+        <section class="card-1080">
+          <span class="arc" aria-hidden="true"></span>
+          <span class="arc-inner" aria-hidden="true"></span>
+          <div class="sq-top">
+            <span class="eyebrow">勉強会 開催告知</span>
+            <span class="sq-round">第65回</span>
+          </div>
+          <div class="sq-body">
+            <span class="sq-theme">脳神経</span>
+            <h1 class="sq-title">パーキンソン病治療薬の使い分け</h1>
+            <p class="sq-date">2026-08-01（土）14:00–15:30<br>ハイブリッド開催 ／ 参加無料・事前申込制</p>
+          </div>
+          <div class="sq-foot">
+            <div class="lockup">
+              <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+</g>
+</svg>
+              <span class="lockup-copy">
+                <span class="lockup-label">Clinical Academic WG</span>
+                <span class="lockup-name">臨床学術ワーキンググループ</span>
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- (b) OGP横長 -->
+    <div>
+      <p class="stage-note">OGP横長 — 実寸 1200×630（表示は60%）</p>
+      <div class="scale-og">
+        <section class="card-og">
+          <span class="arc" aria-hidden="true"></span>
+          <div class="og-top">
+            <span class="og-name">臨床学術ワーキンググループ</span>
+            <h2 class="og-copy">必要な勉強会に、すぐ届く。</h2>
+          </div>
+          <div class="og-bottom">
+            <div class="og-themes">
+              <span class="og-chip">循環器</span>
+              <span class="og-chip">脳神経</span>
+              <span class="og-chip">感染症</span>
+              <span class="og-chip">研究・認定</span>
+            </div>
+            <div class="lockup">
+              <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+</g>
+</svg>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

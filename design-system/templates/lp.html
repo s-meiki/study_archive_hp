@@ -1,0 +1,284 @@
+<!-- @dsCard group="Templates" name="LPセクション" subtitle="ヒーロー/特徴/実績/CTA/フッター" width="1180" height="2600" -->
+<!--
+  使い方 (AI向け):
+  - 勉強会サイトの紹介ページ・募集ページはこの縦一連を上から流用する。コンテナ最大幅は1180px。
+  - ヒーローは 0.94fr/1.06fr の左右非対称。左に文言、右に注目回カード。primary塗りボタンは1つだけ。
+  - 特徴カードは3枚、実績帯は統計タイル3連、CTAはpanel内に見出し+ボタンで締める。
+  - primary は全体の1割弱、accent は差し色のみ。装飾グラデは使わない（ロゴとサムネ地のみ例外）。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LPセクション — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --bg-soft: #efebe2; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
+    --on-primary: #ffffff; --accent-tint: rgba(151, 114, 75, 0.14); --accent-strong: #8c4f1f;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px; width: 1180px;
+    font-family: var(--font-sans); color: var(--ink); background: var(--bg);
+  }
+  .lp { display: grid; gap: 18px; }
+  .panel {
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow);
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
+    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 0 20px; border-radius: var(--radius-pill);
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+    font-family: inherit; font-size: 0.93rem; font-weight: 700; text-decoration: none; cursor: pointer;
+  }
+  .button-primary { background: var(--primary); border-color: transparent; color: var(--on-primary); }
+  .button-ghost { background: var(--surface-muted); }
+
+  /* ---- (a) トップバー ---- */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 24px;
+  }
+  .lockup { display: inline-flex; align-items: center; gap: 12px; }
+  .lockup-mark { width: 44px; height: 44px; flex: none; display: block; }
+  .lockup-copy { display: grid; gap: 2px; }
+  .lockup-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .lockup-name { color: var(--ink); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
+  .topnav { display: flex; align-items: center; gap: 22px; }
+  .topnav a { color: var(--muted); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+  .topnav a:hover { color: var(--primary); }
+
+  /* ---- (b) ヒーロー ---- */
+  .hero { display: grid; grid-template-columns: 0.94fr 1.06fr; gap: 18px; }
+  .hero-copy { padding: 40px; }
+  .hero-copy h1 {
+    margin: 16px 0 0; font-size: clamp(2.2rem, 4.4vw, 3.4rem);
+    line-height: 1.06; letter-spacing: -0.05em; font-weight: 600;
+  }
+  .lead { margin: 16px 0 0; max-width: 30rem; color: var(--muted); font-size: 1.02rem; line-height: 1.72; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .stat-chip {
+    display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px;
+    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
+    color: var(--muted); font-size: 0.84rem;
+  }
+  .stat-chip b { color: var(--ink); font-weight: 700; margin-right: 6px; }
+
+  .hero-feature { display: grid; gap: 14px; padding: 18px; align-content: start; }
+  .feature-media {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden;
+    background:
+      linear-gradient(160deg, rgba(23, 34, 40, 0.2), rgba(23, 34, 40, 0.06)),
+      linear-gradient(135deg, #2f4d50, #7f9f99);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .feature-media::before {
+    content: ""; position: absolute; inset: 14px; border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .media-label { position: relative; color: rgba(255, 255, 255, 0.82); font-size: 0.82rem; letter-spacing: 0.04em; }
+  .feature-badge {
+    position: absolute; top: 16px; left: 16px; min-height: 30px; display: inline-flex; align-items: center;
+    padding: 0 12px; border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.9);
+    color: var(--accent); font-size: 0.8rem; font-weight: 700;
+  }
+  .feature-body { padding: 4px 6px 6px; }
+  .feature-meta { display: flex; flex-wrap: wrap; gap: 8px 12px; color: var(--muted); font-size: 0.84rem; }
+  .feature-body h3 { margin: 10px 0 0; font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; }
+  .feature-body p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; line-height: 1.72; }
+
+  /* ---- 共通セクション見出し ---- */
+  .section { padding: 40px; }
+  .section-head { max-width: 40rem; }
+  .section-head h2 { margin: 14px 0 0; font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; }
+  .section-head p { margin: 12px 0 0; color: var(--muted); line-height: 1.72; }
+
+  /* ---- (c) 特徴3カード ---- */
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
+  .feature-card {
+    padding: 26px 22px; background: var(--surface-muted);
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+  }
+  .feature-tag {
+    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .feature-card h3 { margin: 16px 0 0; font-size: 1.2rem; line-height: 1.3; letter-spacing: -0.03em; }
+  .feature-card p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; line-height: 1.72; }
+
+  /* ---- (d) 実績・統計帯 ---- */
+  .stats-band { padding: 40px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
+  .stat-tile {
+    padding: 26px 22px; background: var(--surface-muted);
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+  }
+  .stat-num { font-size: 1.9rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
+  .stat-num small { font-size: 1rem; font-weight: 700; margin-left: 4px; }
+  .stat-label { margin-top: 8px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+
+  /* ---- (e) CTA ---- */
+  .cta { padding: 44px; text-align: center; }
+  .cta h2 { margin: 14px auto 0; max-width: 24ch; font-size: 1.64rem; line-height: 1.24; letter-spacing: -0.03em; }
+  .cta p { margin: 12px auto 0; max-width: 34rem; color: var(--muted); line-height: 1.72; }
+  .cta-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+
+  /* ---- (f) フッター ---- */
+  .site-footer {
+    display: grid; grid-template-columns: minmax(0, 1.3fr) auto; gap: 12px 18px;
+    padding: 22px 28px; align-items: center;
+  }
+  .site-footer-copy { color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
+  .site-footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+  .site-footer-link {
+    color: var(--primary); font-size: 0.88rem; font-weight: 600; text-decoration: underline;
+    text-decoration-color: rgba(54, 90, 92, 0.28); text-underline-offset: 0.18em;
+  }
+  .site-footer-link:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="lp">
+
+    <!-- (a) トップバー -->
+    <header class="panel topbar">
+      <div class="lockup">
+        <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+</g>
+</svg>
+        <span class="lockup-copy">
+          <span class="lockup-label">Clinical Academic WG</span>
+          <span class="lockup-name">臨床学術ワーキンググループ</span>
+        </span>
+      </div>
+      <nav class="topnav">
+        <a href="#">アーカイブ</a>
+        <a href="#">学習コース</a>
+        <a href="#">開催予定</a>
+        <a class="button button-ghost" href="#">参加方法</a>
+      </nav>
+    </header>
+
+    <!-- (b) ヒーロー -->
+    <section class="hero">
+      <div class="panel hero-copy">
+        <span class="eyebrow">臨床 × 学術のアーカイブ</span>
+        <h1>必要な勉強会に、<br>すぐ届く。</h1>
+        <p class="lead">薬剤師・医療従事者の勉強会を、テーマ別に整理して公開しています。録画と資料をまとめて残すので、参加できなかった回も短時間でたどり着けます。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#">アーカイブを見る</a>
+          <a class="button button-ghost" href="#">参加方法を確認</a>
+        </div>
+        <div class="hero-stats">
+          <span class="stat-chip"><b>64回</b>開催アーカイブ</span>
+          <span class="stat-chip"><b>6領域</b>テーマ分類</span>
+          <span class="stat-chip"><b>月2回</b>ハイブリッド開催</span>
+        </div>
+      </div>
+      <div class="panel hero-feature">
+        <div class="feature-media">
+          <span class="feature-badge">注目の回</span>
+          <span class="media-label">写真: 勉強会の様子</span>
+        </div>
+        <div class="feature-body">
+          <div class="feature-meta">
+            <span>2026-07-18</span>
+            <span>循環器</span>
+            <span>録画 90分</span>
+          </div>
+          <h3>抗凝固療法の実践ポイント</h3>
+          <p>出血リスクと血栓リスクの対比から、薬剤選択とモニタリングの観点までを整理した回です。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- (c) 特徴3カード -->
+    <section class="panel section">
+      <div class="section-head">
+        <span class="eyebrow">できること</span>
+        <h2>参加できなかった回も、あとから追いつける</h2>
+        <p>忙しい臨床現場でも学びを止めないための、3つの仕組みを用意しています。</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="feature-tag">Archive</span>
+          <h3>テーマ別に整理</h3>
+          <p>循環器・脳神経・感染症などの領域で分類し、必要な回にすぐたどり着けます。</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-tag">Library</span>
+          <h3>録画・資料を保存</h3>
+          <p>当日の録画とスライドをまとめて公開。見返しながら復習できます。</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-tag">Hybrid</span>
+          <h3>月2回ハイブリッド</h3>
+          <p>会場とオンラインの両方で定例開催。都合に合わせて参加できます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- (d) 実績・統計帯 -->
+    <section class="panel stats-band">
+      <div class="section-head">
+        <span class="eyebrow">これまでの活動</span>
+        <h2>積み重ねてきたアーカイブ</h2>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="stat-num">64<small>回</small></div>
+          <div class="stat-label">2024年以降の開催回数</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num">6<small>領域</small></div>
+          <div class="stat-label">循環器・脳神経・感染症ほか</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num">2<small>回/月</small></div>
+          <div class="stat-label">ハイブリッド定例のペース</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- (e) CTA -->
+    <section class="panel cta">
+      <span class="eyebrow">はじめての方へ</span>
+      <h2>次の勉強会から、一緒に学びませんか</h2>
+      <p>参加は無料です。開催予定を確認し、当日はハイブリッドのどちらからでもご参加いただけます。</p>
+      <div class="cta-actions">
+        <a class="button button-primary" href="#">開催予定を見る</a>
+        <a class="button button-ghost" href="#">アーカイブを見る</a>
+      </div>
+    </section>
+
+    <!-- (f) フッター -->
+    <footer class="panel site-footer">
+      <p class="site-footer-copy">臨床学術ワーキンググループ ／ Clinical Academic Working Group<br>本アーカイブは個別診療の判断を代替するものではありません。</p>
+      <div class="site-footer-links">
+        <a class="site-footer-link" href="#">アーカイブ</a>
+        <a class="site-footer-link" href="#">学習コース</a>
+        <a class="site-footer-link" href="#">お問い合わせ</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

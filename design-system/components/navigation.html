@@ -1,0 +1,171 @@
+<!-- @dsCard group="Components" name="ナビゲーション" subtitle="トップバー/フッター" width="1100" height="520" -->
+<!--
+  使い方 (AI向け):
+  - トップバーは全ページ共通。左にブランドロックアップ、右に注記チップ+ピル型ナビリンクを並べる。
+  - ナビリンクは3〜5件を目安に、ページの文脈に応じて出し分ける (強調用の下線・色替えはしない)。
+  - フッターも全ページ共通。panel(角丸28px)の中に、左=著作権表示、右=法務リンク(primary文字+下線)。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ナビゲーション — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --surface: #fffdf9;
+    --ink: #24343b;
+    --muted: #6b7b82;
+    --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c;
+    --accent: #97724b;
+    --radius-xl: 28px;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    margin: 0 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-block + .spec-block { margin-top: 26px; }
+
+  /* ===== トップバー (public/assets/styles.css .topbar 系を再現) ===== */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark { width: 50px; height: 50px; flex: none; display: block; }
+  .brand-copy { display: grid; gap: 2px; }
+  .brand-label {
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .brand-name {
+    color: var(--ink);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .topbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .topbar-note {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255, 253, 249, 0.8);
+  }
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255, 253, 249, 0.8);
+    color: var(--ink);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* ===== フッター (public/assets/styles.css .site-footer 系を再現) ===== */
+  .panel {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+  }
+  .site-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) auto;
+    gap: 12px 18px;
+    padding: 18px 24px;
+    align-items: center;
+  }
+  .site-footer-copy {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+  .site-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .site-footer-link {
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: rgba(54, 90, 92, 0.28);
+    text-underline-offset: 0.18em;
+  }
+</style>
+</head>
+<body>
+  <div class="spec-block">
+    <p class="spec-label">トップバー — ブランドロックアップ + ピル型ナビ</p>
+    <header class="topbar">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+            <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+            <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+          </g>
+        </svg>
+        <div class="brand-copy">
+          <span class="brand-label">Clinical Academic Working Group</span>
+          <span class="brand-name">臨床学術ワーキンググループ</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
+        <a class="topbar-link" href="#">アーカイブ</a>
+        <a class="topbar-link" href="#">コース</a>
+        <a class="topbar-link" href="#">学習</a>
+        <a class="topbar-link" href="#">参加案内</a>
+      </div>
+    </header>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">フッター — 著作権表示 + 法務リンク</p>
+    <footer class="panel site-footer">
+      <p class="site-footer-copy">© 2026 臨床学術ワーキンググループ. All rights reserved.</p>
+      <div class="site-footer-links" aria-label="法務リンク">
+        <a class="site-footer-link" href="#">利用規約</a>
+        <a class="site-footer-link" href="#">プライバシーポリシー</a>
+        <a class="site-footer-link" href="#">問い合わせ</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

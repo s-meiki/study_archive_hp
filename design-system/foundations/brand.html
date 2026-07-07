@@ -1,0 +1,120 @@
+<!-- @dsCard group="Foundations" name="ブランド" subtitle="ロゴロックアップ・代表コピー・テーマチップ・免責文言" width="900" height="560" -->
+<!--
+  使い方 (AI向け):
+  - ロゴマークは CA モノグラムのインラインSVG (.brand-mark, 50px) を必ずパスデータごとそのまま流用し、色や形を変えない。
+    色は金の弧(C)=var(--accent)、青緑のA=var(--primary) の2トークンのみ。サイト実体は public/images/brand-mark.svg。
+  - ブランドラベルは英語uppercase小文字表記(letter-spacing +0.08em)、ブランド名は日本語で太字・字間を締める。
+  - テーマ分類6語彙は固定。順不同・改変不可。チップの色はカテゴリごとに変えず、全て同じトークンで統一する。
+  - 免責文言はどの資料でも一字一句変更せずそのまま使う。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ブランド — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --accent-strong: #8c4f1f; --accent-tint: rgba(151, 114, 75, 0.14);
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --primary: #365a5c; --accent: #97724b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    width: 100%; margin: 22px 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-label:first-child { margin-top: 0; }
+
+  .lockup-card {
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 20px 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .brand-mark { width: 50px; height: 50px; flex: none; display: block; }
+  .brand-copy { display: grid; gap: 2px; }
+  .brand-label {
+    color: var(--muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .brand-name { color: var(--ink); font-size: 1.02rem; font-weight: 700; letter-spacing: -0.02em; }
+
+  .tagline-card {
+    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 20px 24px;
+  }
+  .tagline-text {
+    margin: 0; font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; font-weight: 700;
+  }
+  .tagline-note { margin: 10px 0 0; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+  .theme-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .theme-chip {
+    display: inline-flex; align-items: center; padding: 8px 16px;
+    border-radius: var(--radius-pill); background: var(--surface-muted);
+    border: 1px solid var(--line); font-size: 0.84rem; font-weight: 700; color: var(--ink);
+  }
+
+  .disclaimer-note {
+    display: flex; gap: 12px; background: var(--surface-muted);
+    border-left: 3px solid var(--muted); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 14px 18px; font-size: 0.82rem; color: var(--muted); line-height: 1.7;
+  }
+  .disclaimer-note b { color: var(--ink); }
+
+  .logo-rule {
+    display: flex; gap: 16px; align-items: center;
+    background: var(--accent-tint); border-radius: var(--radius-md);
+    padding: 12px 18px; font-size: 0.8rem; color: var(--accent-strong); font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="spec-label">ロゴロックアップ</div>
+  <div class="lockup-card">
+    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+      </g>
+    </svg>
+    <div class="brand-copy">
+      <div class="brand-label">Clinical Academic Working Group</div>
+      <div class="brand-name">臨床学術ワーキンググループ</div>
+    </div>
+  </div>
+
+  <div class="spec-label">代表コピー</div>
+  <div class="tagline-card">
+    <p class="tagline-text">必要な勉強会に、すぐ届く。</p>
+    <p class="tagline-note">ヒーロー・資料表紙のリード直前で使う短い言い切り。1.64rem/700/字間-0.03emのセクション見出し規格に準拠。改変・語尾変更はしない。</p>
+  </div>
+
+  <div class="spec-label">テーマ分類 (固定語彙・6種)</div>
+  <div class="theme-row">
+    <span class="theme-chip">循環器</span>
+    <span class="theme-chip">脳神経</span>
+    <span class="theme-chip">感染症</span>
+    <span class="theme-chip">基礎レクチャー</span>
+    <span class="theme-chip">研究・認定</span>
+    <span class="theme-chip">AI活用</span>
+  </div>
+
+  <div class="spec-label">免責文言</div>
+  <div class="disclaimer-note">
+    <div><b>注記:</b> 本アーカイブは個別診療の判断を代替するものではありません。</div>
+  </div>
+
+  <div class="spec-label">ロゴ色の扱い</div>
+  <div class="logo-rule">マークの色は --primary(A) と --accent(Cの弧) の2トークンのみ。旧・青系グラデ球体は廃止済みで、いかなる資料でも使わない。</div>
+</body>
+</html>

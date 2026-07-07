@@ -1,0 +1,213 @@
+<!-- @dsCard group="Templates" name="ワンページャー (A4)" subtitle="勉強会 開催案内" width="794" height="1123" -->
+<!--
+  使い方 (AI向け):
+  - 1回分の勉強会の開催案内を1枚に収める配布資料。A4縦 (794x1123px) 固定・印刷前提。
+  - 開催概要はラベル+値の2カラム表、内容ハイライトは3点、参加方法は番号付き手順3つで統一する。
+  - 情報密度は高めでよいが外周パディング (44px) と行間は詰めすぎない。免責文言は必ずフッターに残す。
+  - 領域チップは固定語彙 (循環器/脳神経/感染症/基礎レクチャー/研究・認定/AI活用) から選ぶ。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ワンページャー (A4) — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --bg-soft: #efebe2; --surface: #fffdf9; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
+    --on-primary: #ffffff; --accent-tint: rgba(151, 114, 75, 0.14); --accent-strong: #8c4f1f;
+    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
+    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; width: 794px;
+    font-family: var(--font-sans); color: var(--ink); background: var(--bg-soft);
+  }
+  .page {
+    width: 794px; height: 1123px; padding: 44px 48px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: var(--radius-md); box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+
+  /* ---- ヘッダー ---- */
+  .sheet-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding-bottom: 18px; border-bottom: 1px solid var(--line);
+  }
+  .lockup { display: inline-flex; align-items: center; gap: 12px; }
+  .lockup-mark { width: 42px; height: 42px; flex: none; display: block; }
+  .lockup-copy { display: grid; gap: 2px; }
+  .lockup-label { color: var(--muted); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .lockup-name { color: var(--ink); font-size: 0.96rem; font-weight: 700; letter-spacing: -0.02em; }
+  .eyebrow {
+    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
+    font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* ---- 表題 ---- */
+  .sheet-title { margin-top: 22px; }
+  .title-meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 0.82rem; align-items: center; }
+  .theme-chip {
+    display: inline-flex; align-items: center; min-height: 26px; padding: 0 12px;
+    border-radius: var(--radius-pill); background: var(--accent-tint); color: var(--accent-strong);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .sheet-title h1 {
+    margin: 12px 0 0; font-size: 2.2rem; line-height: 1.16; letter-spacing: -0.04em; font-weight: 600;
+  }
+  .sheet-title .subtitle { margin: 10px 0 0; color: var(--muted); font-size: 1rem; line-height: 1.6; }
+
+  /* ---- 開催概要ボックス ---- */
+  .overview {
+    margin-top: 22px; padding: 22px 24px; background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.92); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+  }
+  .overview-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary);
+  }
+  .overview-table { margin-top: 14px; display: grid; grid-template-columns: 96px 1fr; gap: 12px 16px; }
+  .ov-key { color: var(--muted); font-size: 0.86rem; font-weight: 700; padding-top: 1px; }
+  .ov-val { color: var(--ink); font-size: 0.95rem; line-height: 1.55; }
+
+  /* ---- セクション見出し ---- */
+  .block { margin-top: 24px; }
+  .block-title {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: 1.16rem; letter-spacing: -0.03em; font-weight: 700;
+  }
+  .block-title .no { color: var(--primary); font-size: 0.86rem; font-weight: 700; letter-spacing: 0.06em; }
+
+  /* ---- 内容ハイライト ---- */
+  .highlights { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .highlights li {
+    position: relative; padding: 12px 16px 12px 42px; background: var(--surface-muted);
+    border: 1px solid var(--line); border-radius: var(--radius-md);
+    font-size: 0.95rem; line-height: 1.55;
+  }
+  .highlights li::before {
+    content: ""; position: absolute; left: 16px; top: 1.05em; width: 12px; height: 12px;
+    border-radius: var(--radius-pill); background: var(--primary-soft); border: 3px solid var(--primary);
+  }
+  .highlights b { font-weight: 700; }
+
+  /* ---- 参加方法 手順 ---- */
+  .steps { margin: 14px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .step {
+    padding: 18px 16px; background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.92); border-radius: var(--radius-md); box-shadow: var(--shadow);
+  }
+  .step-no {
+    display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+    border-radius: var(--radius-pill); background: var(--primary); color: var(--on-primary);
+    font-size: 0.95rem; font-weight: 800;
+  }
+  .step h3 { margin: 12px 0 0; font-size: 1rem; line-height: 1.3; letter-spacing: -0.02em; }
+  .step p { margin: 7px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.55; }
+
+  /* ---- フッター ---- */
+  .sheet-foot {
+    margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+  }
+  .foot-note { color: var(--muted); font-size: 0.78rem; line-height: 1.6; max-width: 30rem; }
+  .foot-contact { text-align: right; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
+  .foot-contact b { display: block; color: var(--ink); font-size: 0.9rem; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ヘッダー -->
+    <header class="sheet-head">
+      <div class="lockup">
+        <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+<path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+</g>
+</svg>
+        <span class="lockup-copy">
+          <span class="lockup-label">Clinical Academic WG</span>
+          <span class="lockup-name">臨床学術ワーキンググループ</span>
+        </span>
+      </div>
+      <span class="eyebrow">開催案内</span>
+    </header>
+
+    <!-- 表題 -->
+    <div class="sheet-title">
+      <div class="title-meta">
+        <span class="theme-chip">脳神経</span>
+        <span>第65回 勉強会</span>
+        <span>／ 基礎から実践まで</span>
+      </div>
+      <h1>パーキンソン病治療薬の使い分け</h1>
+      <p class="subtitle">診断後の薬剤選択と、経過に応じた調整の考え方を整理します。</p>
+    </div>
+
+    <!-- 開催概要 -->
+    <section class="overview">
+      <span class="overview-label">開催概要</span>
+      <div class="overview-table">
+        <div class="ov-key">日時</div>
+        <div class="ov-val">2026-08-01（土）14:00–15:30（受付 13:45〜）</div>
+        <div class="ov-key">形式</div>
+        <div class="ov-val">ハイブリッド開催（会場参加／オンライン参加を選択）</div>
+        <div class="ov-key">対象</div>
+        <div class="ov-val">薬剤師・医療従事者、および学びを深めたい関係職種</div>
+        <div class="ov-key">参加費</div>
+        <div class="ov-val">無料（事前申込制）</div>
+      </div>
+    </section>
+
+    <!-- 内容ハイライト -->
+    <section class="block">
+      <div class="block-title"><span class="no">01</span>内容ハイライト</div>
+      <ul class="highlights">
+        <li><b>薬剤選択の枠組み</b>：症状と経過に応じた第一選択の考え方を整理します。</li>
+        <li><b>調整の実際</b>：効果と副作用のバランスをふまえた用量調整の観点を共有します。</li>
+        <li><b>多職種の連携</b>：服薬状況の把握と情報共有のポイントを確認します。</li>
+      </ul>
+    </section>
+
+    <!-- 参加方法 -->
+    <section class="block">
+      <div class="block-title"><span class="no">02</span>参加方法</div>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-no">1</span>
+          <h3>申込フォーム</h3>
+          <p>開催予定ページの申込フォームから、氏名と参加形式を登録します。</p>
+        </li>
+        <li class="step">
+          <span class="step-no">2</span>
+          <h3>案内の受領</h3>
+          <p>前日までに、会場情報またはオンライン接続の案内が届きます。</p>
+        </li>
+        <li class="step">
+          <span class="step-no">3</span>
+          <h3>当日参加</h3>
+          <p>開始10分前から入室できます。後日、録画と資料も公開します。</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- フッター -->
+    <footer class="sheet-foot">
+      <p class="foot-note">本アーカイブは個別診療の判断を代替するものではありません。掲載内容は開催時点の情報です。</p>
+      <div class="foot-contact">
+        <b>臨床学術ワーキンググループ 事務局</b>
+        お問い合わせ: 開催予定ページの連絡先まで
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

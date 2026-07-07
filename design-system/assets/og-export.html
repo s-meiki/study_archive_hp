@@ -1,0 +1,76 @@
+<!-- @dsCard group="Assets" name="OGP書き出し原稿" subtitle="1200x630 フルブリード (ogp.png生成用)" width="1200" height="630" -->
+<!--
+  使い方 (AI向け):
+  - ogp.png を再生成するための実寸原稿。templates/social.html のOGP型のフルブリード版 (角丸・影・外枠なし)。
+  - 書き出し: リポジトリルートで design-system/README.md「OGP画像の書き出し」のコマンドを実行する。
+  - 見出しは About 刷新に合わせた OGP 専用メッセージ。チップは事実ベースのバッジ (開催頻度・形式・録画) で、
+    人名・絵文字・感嘆符・誇大表現を入れない。ロゴは CA モノグラム (foundations/brand.html が正) を改変せず使う。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>OGP書き出し原稿 — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec; --surface-muted: #faf6ef;
+    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c; --primary-tint: rgba(54, 90, 92, 0.12);
+    --accent: #97724b;
+    --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .og {
+    position: relative; width: 1200px; height: 630px; overflow: hidden;
+    padding: 72px 80px; background: var(--bg);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .arc {
+    position: absolute; right: -160px; bottom: -200px; width: 480px; height: 480px;
+    border-radius: var(--radius-pill); background: var(--primary-tint);
+  }
+  .og-top { position: relative; display: flex; align-items: center; gap: 18px; }
+  .lockup-mark { width: 64px; height: 64px; flex: none; display: block; }
+  .og-name { color: var(--primary); font-size: 1.5rem; font-weight: 700; letter-spacing: 0.06em; }
+  .og-main { position: relative; }
+  .og-copy {
+    margin: 0; font-size: 4.1rem; line-height: 1.12; letter-spacing: -0.05em;
+    font-weight: 600; color: var(--ink); max-width: 20ch;
+  }
+  .og-lead { margin: 26px 0 0; color: var(--muted); font-size: 1.5rem; line-height: 1.6; }
+  .og-bottom { position: relative; display: flex; align-items: center; gap: 14px; }
+  .og-chip {
+    display: inline-flex; align-items: center; min-height: 52px; padding: 0 26px;
+    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
+    color: var(--muted); font-size: 1.3rem; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="og">
+    <span class="arc" aria-hidden="true"></span>
+    <div class="og-top">
+      <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+          <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+          <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+        </g>
+      </svg>
+      <span class="og-name">臨床学術ワーキンググループ</span>
+    </div>
+    <div class="og-main">
+      <h1 class="og-copy">月2回、オンラインで<br>つながって学ぶ。</h1>
+      <p class="og-lead">薬剤師向け勉強会アーカイブ ／ 録画・資料をテーマ別に公開</p>
+    </div>
+    <div class="og-bottom">
+      <span class="og-chip">月2回以上開催</span>
+      <span class="og-chip">ハイブリッド開催</span>
+      <span class="og-chip">録画あり</span>
+    </div>
+  </div>
+</body>
+</html>

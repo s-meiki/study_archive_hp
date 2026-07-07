@@ -1,0 +1,151 @@
+<!-- @dsCard group="Components" name="注記・空状態" subtitle="免責/お知らせ/空状態" width="900" height="640" -->
+<!--
+  使い方 (AI向け):
+  - 免責ノートの本文は固定文言。要約・言い換え・削除をせず、そのまま貼り付ける。
+  - お知らせ=情報共有、注意=期限や保留の告知、エラー=フォーム等の失敗通知。用途に応じて色分けを使い分ける。
+  - 空状態は検索・絞り込み結果が0件のときに表示。原因の推測(条件を緩める提案)とリセット導線を必ず添える。
+-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>注記・空状態 — 臨床学術WG Design System</title>
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --surface: #fffdf9;
+    --surface-muted: #faf6ef;
+    --ink: #24343b;
+    --muted: #6b7b82;
+    --line: rgba(36, 52, 59, 0.1);
+    --primary: #365a5c;
+    --primary-soft: #e5efee;
+    --accent-strong: #8c4f1f;
+    --accent-tint: rgba(151, 114, 75, 0.14);
+    --danger: #8a3f30;
+    --danger-tint: rgba(150, 70, 55, 0.12);
+    --radius-xl: 28px;
+    --radius-md: 16px;
+    --radius-pill: 999px;
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px; font-family: var(--font-sans);
+    color: var(--ink); background: var(--bg);
+  }
+  .spec-label {
+    margin: 0 0 10px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .spec-block + .spec-block { margin-top: 22px; }
+
+  /* ===== ノート共通土台 ===== */
+  .note {
+    display: grid;
+    gap: 8px;
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--line);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+  .note p { margin: 0; }
+
+  .note--muted { background: var(--surface-muted); color: var(--ink); }
+
+  .note--info { background: var(--surface); }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-pill);
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .note--caution {
+    background: var(--accent-tint);
+    color: var(--accent-strong);
+    border-color: rgba(151, 114, 75, 0.28);
+  }
+  .note--caution strong { font-weight: 700; }
+
+  .note--danger {
+    background: var(--danger-tint);
+    color: var(--danger);
+    border-color: rgba(150, 70, 55, 0.28);
+  }
+
+  /* ===== 空状態 (public/assets/styles.css .empty-state を再現) ===== */
+  .empty-state {
+    padding: 36px 24px;
+    border-radius: var(--radius-xl);
+    background: var(--surface-muted);
+    border: 1px solid var(--line);
+  }
+  .empty-state h3 {
+    margin: 0;
+    font-size: 1.12rem;
+    letter-spacing: -0.03em;
+  }
+  .empty-state p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 46px; padding: 0 18px; margin-top: 16px; border-radius: var(--radius-pill);
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+    font-family: inherit; font-size: 0.93rem; font-weight: 700; cursor: pointer;
+  }
+  .btn-ghost { background: var(--surface-muted); }
+</style>
+</head>
+<body>
+  <div class="spec-block">
+    <p class="spec-label">免責ノート — 本文は固定文言 (削除・改変不可)</p>
+    <div class="note note--muted">
+      <p>本アーカイブは個別診療の判断を代替するものではありません。</p>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">お知らせノート — eyebrow + 告知本文</p>
+    <div class="note note--info">
+      <span class="eyebrow">お知らせ</span>
+      <p>次回の勉強会は2026年7月14日(火)19:00からオンライン開催です。テーマは循環器です。</p>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">注意ノート — 期限/保留の告知</p>
+    <div class="note note--caution">
+      <p><strong>申込締切のお知らせ</strong><br>次回勉強会の参加申込締切は2026年7月10日(金)17:00です。</p>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">エラーノート — フォーム送信エラー</p>
+    <div class="note note--danger" role="alert">
+      <p>送信に失敗しました。時間をおいて再度お試しください。</p>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">空状態 — 検索結果0件</p>
+    <div class="empty-state">
+      <h3>条件に合うアーカイブが見つかりませんでした</h3>
+      <p>キーワードを短くするか、テーマや年度の絞り込みを解除すると見つかりやすくなります。</p>
+      <button class="btn btn-ghost" type="button">条件をリセット</button>
+    </div>
+  </div>
+</body>
+</html>
