@@ -1,4 +1,8 @@
-const dataUtils = window.StudyArchiveDataUtils;
+// Next の <Script strategy="lazyOnload"> はスクリプト間の実行順を保証しないため、
+// utils/データが後着でも復帰できるよう let にして loadArchivePage 側で再取得する。
+let dataUtils = window.StudyArchiveDataUtils;
+const SITE_DATA_RETRY_LIMIT = 40;
+const SITE_DATA_RETRY_DELAY_MS = 100;
 
 const statusPanelEl = document.querySelector("#detail-status");
 const breadcrumbCurrentEl = document.querySelector("#detail-breadcrumb-current");
@@ -510,31 +514,41 @@ function loadArchivePage() {
 
   setStatus("アーカイブ詳細を読み込んでいます。");
 
-  try {
-    const data = window.STUDY_ARCHIVE_DATA;
+  const attemptLoad = (attempt = 0) => {
+    try {
+      dataUtils = window.StudyArchiveDataUtils;
+      const data = window.STUDY_ARCHIVE_DATA;
 
-    if (!dataUtils?.hasValidSiteData(data)) {
-      throw new Error("Invalid site data");
+      if (!dataUtils?.hasValidSiteData || !dataUtils.hasValidSiteData(data)) {
+        if (attempt < SITE_DATA_RETRY_LIMIT) {
+          window.setTimeout(() => attemptLoad(attempt + 1), SITE_DATA_RETRY_DELAY_MS);
+          return;
+        }
+
+        throw new Error("Invalid site data");
+      }
+
+      const archiveId = getRequestedArchiveId();
+      if (!archiveId) {
+        showEmptyState("アーカイブIDが指定されていません。");
+        return;
+      }
+
+      const archive = data.archives.find((item) => item.id === archiveId);
+
+      if (!archive) {
+        showEmptyState("指定されたアーカイブが見つかりませんでした。");
+        return;
+      }
+
+      renderArchivePage(dataUtils.cloneSiteData(data), archive);
+    } catch (error) {
+      console.error(error);
+      showEmptyState("詳細ページのデータを読み込めませんでした。");
     }
+  };
 
-    const archiveId = getRequestedArchiveId();
-    if (!archiveId) {
-      showEmptyState("アーカイブIDが指定されていません。");
-      return;
-    }
-
-    const archive = data.archives.find((item) => item.id === archiveId);
-
-    if (!archive) {
-      showEmptyState("指定されたアーカイブが見つかりませんでした。");
-      return;
-    }
-
-    renderArchivePage(dataUtils.cloneSiteData(data), archive);
-  } catch (error) {
-    console.error(error);
-    showEmptyState("詳細ページのデータを読み込めませんでした。");
-  }
+  attemptLoad();
 }
 
 loadArchivePage();
