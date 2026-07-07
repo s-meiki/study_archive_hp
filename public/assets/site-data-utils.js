@@ -337,7 +337,11 @@
       throw new Error("Invalid site data");
     }
 
-    return `window.STUDY_ARCHIVE_DATA = ${JSON.stringify(data, null, 2)};\n`;
+    // Generated file contract: archives stay in descending date order, same as
+    // scripts/import_archives_from_xlsx.py (verified by scripts/check_site_content.py).
+    const payload = cloneSiteData(data);
+    payload.archives.sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+    return `window.STUDY_ARCHIVE_DATA = ${JSON.stringify(payload, null, 2)};\n`;
   }
 
   function createArchiveId(date, title) {

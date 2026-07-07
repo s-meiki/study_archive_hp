@@ -273,202 +273,67 @@ window.STUDY_ARCHIVE_DATA = {
       }
     },
     {
-      "id": "archive-20241206-a926c4365a",
-      "themeId": "research-career",
-      "title": "accept論文 報告会",
-      "summary": "論文の内容共有と実務への持ち帰りを目的にした報告会。",
-      "speaker": "齋藤主任",
-      "date": "2024-12-06",
-      "updatedAt": "2024-12-06",
+      "id": "archive-20260224-f1f9a4cdfb",
+      "themeId": "cardiology",
+      "title": "「心房細動の薬物治療」",
+      "summary": "心房細動に対する薬物治療の基本と処方の見方を確認する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-02-24",
+      "updatedAt": "2026-03-09",
       "duration": "未記載",
-      "featured": false,
+      "featured": true,
       "assets": {
         "recording": false,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
-      }
-    },
-    {
-      "id": "archive-20241210-c9374cc04a",
-      "themeId": "research-career",
-      "title": "臨床研究ってなに？ 臨床研究ってなんのためにするの？ 臨床研究して自分にメリットあるの？ 的な概論的内容",
-      "summary": "臨床研究の目的や取り組む意義を導入的に整理するレクチャー。",
-      "speaker": "徳留主任",
-      "date": "2024-12-10",
-      "updatedAt": "2024-12-10",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": true,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "https://youtu.be/vEaIwefXIJY",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
-      }
-    },
-    {
-      "id": "archive-20250418-5f6b4f5075",
-      "themeId": "research-career",
-      "title": "日病薬/医療薬の専門認定に関するレクチャー",
-      "summary": "専門認定制度の概要と学習の進め方を確認するレクチャー。",
-      "speaker": "徳留係長",
-      "date": "2025-04-18",
-      "updatedAt": "2025-04-18",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": false,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
-      }
-    },
-    {
-      "id": "archive-20250419-93d5ff6ad9",
-      "themeId": "ai-utilization",
-      "title": "AIを活用する【第一回】",
-      "summary": "AI活用シリーズ第1回。日常業務や学習への取り入れ方を扱う勉強会。",
-      "speaker": "須賀",
-      "date": "2025-04-19",
-      "updatedAt": "2025-04-19",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": true,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "https://youtu.be/glrFjalSYRU",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#365a5c",
-        "end": "#9dbab7"
-      }
-    },
-    {
-      "id": "archive-20250512-f649d5f0a6",
-      "themeId": "ai-utilization",
-      "title": "AIを活用する【第二回】",
-      "summary": "AI活用シリーズ第2回。実践例と参考リンクを交えた継続回。",
-      "speaker": "須賀",
-      "date": "2025-05-12",
-      "updatedAt": "2025-05-12",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": true,
         "slides": false,
         "notes": false,
         "references": true
       },
       "links": {
-        "recording": "https://youtu.be/rodc-V55XSQ",
+        "recording": "",
         "slides": "",
         "notes": "",
-        "references": "https://cotyumkd.gensparkspace.com/"
+        "references": "uploads/2026-02/archive-1tk3qr/references-af.pdf"
       },
       "thumbnail": {
-        "start": "#365a5c",
-        "end": "#9dbab7"
+        "start": "#6b5548",
+        "end": "#c0a48f"
       }
     },
     {
-      "id": "archive-20250529-6d09b4f125",
-      "themeId": "research-career",
-      "title": "臨床業務と研究を両立させるヒントや実例に関して",
-      "summary": "日常業務と研究活動を両立するためのヒントや実例を共有する回。",
-      "speaker": "八木澤主任",
-      "date": "2025-05-29",
-      "updatedAt": "2025-05-29",
+      "id": "archive-20260210-90b833c4a5",
+      "themeId": "cardiology",
+      "title": "「虚血性心疾患の薬物治療」",
+      "summary": "虚血性心疾患に対する薬物治療の考え方を整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-02-10",
+      "updatedAt": "2026-03-09",
       "duration": "未記載",
       "featured": false,
       "assets": {
         "recording": false,
         "slides": false,
         "notes": false,
-        "references": false
+        "references": true
       },
       "links": {
         "recording": "",
         "slides": "",
         "notes": "",
-        "references": ""
+        "references": "uploads/2026-02/archive-19n74r/references-references-1m9clq.pdf"
       },
       "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
+        "start": "#6b5548",
+        "end": "#c0a48f"
       }
     },
     {
-      "id": "archive-20250610-e55425f87e",
-      "themeId": "ai-utilization",
-      "title": "AIを活用する【第三回】",
-      "summary": "AI活用シリーズ第3回。継続運用を前提にした実践共有回。",
-      "speaker": "須賀",
-      "date": "2025-06-10",
-      "updatedAt": "2026-03-22",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": true,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "https://youtu.be/ysDbkzlmS0I",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#365a5c",
-        "end": "#9dbab7"
-      }
-    },
-    {
-      "id": "archive-20250723-869987a4ad",
-      "themeId": "ai-utilization",
-      "title": "AIを活用する【第四回】",
-      "summary": "AI活用シリーズ第4回。院内での活用を広げるための勉強会。",
-      "speaker": "須賀",
-      "date": "2025-07-23",
-      "updatedAt": "2025-07-23",
+      "id": "archive-20260128-b518b2beb5",
+      "themeId": "neurology",
+      "title": "脳卒中（出血性疾患編）",
+      "summary": "脳卒中のうち出血性疾患に焦点を当てて病態と治療を整理する回。",
+      "speaker": "瀬戸主任",
+      "date": "2026-01-28",
+      "updatedAt": "2026-01-28",
       "duration": "未記載",
       "featured": true,
       "assets": {
@@ -484,18 +349,18 @@ window.STUDY_ARCHIVE_DATA = {
         "references": ""
       },
       "thumbnail": {
-        "start": "#365a5c",
-        "end": "#9dbab7"
+        "start": "#556070",
+        "end": "#98a4bb"
       }
     },
     {
-      "id": "archive-20250728-b72431442d",
+      "id": "archive-20260116-3692b9f7d3",
       "themeId": "foundations",
-      "title": "基礎から固めていこう",
-      "summary": "周辺知識を含めて基礎事項を整理し直すための入門レクチャー。",
+      "title": "「今さら聞けないシリーズ」---輸液の基礎---",
+      "summary": "今さら聞けないシリーズとして輸液の基礎を押さえ直すレクチャー。",
       "speaker": "須賀",
-      "date": "2025-07-28",
-      "updatedAt": "2025-07-28",
+      "date": "2026-01-16",
+      "updatedAt": "2026-01-16",
       "duration": "未記載",
       "featured": false,
       "assets": {
@@ -516,13 +381,67 @@ window.STUDY_ARCHIVE_DATA = {
       }
     },
     {
-      "id": "archive-20250929-3ec4581a44",
+      "id": "archive-20260109-8e6dd8e413",
+      "themeId": "research-career",
+      "title": "帰還報告会(医療薬学会)",
+      "summary": "医療薬学会参加後の学びと現場への示唆を共有する報告会。",
+      "speaker": "須賀",
+      "date": "2026-01-09",
+      "updatedAt": "2026-01-09",
+      "duration": "未記載",
+      "featured": true,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5b4c4c",
+        "end": "#baa09b"
+      }
+    },
+    {
+      "id": "archive-20251219-07b09962fd",
+      "themeId": "research-career",
+      "title": "帰還報告会(医療薬学会)",
+      "summary": "医療薬学会参加後の学びと現場への示唆を共有する報告会。",
+      "speaker": "須賀",
+      "date": "2025-12-19",
+      "updatedAt": "2025-12-19",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5b4c4c",
+        "end": "#baa09b"
+      }
+    },
+    {
+      "id": "archive-20251031-2aeb4782dd",
       "themeId": "neurology",
-      "title": "脳梗塞の病態と薬物治療について",
-      "summary": "脳梗塞の病態理解と薬物治療の要点を確認する勉強会。",
+      "title": "脳梗塞の病態と薬物治療について(同内容)",
+      "summary": "脳梗塞の病態と薬物治療を同内容で再実施した回。",
       "speaker": "瀬戸主任",
-      "date": "2025-09-29",
-      "updatedAt": "2025-09-29",
+      "date": "2025-10-31",
+      "updatedAt": "2025-10-31",
       "duration": "未記載",
       "featured": false,
       "assets": {
@@ -570,13 +489,13 @@ window.STUDY_ARCHIVE_DATA = {
       }
     },
     {
-      "id": "archive-20251031-2aeb4782dd",
+      "id": "archive-20250929-3ec4581a44",
       "themeId": "neurology",
-      "title": "脳梗塞の病態と薬物治療について(同内容)",
-      "summary": "脳梗塞の病態と薬物治療を同内容で再実施した回。",
+      "title": "脳梗塞の病態と薬物治療について",
+      "summary": "脳梗塞の病態理解と薬物治療の要点を確認する勉強会。",
       "speaker": "瀬戸主任",
-      "date": "2025-10-31",
-      "updatedAt": "2025-10-31",
+      "date": "2025-09-29",
+      "updatedAt": "2025-09-29",
       "duration": "未記載",
       "featured": false,
       "assets": {
@@ -597,67 +516,13 @@ window.STUDY_ARCHIVE_DATA = {
       }
     },
     {
-      "id": "archive-20251219-07b09962fd",
-      "themeId": "research-career",
-      "title": "帰還報告会(医療薬学会)",
-      "summary": "医療薬学会参加後の学びと現場への示唆を共有する報告会。",
-      "speaker": "須賀",
-      "date": "2025-12-19",
-      "updatedAt": "2025-12-19",
-      "duration": "未記載",
-      "featured": false,
-      "assets": {
-        "recording": false,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
-      }
-    },
-    {
-      "id": "archive-20260109-8e6dd8e413",
-      "themeId": "research-career",
-      "title": "帰還報告会(医療薬学会)",
-      "summary": "医療薬学会参加後の学びと現場への示唆を共有する報告会。",
-      "speaker": "須賀",
-      "date": "2026-01-09",
-      "updatedAt": "2026-01-09",
-      "duration": "未記載",
-      "featured": true,
-      "assets": {
-        "recording": false,
-        "slides": false,
-        "notes": false,
-        "references": false
-      },
-      "links": {
-        "recording": "",
-        "slides": "",
-        "notes": "",
-        "references": ""
-      },
-      "thumbnail": {
-        "start": "#5b4c4c",
-        "end": "#baa09b"
-      }
-    },
-    {
-      "id": "archive-20260116-3692b9f7d3",
+      "id": "archive-20250728-b72431442d",
       "themeId": "foundations",
-      "title": "「今さら聞けないシリーズ」---輸液の基礎---",
-      "summary": "今さら聞けないシリーズとして輸液の基礎を押さえ直すレクチャー。",
+      "title": "基礎から固めていこう",
+      "summary": "周辺知識を含めて基礎事項を整理し直すための入門レクチャー。",
       "speaker": "須賀",
-      "date": "2026-01-16",
-      "updatedAt": "2026-01-16",
+      "date": "2025-07-28",
+      "updatedAt": "2025-07-28",
       "duration": "未記載",
       "featured": false,
       "assets": {
@@ -678,13 +543,13 @@ window.STUDY_ARCHIVE_DATA = {
       }
     },
     {
-      "id": "archive-20260128-b518b2beb5",
-      "themeId": "neurology",
-      "title": "脳卒中（出血性疾患編）",
-      "summary": "脳卒中のうち出血性疾患に焦点を当てて病態と治療を整理する回。",
-      "speaker": "瀬戸主任",
-      "date": "2026-01-28",
-      "updatedAt": "2026-01-28",
+      "id": "archive-20250723-869987a4ad",
+      "themeId": "ai-utilization",
+      "title": "AIを活用する【第四回】",
+      "summary": "AI活用シリーズ第4回。院内での活用を広げるための勉強会。",
+      "speaker": "須賀",
+      "date": "2025-07-23",
+      "updatedAt": "2025-07-23",
       "duration": "未記載",
       "featured": true,
       "assets": {
@@ -700,62 +565,197 @@ window.STUDY_ARCHIVE_DATA = {
         "references": ""
       },
       "thumbnail": {
-        "start": "#556070",
-        "end": "#98a4bb"
+        "start": "#365a5c",
+        "end": "#9dbab7"
       }
     },
     {
-      "id": "archive-20260210-90b833c4a5",
-      "themeId": "cardiology",
-      "title": "「虚血性心疾患の薬物治療」",
-      "summary": "虚血性心疾患に対する薬物治療の考え方を整理する勉強会。",
+      "id": "archive-20250610-e55425f87e",
+      "themeId": "ai-utilization",
+      "title": "AIを活用する【第三回】",
+      "summary": "AI活用シリーズ第3回。継続運用を前提にした実践共有回。",
       "speaker": "須賀",
-      "date": "2026-02-10",
-      "updatedAt": "2026-03-09",
+      "date": "2025-06-10",
+      "updatedAt": "2026-03-22",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/ysDbkzlmS0I",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#365a5c",
+        "end": "#9dbab7"
+      }
+    },
+    {
+      "id": "archive-20250529-6d09b4f125",
+      "themeId": "research-career",
+      "title": "臨床業務と研究を両立させるヒントや実例に関して",
+      "summary": "日常業務と研究活動を両立するためのヒントや実例を共有する回。",
+      "speaker": "八木澤主任",
+      "date": "2025-05-29",
+      "updatedAt": "2025-05-29",
       "duration": "未記載",
       "featured": false,
       "assets": {
         "recording": false,
         "slides": false,
         "notes": false,
-        "references": true
+        "references": false
       },
       "links": {
         "recording": "",
         "slides": "",
         "notes": "",
-        "references": "uploads/2026-02/archive-19n74r/references-references-1m9clq.pdf"
+        "references": ""
       },
       "thumbnail": {
-        "start": "#6b5548",
-        "end": "#c0a48f"
+        "start": "#5b4c4c",
+        "end": "#baa09b"
       }
     },
     {
-      "id": "archive-20260224-f1f9a4cdfb",
-      "themeId": "cardiology",
-      "title": "「心房細動の薬物治療」",
-      "summary": "心房細動に対する薬物治療の基本と処方の見方を確認する勉強会。",
+      "id": "archive-20250512-f649d5f0a6",
+      "themeId": "ai-utilization",
+      "title": "AIを活用する【第二回】",
+      "summary": "AI活用シリーズ第2回。実践例と参考リンクを交えた継続回。",
       "speaker": "須賀",
-      "date": "2026-02-24",
-      "updatedAt": "2026-03-09",
+      "date": "2025-05-12",
+      "updatedAt": "2025-05-12",
       "duration": "未記載",
-      "featured": true,
+      "featured": false,
       "assets": {
-        "recording": false,
+        "recording": true,
         "slides": false,
         "notes": false,
         "references": true
       },
       "links": {
+        "recording": "https://youtu.be/rodc-V55XSQ",
+        "slides": "",
+        "notes": "",
+        "references": "https://cotyumkd.gensparkspace.com/"
+      },
+      "thumbnail": {
+        "start": "#365a5c",
+        "end": "#9dbab7"
+      }
+    },
+    {
+      "id": "archive-20250419-93d5ff6ad9",
+      "themeId": "ai-utilization",
+      "title": "AIを活用する【第一回】",
+      "summary": "AI活用シリーズ第1回。日常業務や学習への取り入れ方を扱う勉強会。",
+      "speaker": "須賀",
+      "date": "2025-04-19",
+      "updatedAt": "2025-04-19",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/glrFjalSYRU",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#365a5c",
+        "end": "#9dbab7"
+      }
+    },
+    {
+      "id": "archive-20250418-5f6b4f5075",
+      "themeId": "research-career",
+      "title": "日病薬/医療薬の専門認定に関するレクチャー",
+      "summary": "専門認定制度の概要と学習の進め方を確認するレクチャー。",
+      "speaker": "徳留係長",
+      "date": "2025-04-18",
+      "updatedAt": "2025-04-18",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
         "recording": "",
         "slides": "",
         "notes": "",
-        "references": "uploads/2026-02/archive-1tk3qr/references-af.pdf"
+        "references": ""
       },
       "thumbnail": {
-        "start": "#6b5548",
-        "end": "#c0a48f"
+        "start": "#5b4c4c",
+        "end": "#baa09b"
+      }
+    },
+    {
+      "id": "archive-20241210-c9374cc04a",
+      "themeId": "research-career",
+      "title": "臨床研究ってなに？ 臨床研究ってなんのためにするの？ 臨床研究して自分にメリットあるの？ 的な概論的内容",
+      "summary": "臨床研究の目的や取り組む意義を導入的に整理するレクチャー。",
+      "speaker": "徳留主任",
+      "date": "2024-12-10",
+      "updatedAt": "2024-12-10",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/vEaIwefXIJY",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5b4c4c",
+        "end": "#baa09b"
+      }
+    },
+    {
+      "id": "archive-20241206-a926c4365a",
+      "themeId": "research-career",
+      "title": "accept論文 報告会",
+      "summary": "論文の内容共有と実務への持ち帰りを目的にした報告会。",
+      "speaker": "齋藤主任",
+      "date": "2024-12-06",
+      "updatedAt": "2024-12-06",
+      "duration": "未記載",
+      "featured": false,
+      "assets": {
+        "recording": false,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5b4c4c",
+        "end": "#baa09b"
       }
     }
   ]
