@@ -58,7 +58,7 @@ dev サーバーで学習フローを実機検証: 視聴済み→進捗反映�
 ### 追記: ブランド刷新（2026-07-08 完了）
 - 新ブランドマーク「CAモノグラム」採用（めいき選定）。public/images/brand-mark.svg、`.brand-mark` の CSS 差し替えで全ページ＋旧静的版に反映。favicon 一式刷新（SVG+PNG+ICO、layout.tsx metadata.icons 明示）
 - OGP 刷新（めいき承認済み）: design-system/assets/og-export.html → ogp-candidate.png → public/images/ogp.png（2400×1260）
-- design-system/ バンドルも新マークに追従しコミット済み。Claude Design への /design-sync push はターミナルから実施（未）
+- design-system/ バンドルも新マークに追従しコミット済み。Claude Design への sync は反映済みを確認（2026-07-08・DesignSync APIで突合: 全20パス一致、brand.html の新マークSVG・tokens.css の廃止注記までリモートと一致。desktopセッションでも読み取り認証可だった）
 
 ## クリティカルパス
 
