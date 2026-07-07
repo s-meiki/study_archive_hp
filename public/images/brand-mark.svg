@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="臨床学術ワーキンググループ ブランドマーク">
+  <!--
+    CA モノグラム (Clinical Academic)。
+    金の弧(C)=accent #97724b ／ 青緑のA=primary #365a5c。
+    背景画像・img参照でも色が出るよう、トークン値を直書きしている。
+    値を変えるときはサイトのトークン (public/assets/styles.css :root) に従うこと。
+    16px 用の簡略版は public/favicon.svg (線幅を太くした派生)。
+  -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#97724b" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
+    <path stroke="#365a5c" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
+    <path stroke="#365a5c" stroke-width="3" d="M 25.4 37 L 38.6 37" />
+  </g>
+</svg>

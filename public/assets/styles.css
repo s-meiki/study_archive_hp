@@ -92,20 +92,8 @@ p {
 .brand-mark {
   width: 50px;
   height: 50px;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 35% 30%, rgba(178, 235, 244, 0.95), rgba(178, 235, 244, 0.24) 22%, transparent 24%),
-    linear-gradient(145deg, #41c5dd 0%, #196fc1 52%, #153786 100%);
-  box-shadow: 0 10px 24px rgba(54, 90, 92, 0.14);
-  position: relative;
-}
-
-.brand-mark::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(255, 255, 255, 0.42);
+  flex: none;
+  background: url("../images/brand-mark.svg") center / contain no-repeat;
 }
 
 .brand-copy {
