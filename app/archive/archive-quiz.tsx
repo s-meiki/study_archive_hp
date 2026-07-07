@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useProgress } from "../learning/progress-context";
 import { useLessonProgress } from "../learning/use-lesson-progress";
 import { bumpStreak } from "../learning/streak";
@@ -22,12 +22,51 @@ type ArchiveQuizProps = {
 
 type AnswerMap = Record<string, string>;
 
+// 作問データは正答が先頭選択肢に偏っているため、表示時に選択肢を並べ替えて
+// 位置から答えを推測できないようにする。SSR と hydration で同一順序になるよう
+// 乱数ではなく質問IDから決定論的に並べる（再挑戦時は round を混ぜて並べ直す）。
+function stableSeed(text: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function shuffledBySeed<T>(items: readonly T[], seed: number): T[] {
+  const result = [...items];
+  let state = seed || 1;
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    state = Math.imul(state ^ (state >>> 15), state | 1);
+    state ^= state + Math.imul(state ^ (state >>> 7), state | 61);
+    const rand = ((state ^ (state >>> 14)) >>> 0) / 4294967296;
+    const j = Math.floor(rand * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
 export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
   const { update } = useProgress();
   const { status, markCompleted } = useLessonProgress(archiveId);
 
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [graded, setGraded] = useState(false);
+  const [shuffleRound, setShuffleRound] = useState(0);
+
+  // フックは quiz の null 早期リターンより前に置く必要がある。
+  const displayQuestions = useMemo(
+    () =>
+      (quiz?.questions ?? []).map((question) => ({
+        ...question,
+        choices: shuffledBySeed(
+          question.choices,
+          stableSeed(`${archiveId}|${question.id}|${shuffleRound}`)
+        )
+      })),
+    [quiz, archiveId, shuffleRound]
+  );
 
   if (!quiz) {
     return (
@@ -97,6 +136,7 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
   function handleRetry() {
     setAnswers({});
     setGraded(false);
+    setShuffleRound((round) => round + 1);
   }
 
   return (
@@ -108,7 +148,7 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
       </p>
 
       <ol className="learn-quiz-question-list">
-        {questions.map((question, questionIndex) => {
+        {displayQuestions.map((question, questionIndex) => {
           const selectedId = answers[question.id];
           return (
             <li key={question.id} className="learn-quiz-question">
