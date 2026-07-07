@@ -5,31 +5,35 @@
   "summary": "輸液・ポリファーマシー・血液製剤など、日常業務で前提となる基礎知識をひととおり見直す入門コースです。まず最初に取り組み、他テーマの理解を支える足場をつくります。",
   "level": "入門",
   "order": 1,
-  "updatedAt": "2026-07-05",
+  "updatedAt": "2026-07-07",
   "lessons": [
     {
-      "archiveId": "archive-20250728-b72431442d",
+      "archiveId": "archive-20260515-4799a9755a",
       "order": 1
     },
     {
-      "archiveId": "archive-20260116-3692b9f7d3",
-      "order": 2
+      "archiveId": "archive-20250728-b72431442d",
+      "order": 2,
+      "labelOverride": "薬剤師の基礎知識を固める（導入編）"
     },
     {
-      "archiveId": "archive-20260327-6e372ec019",
+      "archiveId": "archive-20260116-3692b9f7d3",
       "order": 3
     },
     {
-      "archiveId": "archive-20260408-3a9fc4db6d",
+      "archiveId": "archive-20260526-c57ee27d13",
       "order": 4
     },
     {
-      "archiveId": "archive-20260515-4799a9755a",
-      "order": 5
+      "archiveId": "archive-20260327-6e372ec019",
+      "order": 5,
+      "labelOverride": "ポリファーマシー入門 ― 処方見直しの視点"
     },
     {
-      "archiveId": "archive-20260526-c57ee27d13",
-      "order": 6
+      "archiveId": "archive-20260408-3a9fc4db6d",
+      "order": 6,
+      "optional": true,
+      "labelOverride": "ポリファーマシー入門 ― 処方見直しの視点（再演）"
     }
   ]
 }

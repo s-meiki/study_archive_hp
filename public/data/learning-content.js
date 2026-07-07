@@ -8,31 +8,35 @@ window.LEARNING_CONTENT = {
       "summary": "輸液・ポリファーマシー・血液製剤など、日常業務で前提となる基礎知識をひととおり見直す入門コースです。まず最初に取り組み、他テーマの理解を支える足場をつくります。",
       "level": "入門",
       "order": 1,
-      "updatedAt": "2026-07-05",
+      "updatedAt": "2026-07-07",
       "lessons": [
         {
-          "archiveId": "archive-20250728-b72431442d",
+          "archiveId": "archive-20260515-4799a9755a",
           "order": 1
         },
         {
-          "archiveId": "archive-20260116-3692b9f7d3",
-          "order": 2
+          "archiveId": "archive-20250728-b72431442d",
+          "order": 2,
+          "labelOverride": "薬剤師の基礎知識を固める（導入編）"
         },
         {
-          "archiveId": "archive-20260327-6e372ec019",
+          "archiveId": "archive-20260116-3692b9f7d3",
           "order": 3
         },
         {
-          "archiveId": "archive-20260408-3a9fc4db6d",
+          "archiveId": "archive-20260526-c57ee27d13",
           "order": 4
         },
         {
-          "archiveId": "archive-20260515-4799a9755a",
-          "order": 5
+          "archiveId": "archive-20260327-6e372ec019",
+          "order": 5,
+          "labelOverride": "ポリファーマシー入門 ― 処方見直しの視点"
         },
         {
-          "archiveId": "archive-20260526-c57ee27d13",
-          "order": 6
+          "archiveId": "archive-20260408-3a9fc4db6d",
+          "order": 6,
+          "optional": true,
+          "labelOverride": "ポリファーマシー入門 ― 処方見直しの視点（再演）"
         }
       ]
     },
@@ -62,7 +66,7 @@ window.LEARNING_CONTENT = {
       "summary": "脳梗塞の病態と薬物治療を繰り返し確認し、出血性脳卒中まで視野を広げて脳神経領域の要点を整理するコースです。",
       "level": "標準",
       "order": 3,
-      "updatedAt": "2026-07-05",
+      "updatedAt": "2026-07-07",
       "lessons": [
         {
           "archiveId": "archive-20250929-3ec4581a44",
@@ -71,12 +75,14 @@ window.LEARNING_CONTENT = {
         {
           "archiveId": "archive-20251022-fcc96394fa",
           "order": 2,
-          "optional": true
+          "optional": true,
+          "labelOverride": "脳梗塞の病態と薬物治療（再演）"
         },
         {
           "archiveId": "archive-20251031-2aeb4782dd",
           "order": 3,
-          "optional": true
+          "optional": true,
+          "labelOverride": "脳梗塞の病態と薬物治療（再演）"
         },
         {
           "archiveId": "archive-20260128-b518b2beb5",
@@ -137,14 +143,15 @@ window.LEARNING_CONTENT = {
       "summary": "臨床研究の意義や専門認定制度、学会報告の実例をたどり、研究とキャリア形成の入口を確認するコースです。",
       "level": "標準",
       "order": 6,
-      "updatedAt": "2026-07-05",
+      "updatedAt": "2026-07-07",
       "lessons": [
         {
-          "archiveId": "archive-20241206-a926c4365a",
-          "order": 1
+          "archiveId": "archive-20241210-c9374cc04a",
+          "order": 1,
+          "labelOverride": "臨床研究とは ― 目的・意義・始め方（概論）"
         },
         {
-          "archiveId": "archive-20241210-c9374cc04a",
+          "archiveId": "archive-20241206-a926c4365a",
           "order": 2
         },
         {
@@ -157,11 +164,14 @@ window.LEARNING_CONTENT = {
         },
         {
           "archiveId": "archive-20251219-07b09962fd",
-          "order": 5
+          "order": 5,
+          "labelOverride": "医療薬学会 参加報告 ― 現場への示唆"
         },
         {
           "archiveId": "archive-20260109-8e6dd8e413",
-          "order": 6
+          "order": 6,
+          "optional": true,
+          "labelOverride": "医療薬学会 参加報告 ― 現場への示唆（再演）"
         }
       ]
     }
