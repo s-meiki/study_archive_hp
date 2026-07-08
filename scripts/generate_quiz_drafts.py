@@ -49,6 +49,15 @@ def parse_args():
             "missing a quiz (reviewStatus: draft, questions: [])"
         ),
     )
+    parser.add_argument(
+        "--multiple",
+        action="store_true",
+        help=(
+            "with --scaffold, also seed a type:multiple draft question built "
+            "from keyPoints (>=3 items). Distractors are placeholders to be "
+            "replaced during review; the question stays reviewStatus:draft."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -92,11 +101,57 @@ def build_source_entry(archive: dict):
     }
 
 
-def build_scaffold(archive_id: str, today: str):
+def build_multiple_draft_question(entry: dict):
+    """Seed a type:multiple draft question from keyPoints, or None if too weak.
+
+    Correct answers are the archive's keyPoints (kept verbatim, faithful to the
+    source). Distractors are explicit placeholders so a human must replace them
+    during review. The question stays reviewStatus:draft and is therefore
+    excluded from the built quiz-bank until reviewed.
+    """
+    key_points = [kp for kp in entry.get("keyPoints", []) if isinstance(kp, str) and kp.strip()]
+    if len(key_points) < 3:
+        return None
+
+    # answerIds must be 2..(choices-1). With N keyPoints as correct answers we
+    # add >=1 placeholder distractor so the count stays valid.
+    letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    correct = key_points[: min(len(key_points), len(letters) - 1)]
+    choices = []
+    answer_ids = []
+    for idx, text in enumerate(correct):
+        choices.append({"id": letters[idx], "text": text})
+        answer_ids.append(letters[idx])
+    # placeholder distractors (must be reviewed/replaced before publishing)
+    for offset in range(2):
+        idx = len(choices)
+        if idx >= len(letters):
+            break
+        choices.append(
+            {"id": letters[idx], "text": "（出典外のダミー選択肢。レビューで差し替える）"}
+        )
+
+    return {
+        "id": "m1",
+        "type": "multiple",
+        "prompt": "この回のキーポイントとして資料に挙げられているものを、すべて選んでください。",
+        "choices": choices,
+        "answerIds": answer_ids,
+        "explanation": "keyPoints に挙げられている項目が正答です（レビューで文面を調整すること）。",
+        "reviewStatus": "draft",
+    }
+
+
+def build_scaffold(archive_id: str, today: str, entry: dict = None, with_multiple: bool = False):
+    questions = []
+    if with_multiple and entry is not None:
+        question = build_multiple_draft_question(entry)
+        if question is not None:
+            questions.append(question)
     return {
         "archiveId": archive_id,
         "passThreshold": 0.7,
-        "questions": [],
+        "questions": questions,
         "reviewStatus": "draft",
         "generatedBy": "ai",
         "updatedAt": today,
@@ -139,16 +194,24 @@ def main():
     if args.scaffold:
         today = date.today().isoformat()
         created = 0
-        for archive_id in sources:
+        seeded_multiple = 0
+        for archive_id, entry in sources.items():
             scaffold_path = quizzes_dir / f"{archive_id}.json"
             if scaffold_path.exists():
                 continue
+            scaffold = build_scaffold(
+                archive_id, today, entry=entry, with_multiple=args.multiple
+            )
+            if scaffold["questions"]:
+                seeded_multiple += 1
             scaffold_path.write_text(
-                json.dumps(build_scaffold(archive_id, today), ensure_ascii=False, indent=2) + "\n",
+                json.dumps(scaffold, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
             created += 1
         print(f"Created {created} scaffold quiz files in {quizzes_dir}")
+        if args.multiple:
+            print(f"  Seeded a type:multiple draft question in {seeded_multiple} of them.")
 
     skipped = len(archives) - len(missing_archives)
     print(f"Skipped {skipped} archives that already have a quiz file.")

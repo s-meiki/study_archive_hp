@@ -20,7 +20,29 @@ type ArchiveQuizProps = {
   quiz: ArchiveQuizType | null;
 };
 
-type AnswerMap = Record<string, string>;
+// 単一・複数どちらの設問も選択集合（choice id の配列）で保持する。
+// single は 0〜1 件、multiple は 0〜複数件。
+type AnswerMap = Record<string, string[]>;
+
+type GradableQuestion = ArchiveQuizType["questions"][number];
+
+// 設問の正答 id 集合を返す（single は answerId を 1 件、multiple は answerIds）。
+function correctIdsFor(question: GradableQuestion): string[] {
+  if (question.type === "multiple") {
+    return question.answerIds ?? [];
+  }
+  return question.answerId ? [question.answerId] : [];
+}
+
+// 選択集合が正答集合と完全一致するかを判定する（multiple は部分点なし）。
+function isQuestionCorrect(question: GradableQuestion, selected: string[]): boolean {
+  const correct = correctIdsFor(question);
+  if (correct.length === 0 || correct.length !== selected.length) {
+    return false;
+  }
+  const selectedSet = new Set(selected);
+  return correct.every((id) => selectedSet.has(id));
+}
 
 // 作問データは正答が先頭選択肢に偏っているため、表示時に選択肢を並べ替えて
 // 位置から答えを推測できないようにする。SSR と hydration で同一順序になるよう
@@ -82,21 +104,38 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
   const activeQuiz = quiz;
   const questions = activeQuiz.questions;
   const totalCount = questions.length;
-  const answeredCount = questions.filter((question) => answers[question.id] != null).length;
+  const answeredCount = questions.filter(
+    (question) => (answers[question.id]?.length ?? 0) > 0
+  ).length;
   const allAnswered = totalCount > 0 && answeredCount === totalCount;
 
-  const correctCount = questions.filter(
-    (question) => answers[question.id] === question.answerId
+  const correctCount = questions.filter((question) =>
+    isQuestionCorrect(question, answers[question.id] ?? [])
   ).length;
   const score = totalCount > 0 ? correctCount / totalCount : 0;
   const scorePercent = Math.round(score * 100);
   const passed = graded && score >= activeQuiz.passThreshold;
 
-  function handleSelect(questionId: string, choiceId: string) {
+  // single: 選択を 1 件に置き換える（ラジオ相当）。
+  function handleSelectSingle(questionId: string, choiceId: string) {
     if (graded) {
       return;
     }
-    setAnswers((current) => ({ ...current, [questionId]: choiceId }));
+    setAnswers((current) => ({ ...current, [questionId]: [choiceId] }));
+  }
+
+  // multiple: 選択肢の on/off をトグルする（チェックボックス相当）。
+  function handleToggleMultiple(questionId: string, choiceId: string) {
+    if (graded) {
+      return;
+    }
+    setAnswers((current) => {
+      const previous = current[questionId] ?? [];
+      const next = previous.includes(choiceId)
+        ? previous.filter((id) => id !== choiceId)
+        : [...previous, choiceId];
+      return { ...current, [questionId]: next };
+    });
   }
 
   function handleGrade() {
@@ -104,8 +143,8 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
       return;
     }
 
-    const nextCorrect = questions.filter(
-      (question) => answers[question.id] === question.answerId
+    const nextCorrect = questions.filter((question) =>
+      isQuestionCorrect(question, answers[question.id] ?? [])
     ).length;
     const nextScore = totalCount > 0 ? nextCorrect / totalCount : 0;
 
@@ -149,7 +188,10 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
 
       <ol className="learn-quiz-question-list">
         {displayQuestions.map((question, questionIndex) => {
-          const selectedId = answers[question.id];
+          const isMultiple = question.type === "multiple";
+          const selected = answers[question.id] ?? [];
+          const correctSet = new Set(correctIdsFor(question));
+          const questionCorrect = isQuestionCorrect(question, selected);
           return (
             <li key={question.id} className="learn-quiz-question">
               <p className="learn-quiz-prompt">
@@ -157,10 +199,18 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
                 <span className="learn-quiz-prompt-text">{question.prompt}</span>
               </p>
 
-              <div className="learn-quiz-choices" role="radiogroup" aria-label={question.prompt}>
+              {isMultiple ? (
+                <p className="learn-quiz-multi-hint">該当するものをすべて選んでください（複数選択）。</p>
+              ) : null}
+
+              <div
+                className="learn-quiz-choices"
+                role={isMultiple ? "group" : "radiogroup"}
+                aria-label={question.prompt}
+              >
                 {question.choices.map((choice) => {
-                  const isSelected = selectedId === choice.id;
-                  const isCorrectChoice = choice.id === question.answerId;
+                  const isSelected = selected.includes(choice.id);
+                  const isCorrectChoice = correctSet.has(choice.id);
                   const showCorrect = graded && isCorrectChoice;
                   const showIncorrect = graded && isSelected && !isCorrectChoice;
                   const choiceClassName = [
@@ -174,13 +224,17 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
                   return (
                     <label key={choice.id} className={choiceClassName}>
                       <input
-                        type="radio"
+                        type={isMultiple ? "checkbox" : "radio"}
                         className="learn-quiz-radio"
                         name={`quiz-${archiveId}-${question.id}`}
                         value={choice.id}
                         checked={isSelected}
                         disabled={graded}
-                        onChange={() => handleSelect(question.id, choice.id)}
+                        onChange={() =>
+                          isMultiple
+                            ? handleToggleMultiple(question.id, choice.id)
+                            : handleSelectSingle(question.id, choice.id)
+                        }
                       />
                       <span className="learn-quiz-choice-text">{choice.text}</span>
                     </label>
@@ -192,12 +246,12 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
                 <div className="learn-quiz-feedback">
                   <span
                     className={`learn-quiz-verdict${
-                      selectedId === question.answerId
+                      questionCorrect
                         ? " learn-quiz-verdict--correct"
                         : " learn-quiz-verdict--incorrect"
                     }`}
                   >
-                    {selectedId === question.answerId ? "正解" : "不正解"}
+                    {questionCorrect ? "正解" : "不正解"}
                   </span>
                   {question.explanation ? (
                     <p className="learn-quiz-explanation">{question.explanation}</p>

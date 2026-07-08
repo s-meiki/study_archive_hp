@@ -47,6 +47,23 @@
       ],
       "answerId": "a",
       "explanation": "keyPointsに、多職種で共有しやすい介入ポイントを考えることが整理点として挙げられています。"
+    },
+    {
+      "id": "m1",
+      "type": "multiple",
+      "prompt": "ポリファーマシーの処方見直しで確認するとされている観点として、資料に挙げられているものを、すべて選んでください。",
+      "choices": [
+        { "id": "a", "text": "患者背景" },
+        { "id": "b", "text": "治療目的" },
+        { "id": "c", "text": "薬剤の製造ロット番号" },
+        { "id": "d", "text": "薬剤師個人の処方経験年数" }
+      ],
+      "answerIds": [
+        "a",
+        "b"
+      ],
+      "explanation": "overviewとkeyPointsでは、処方を見直す際に患者背景と治療目的から確認する視点が示されています。製造ロット番号や処方経験年数には触れられていません。",
+      "reviewStatus": "reviewed"
     }
   ],
   "reviewStatus": "reviewed",
