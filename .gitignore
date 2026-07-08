@@ -30,6 +30,7 @@ node_modules/
 .next/
 .next-build/
 .next-dev/
+.next-verify/
 .next_backup_*/
 .env.local
 .vercel/
