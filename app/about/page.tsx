@@ -65,6 +65,26 @@ const themeSummaries: [string, string, boolean][] = [
 
 const learnFlow = ["アーカイブ", "コース", "クイズ", "進捗・バッジ"];
 
+// 管理者に事実確認が取れた範囲のみを扱う。事実の追加・誇張はしない。
+const faqs = [
+  [
+    "参加費はかかりますか？",
+    "参加費は原則かかりません。オープンチャットで案内する回に、そのまま参加できます。"
+  ],
+  [
+    "カメラはオンにする必要がありますか？",
+    "カメラのオンは必須ではありません。オフのままでも参加できます。"
+  ],
+  [
+    "発言や質問は必須ですか？",
+    "発言の制限や強制はありません。聞くだけの参加もできます。"
+  ],
+  [
+    "参加できる職種や経験年数に条件はありますか？",
+    "職種や経験年数による参加制限はありません。薬剤師・医療従事者の勉強会として、どなたでも参加いただけます。"
+  ]
+];
+
 const upcomingMeetings = [
   {
     id: "meeting-20260710",
@@ -317,6 +337,23 @@ export default function AboutPage() {
                     {meeting.materialsPlanned ? <span>資料共有あり</span> : null}
                   </div>
                 </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="about-section about-faq-section" aria-labelledby="faq-heading">
+          <div className="about-section-head">
+            <div>
+              <div className="section-kicker">FAQ</div>
+              <h2 id="faq-heading">{kw("よくある|質問")}</h2>
+            </div>
+          </div>
+          <div className="about-faq-list">
+            {faqs.map(([question, answer]) => (
+              <article className="about-faq-item" key={question}>
+                <h3>{question}</h3>
+                <p>{answer}</p>
               </article>
             ))}
           </div>

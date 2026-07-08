@@ -628,6 +628,7 @@
 .about-theme-card,
 .about-meeting-card,
 .about-answer-card,
+.about-faq-item,
 .about-step {
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -637,6 +638,7 @@
 .about-theme-card h3,
 .about-meeting-card h3,
 .about-answer-card h3,
+.about-faq-item h3,
 .about-step h3 {
   font-size: 1.1rem;
   line-height: 1.45;
@@ -646,6 +648,7 @@
 .about-theme-card p,
 .about-meeting-card p,
 .about-answer-card p,
+.about-faq-item p,
 .about-step p {
   color: var(--muted);
   font-size: 0.94rem;
@@ -876,6 +879,19 @@
 
 .about-meeting-tags span {
   background: var(--surface-muted);
+}
+
+/* FAQ (between schedule and final CTA) */
+.about-faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.about-faq-item {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 22px 24px;
 }
 
 .about-notice {
@@ -1724,6 +1740,13 @@ a.learn-course-lesson-title:hover {
   font-weight: 700;
   line-height: 1.6;
   text-wrap: pretty;
+}
+
+.learn-quiz-multi-hint {
+  margin: -2px 0 0 42px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
 }
 
 .learn-quiz-choices {
