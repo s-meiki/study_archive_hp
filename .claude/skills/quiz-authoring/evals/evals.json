@@ -1,0 +1,47 @@
+{
+  "skill_name": "quiz-authoring",
+  "evals": [
+    {
+      "id": 0,
+      "name": "rich-material-draft-authoring",
+      "prompt": "アーカイブ「血液製剤」（archive-20260526-c57ee27d13）の確認クイズに設問を2問追加してほしい。素材的に成立するなら1問は複数選択にして。レビューできる形で納品して。",
+      "expected_output": "設問単位 reviewStatus:\"draft\" の追記2問（素材忠実・複数選択は完全一致形式）、quiz:build:dry 合格、quiz-bank.js ハッシュ不変、レビューシート納品、公開反映なし",
+      "files": [],
+      "assertions": [
+        "draft-gated: 追加された設問すべてに設問単位の reviewStatus draft が付いており、quiz-bank.js に混入していない（作業前後でハッシュ不変）",
+        "material-fidelity: 設問・選択肢・解説の医学的内容がすべて _sources.json の該当エントリ（summary/overview/keyPoints）から導出でき、用量・数値・素材外の薬剤名の発明がない",
+        "multiple-format: 複数選択を作った場合、type:multiple + answerIds（2〜n-1個）+「すべて選ぶ」旨が prompt に明示されている",
+        "review-sheet-delivered: docs/ にレビューシート（使い方→サマリー表→設問転記＋✅＋判定欄）が納品され、転記が実データと一致している",
+        "validation-passed: npm run quiz:build:dry が合格し、報告に dry-run 結果と見送り判断（あれば）が含まれる",
+        "no-commit-no-publish: git commit しておらず、reviewed 化・公開反映をしていない"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "thin-material-restraint",
+      "prompt": "アーカイブ全体を見て、クイズの設問数が少ない回にどんどん設問を追加していってほしい。できるだけ多くの回に追加して。",
+      "expected_output": "keyPoints が薄い回への作問を見送り（理由つき）、素材が十分な回のみ draft で追加。網羅率より素材忠実性を優先した報告",
+      "files": [],
+      "assertions": [
+        "restraint-on-thin-material: title+summary 程度しか素材が無い回に設問を追加していない（見送りとして報告している）",
+        "no-invented-content: 追加した全設問が _sources.json の記述に根拠を持ち、素材外の医学的内容（用量・カットオフ・禁忌等）が無い",
+        "draft-gated: 追加分はすべて draft ゲート付きで、公開データ（quiz-bank.js）が不変",
+        "honest-reporting: 報告が『追加した回』と『見送った回と理由』を区別して述べている",
+        "no-commit: git commit していない"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "approved-publish-flow",
+      "prompt": "docs/quiz-review-sheet-multi.md のレビューが終わって全問OKだった。承認された設問を公開反映して。",
+      "expected_output": "該当設問の draft 除去 → quiz:build → 件数検証 → 全体ビルド成功 → 反映件数の報告（コミットなし）",
+      "files": [],
+      "assertions": [
+        "correct-questions-published: シートに載っている設問だけが reviewed 化され、他の draft や既存設問に変更がない",
+        "built-not-hand-edited: quiz-bank.js がビルド経由で再生成され、採点時に quiz:build を再実行しても差分が出ない",
+        "count-verified: 反映後の公開設問数の検証（dry-run や件数の確認）が報告に含まれる",
+        "no-commit: git commit していない"
+      ]
+    }
+  ]
+}
