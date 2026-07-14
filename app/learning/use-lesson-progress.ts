@@ -68,20 +68,29 @@ export function useLessonProgress(archiveId: string) {
   return { status, progress, markWatched, markCompleted, resetToUnwatched };
 }
 
-export function useRecordVisit(archiveId: string | undefined): void {
+export function useRecordVisit(archiveId: string | undefined, courseId?: string): void {
   const { update } = useProgress();
-  const hasRecordedRef = useRef(false);
+  const recordedVisitRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!archiveId || hasRecordedRef.current) {
+    if (!archiveId) {
       return;
     }
-    hasRecordedRef.current = true;
+
+    const visitKey = `${archiveId}\u0000${courseId ?? ""}`;
+    if (recordedVisitRef.current === visitKey) {
+      return;
+    }
+    recordedVisitRef.current = visitKey;
 
     update((current) => ({
       ...current,
-      lastVisited: { archiveId, at: new Date().toISOString() }
+      lastVisited: {
+        archiveId,
+        ...(courseId ? { courseId } : {}),
+        at: new Date().toISOString()
+      }
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [archiveId]);
+  }, [archiveId, courseId]);
 }

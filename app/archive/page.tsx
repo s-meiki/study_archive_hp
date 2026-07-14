@@ -3,13 +3,14 @@ import Script from "next/script";
 import SiteFooter from "../site-footer";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
-import { findQuizForArchive } from "../site-data";
+import { findQuizForArchive, loadLearningContent } from "../site-data";
 import ArchiveQuiz from "./archive-quiz";
 import LessonProgressControls from "./lesson-progress-controls";
 
 type ArchivePageProps = {
   searchParams: Promise<{
     id?: string | string[];
+    courseId?: string | string[];
   }>;
 };
 
@@ -44,8 +45,8 @@ export async function generateMetadata({ searchParams }: ArchivePageProps): Prom
         ? [
             {
               url: ogImageUrl,
-              width: 1536,
-              height: 1024,
+              width: 2400,
+              height: 1260,
               alt: `${siteLegal.shortSiteName} のOGP画像`
             }
           ]
@@ -63,7 +64,20 @@ export async function generateMetadata({ searchParams }: ArchivePageProps): Prom
 export default async function ArchivePage({ searchParams }: ArchivePageProps) {
   const params = await searchParams;
   const archiveId = firstQueryValue(params.id);
-  const quiz = archiveId ? await findQuizForArchive(archiveId) : null;
+  const requestedCourseId = firstQueryValue(params.courseId);
+  const [quiz, learningContent] = await Promise.all([
+    archiveId ? findQuizForArchive(archiveId) : Promise.resolve(null),
+    requestedCourseId ? loadLearningContent() : Promise.resolve(null)
+  ]);
+  const course =
+    archiveId && requestedCourseId
+      ? learningContent?.courses.find(
+          (candidate) =>
+            candidate.id === requestedCourseId &&
+            candidate.lessons.some((lesson) => lesson.archiveId === archiveId)
+        ) ?? null
+      : null;
+  const courseLesson = course?.lessons.find((lesson) => lesson.archiveId === archiveId);
 
   return (
     <div className="page-shell">
@@ -92,6 +106,18 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           <span id="detail-breadcrumb-current">詳細</span>
         </nav>
 
+        {course && courseLesson ? (
+          <nav className="detail-breadcrumb learn-course-context-strip" aria-label="コース学習の位置">
+            <span>コース学習</span>
+            <span>/</span>
+            <a href={`/courses/${encodeURIComponent(course.id)}`}>← {course.title}へ戻る</a>
+            <span>/</span>
+            <span>
+              第{courseLesson.order}回 / 全{course.lessons.length}回
+            </span>
+          </nav>
+        ) : null}
+
         <div className="status-panel" id="detail-status" hidden></div>
 
         <section className="panel detail-hero" id="detail-hero" hidden>
@@ -101,7 +127,7 @@ export default async function ArchivePage({ searchParams }: ArchivePageProps) {
           <div className="detail-meta" id="detail-meta"></div>
         </section>
 
-        <LessonProgressControls archiveId={archiveId} />
+        <LessonProgressControls archiveId={archiveId} courseId={course?.id} />
 
         <div className="detail-layout" id="detail-layout" hidden>
           <section className="detail-main">

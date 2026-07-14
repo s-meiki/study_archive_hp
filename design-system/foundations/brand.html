@@ -1,8 +1,8 @@
 <!-- @dsCard group="Foundations" name="ブランド" subtitle="ロゴロックアップ・代表コピー・テーマチップ・免責文言" width="900" height="560" -->
 <!--
   使い方 (AI向け):
-  - ロゴマークは CA モノグラムのインラインSVG (.brand-mark, 50px) を必ずパスデータごとそのまま流用し、色や形を変えない。
-    色は金の弧(C)=var(--accent)、青緑のA=var(--primary) の2トークンのみ。サイト実体は public/images/brand-mark.svg。
+  - ロゴマークは Learning Loop (.brand-mark, 50px)。A・開いた本・時計回りの矢印の形・色・比率を変えない。
+    サイト実体は public/images/brand-mark.svg。プレビューでは同じマークをインラインSVGで使う。
   - ブランドラベルは英語uppercase小文字表記(letter-spacing +0.08em)、ブランド名は日本語で太字・字間を締める。
   - テーマ分類6語彙は固定。順不同・改変不可。チップの色はカテゴリごとに変えず、全て同じトークンで統一する。
   - 免責文言はどの資料でも一字一句変更せずそのまま使う。
@@ -80,13 +80,15 @@
 <body>
   <div class="spec-label">ロゴロックアップ</div>
   <div class="lockup-card">
-    <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
-        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
-        <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
-      </g>
-    </svg>
+    <svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true">
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
+    <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
+    <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
+    <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
+    <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
+  </g>
+</svg>
     <div class="brand-copy">
       <div class="brand-label">Clinical Academic Working Group</div>
       <div class="brand-name">臨床学術ワーキンググループ</div>
@@ -115,6 +117,6 @@
   </div>
 
   <div class="spec-label">ロゴ色の扱い</div>
-  <div class="logo-rule">マークの色は --primary(A) と --accent(Cの弧) の2トークンのみ。旧・青系グラデ球体は廃止済みで、いかなる資料でも使わない。</div>
+  <div class="logo-rule">Learning Loop は「復習 → 実践 → 次の学び」の循環を表す。形・色・比率を変えず、旧ロゴや代替アイコンを混在させない。</div>
 </body>
 </html>

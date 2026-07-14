@@ -46,9 +46,9 @@ claude
 
 1. `tokens/tokens.css` の値を新ブランドの色・角丸に差し替える。
 2. 各プレビューHTMLの `<style>` 冒頭にある `:root { … }` ブロックは tokens.css のコピーなので、一括置換で追従させる:
-   - 置換対象は全HTMLの `--bg` 〜 `--font-sans` の変数値と、インラインSVGロゴ(CAモノグラム)のstroke色。エディタの全体検索置換か、Claude Code に「tokens.css の変更を design-system/ 配下の全HTMLの :root に反映して」と頼む。
+   - 置換対象は全HTMLの `--bg` 〜 `--font-sans` の変数値。エディタの全体検索置換か、Claude Code に「tokens.css の変更を design-system/ 配下の全HTMLの :root に反映して」と頼む。
 3. `guidelines.md` の第1〜2節 (ブランドの正体・声とトーン) と、見本内のサンプル文言を新ブランドの文脈に書き換える。
-4. ロゴ (`foundations/brand.html` のインラインSVG CAモノグラム。各プレビューにも同じパスデータが複製されている) を差し替える。
+4. ロゴ (`foundations/brand.html` のインライン Learning Loop マーク。各プレビューにも同じSVGパスが複製されている) を差し替える。外部画像参照は作らない。
 5. ブラウザで全プレビューを開いて崩れ確認 → sync。
 
 ## OGP画像の書き出し

@@ -3,8 +3,8 @@
   使い方 (AI向け):
   - ogp.png を再生成するための実寸原稿。templates/social.html のOGP型のフルブリード版 (角丸・影・外枠なし)。
   - 書き出し: リポジトリルートで design-system/README.md「OGP画像の書き出し」のコマンドを実行する。
-  - 見出しは About 刷新に合わせた OGP 専用メッセージ。チップは事実ベースのバッジ (開催頻度・形式・録画) で、
-    人名・絵文字・感嘆符・誇大表現を入れない。ロゴは CA モノグラム (foundations/brand.html が正) を改変せず使う。
+  - 見出し・リード・チップは「復習から始まる学習体験」を短く伝える OGP 専用メッセージ。
+    人名・絵文字・感嘆符・誇大表現を入れない。Learning Loop マーク (foundations/brand.html が正) を改変せず使う。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -25,51 +25,64 @@
   body { font-family: var(--font-sans); }
   .og {
     position: relative; width: 1200px; height: 630px; overflow: hidden;
-    padding: 72px 80px; background: var(--bg);
-    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 76px 58px; background: var(--bg);
   }
-  .arc {
-    position: absolute; right: -160px; bottom: -200px; width: 480px; height: 480px;
-    border-radius: var(--radius-pill); background: var(--primary-tint);
-  }
-  .og-top { position: relative; display: flex; align-items: center; gap: 18px; }
-  .lockup-mark { width: 64px; height: 64px; flex: none; display: block; }
-  .og-name { color: var(--primary); font-size: 1.5rem; font-weight: 700; letter-spacing: 0.06em; }
-  .og-main { position: relative; }
+  .og-top { position: relative; }
+  .og-name { color: var(--primary); font-size: 1.32rem; font-weight: 700; letter-spacing: 0.06em; }
+  .og-main { position: relative; margin-top: 42px; }
   .og-copy {
-    margin: 0; font-size: 4.1rem; line-height: 1.12; letter-spacing: -0.05em;
-    font-weight: 600; color: var(--ink); max-width: 20ch;
+    margin: 0; font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+    font-size: 4.65rem; line-height: 1.12; letter-spacing: -0.06em;
+    font-weight: 600; color: var(--ink); max-width: 12ch;
   }
-  .og-lead { margin: 26px 0 0; color: var(--muted); font-size: 1.5rem; line-height: 1.6; }
-  .og-bottom { position: relative; display: flex; align-items: center; gap: 14px; }
+  .og-divider { width: 520px; height: 1px; margin: 28px 0 18px; background: var(--accent); opacity: 0.72; }
+  .og-lead { margin: 0; color: var(--ink); font-size: 1.22rem; font-weight: 700; line-height: 1.6; }
+  .og-bottom { position: relative; display: flex; align-items: center; gap: 16px; margin-top: 28px; }
   .og-chip {
-    display: inline-flex; align-items: center; min-height: 52px; padding: 0 26px;
-    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
-    color: var(--muted); font-size: 1.3rem; font-weight: 700;
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px;
+    border-radius: 6px; background: transparent; border: 1px solid rgba(151, 114, 75, 0.8);
+    color: var(--ink); font-size: 1rem; font-weight: 700;
   }
+  .og-loop { position: absolute; right: 22px; top: 56px; width: 486px; height: 486px; }
+  .og-logo { position: absolute; right: 150px; top: 185px; width: 220px; height: 220px; }
+  .og-logo svg { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body>
   <div class="og">
-    <span class="arc" aria-hidden="true"></span>
     <div class="og-top">
-      <svg class="lockup-mark" viewBox="0 0 64 64" aria-hidden="true">
-        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="var(--accent, #97724b)" stroke-width="2.6" d="M 50.58 15.27 A 25 25 0 1 0 50.58 48.73" />
-          <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 22 47 L 32 16 L 42 47" />
-          <path stroke="var(--primary, #365a5c)" stroke-width="3" d="M 25.4 37 L 38.6 37" />
-        </g>
-      </svg>
       <span class="og-name">臨床学術ワーキンググループ</span>
     </div>
     <div class="og-main">
-      <h1 class="og-copy">月2回、オンラインで<br>つながって学ぶ。</h1>
-      <p class="og-lead">薬剤師向け勉強会アーカイブ ／ 録画・資料をテーマ別に公開</p>
+      <h1 class="og-copy">前回の学びを、<br>次の一歩へ。</h1>
+      <div class="og-divider" aria-hidden="true"></div>
+      <p class="og-lead">続きから再開できる、薬剤師向け勉強会アーカイブ</p>
     </div>
     <div class="og-bottom">
-      <span class="og-chip">月2回以上開催</span>
-      <span class="og-chip">ハイブリッド開催</span>
-      <span class="og-chip">録画あり</span>
+      <span class="og-chip">続きから再開</span>
+      <span class="og-chip">確認クイズ</span>
+      <span class="og-chip">テーマ別コース</span>
+    </div>
+    <svg class="og-loop" viewBox="0 0 486 486" aria-hidden="true">
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="#365a5c" stroke-width="8" d="M244 40A204 204 0 0 0 68 346" />
+        <path stroke="#24343b" stroke-width="8" d="M88 383A204 204 0 0 0 390 383" />
+        <path stroke="#97724b" stroke-width="8" d="M410 346A204 204 0 0 0 270 42" />
+        <circle cx="244" cy="40" r="11" stroke="#365a5c" stroke-width="6" fill="#f6f3ec" />
+        <circle cx="68" cy="346" r="11" stroke="#24343b" stroke-width="6" fill="#f6f3ec" />
+        <circle cx="410" cy="346" r="11" stroke="#97724b" stroke-width="6" fill="#f6f3ec" />
+      </g>
+    </svg>
+    <div class="og-logo">
+      <svg viewBox="0 0 96 96" aria-hidden="true">
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
+          <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
+          <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
+          <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
+          <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
+        </g>
+      </svg>
     </div>
   </div>
 </body>

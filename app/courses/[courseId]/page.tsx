@@ -4,14 +4,15 @@ import SiteFooter from "../../site-footer";
 import { siteLegal, siteNavigation } from "../../site-legal";
 import { absoluteSiteUrl } from "../../site-url";
 import { loadLearningContent, loadSiteContent } from "../../site-data";
-import { CourseContinueCard, CourseProgressSummary, LessonStatusBadge } from "../course-progress";
+import CourseAwareContinueCard from "../../archive/course-aware-continue-card";
+import { CourseProgressSummary, LessonStatusBadge } from "../course-progress";
 
 type CourseDetailPageProps = {
   params: Promise<{ courseId: string }>;
 };
 
-function archiveHref(archiveId: string) {
-  return `/archive?id=${encodeURIComponent(archiveId)}`;
+function archiveHref(archiveId: string, courseId: string) {
+  return `/archive?id=${encodeURIComponent(archiveId)}&courseId=${encodeURIComponent(courseId)}`;
 }
 
 async function getCourse(courseId: string) {
@@ -104,7 +105,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
             </div>
           </section>
 
-          <CourseContinueCard lessons={lessonViews} />
+          <CourseAwareContinueCard courseId={course.id} lessons={lessonViews} />
 
           <CourseProgressSummary courseArchiveIds={requiredArchiveIds} />
 
@@ -119,7 +120,10 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                   <span className="learn-course-lesson-order">{lesson.order}</span>
                   <div className="learn-course-lesson-body">
                     {lesson.available ? (
-                      <a className="learn-course-lesson-title" href={archiveHref(lesson.archiveId)}>
+                      <a
+                        className="learn-course-lesson-title"
+                        href={archiveHref(lesson.archiveId, course.id)}
+                      >
                         {lesson.title}
                       </a>
                     ) : (

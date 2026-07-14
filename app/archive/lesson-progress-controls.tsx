@@ -5,6 +5,7 @@ import type { LessonStatus } from "../learning/types";
 
 type LessonProgressControlsProps = {
   archiveId?: string;
+  courseId?: string;
 };
 
 const STATUS_LABEL: Record<LessonStatus, string> = {
@@ -13,8 +14,8 @@ const STATUS_LABEL: Record<LessonStatus, string> = {
   completed: "修了"
 };
 
-export default function LessonProgressControls({ archiveId }: LessonProgressControlsProps) {
-  useRecordVisit(archiveId);
+export default function LessonProgressControls({ archiveId, courseId }: LessonProgressControlsProps) {
+  useRecordVisit(archiveId, courseId);
   const { status, markWatched, markCompleted, resetToUnwatched } = useLessonProgress(archiveId ?? "");
 
   if (!archiveId) {

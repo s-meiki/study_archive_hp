@@ -36,9 +36,9 @@
   --radius-pill: 999px;                        /* ボタン・チップ・入力欄 */
   --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
 
-  /* ロゴマーク (CA モノグラム)
-     旧・青系グラデ球体 (--logo-gradient / --logo-highlight) は 2026-07 に廃止。
-     現行マークは SVG (サイト実体: public/images/brand-mark.svg) で、
-     使用色は --accent (金の弧 C) と --primary (青緑の A) の2トークンのみ。
-     プレビューHTMLでは同じパスデータをインラインSVGで持つ (foundations/brand.html が正)。 */
+  /* ロゴマーク (Learning Loop)
+     循環する矢印と開いた本を組み合わせ、復習から実践へつながる学びを表す。
+     サイト実体は public/images/brand-mark.svg。色・形・比率は改変しない。
+     プレビューHTMLでは自己完結のため、同じマークの縮小PNGを base64 で埋め込む
+     (foundations/brand.html が正)。 */
 }

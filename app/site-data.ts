@@ -34,6 +34,12 @@ export type SiteArchive = {
     notes?: string;
     references?: string;
   };
+  detail?: {
+    overview?: string;
+    keyPoints?: string[];
+    chapters?: Array<{ label?: string; time?: string }>;
+    materials?: Array<{ label?: string; url?: string }>;
+  };
 };
 
 export type SiteContent = {
