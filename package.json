@@ -17,7 +17,8 @@
     "start": "node scripts/run_next_with_server_chunk_fix.js start"
   },
   "dependencies": {
-    "next": "^15.0.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "next": "^15.5.20",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

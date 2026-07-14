@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { createDefaultProgressState, createProgressStore, type ProgressStore } from "./progress-store";
 import type { ProgressState } from "./types";
 
@@ -12,6 +12,7 @@ function getServerSnapshot(): ProgressState {
 
 type ProgressContextValue = {
   state: ProgressState;
+  hydrated: boolean;
   update: (mutator: (current: ProgressState) => ProgressState) => void;
   store: ProgressStore;
 };
@@ -21,6 +22,7 @@ const ProgressContext = createContext<ProgressContextValue | null>(null);
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const store = useMemo(() => createProgressStore(), []);
   const state = useSyncExternalStore(store.subscribe, store.get, getServerSnapshot);
+  const [hydrated, setHydrated] = useState(false);
 
   // Server render and first client render both use the default snapshot (getServerSnapshot).
   // The lazy localStorage read in get() does not notify, so it cannot trigger a
@@ -28,11 +30,12 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   // surfacing persisted progress right after mount without any hydration mismatch.
   useEffect(() => {
     store.hydrate();
+    setHydrated(true);
   }, [store]);
 
   const value = useMemo<ProgressContextValue>(
-    () => ({ state, update: store.update.bind(store), store }),
-    [state, store]
+    () => ({ state, hydrated, update: store.update.bind(store), store }),
+    [state, hydrated, store]
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

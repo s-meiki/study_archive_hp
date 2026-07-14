@@ -92,7 +92,7 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
 
   if (!quiz) {
     return (
-      <section className="panel learn-quiz-panel learn-quiz-pending">
+      <section className="panel learn-quiz-panel learn-quiz-pending" id="quiz">
         <div className="section-kicker">Quiz</div>
         <h2>確認クイズ</h2>
         <p className="learn-quiz-pending-copy">確認クイズは準備中です。</p>
@@ -179,7 +179,7 @@ export default function ArchiveQuiz({ archiveId, quiz }: ArchiveQuizProps) {
   }
 
   return (
-    <section className="panel learn-quiz-panel">
+    <section className="panel learn-quiz-panel" id="quiz">
       <div className="section-kicker">Quiz</div>
       <h2>確認クイズ</h2>
       <p className="learn-quiz-intro">

@@ -32,8 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
         ? [
             {
               url: ogImageUrl,
-              width: 1536,
-              height: 1024,
+              width: 2400,
+              height: 1260,
               alt: `${siteLegal.shortSiteName} のOGP画像`
             }
           ]
