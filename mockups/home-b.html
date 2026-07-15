@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>臨床学術WG — ホーム（案B: 今日の1本）</title>
+  <script>
+    // ちらつき防止のため、CSS より先に保存済みテーマを適用する
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('mock.theme'); } catch (e) {}
+      if (stored === 'dark' || stored === 'light') {
+        document.documentElement.setAttribute('data-theme', stored);
+      }
+    })();
+  </script>
+  <style>
+    /* ==========================================================
+       トークン契約（DESIGN_BRIEF.md 準拠 — globals.css へ持ち上げる）
+       ========================================================== */
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-2: #eef3f8;
+      --ink: #0f1c2e;
+      --ink-2: #3d4d63;
+      --muted: #5d6b80;
+      --border: #dfe6ee;
+      --primary: #2563eb;
+      --primary-strong: #1d4ed8;
+      --on-primary: #ffffff;
+      --accent: #6d28d9;
+      --success: #15803d;
+      --warning: #a8530a;
+      --danger: #dc2626;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --shadow-1: 0 1px 2px rgba(15, 28, 46, 0.06);
+      --shadow-2: 0 10px 28px rgba(15, 28, 46, 0.07);
+      --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+
+      /* メータ（単一比率）: 同一ランプの薄いステップをトラックに使う */
+      --meter-track: #dbeafe;
+
+      /* カテゴリ固定順パレット（validate_palette.js 両モード合格）
+         1循環器 2脳神経 3感染症 4基礎レクチャー 5研究・認定 6AI活用 */
+      --cat-1: #2a78d6;
+      --cat-2: #1baf7a;
+      --cat-3: #eda100;
+      --cat-4: #008300;
+      --cat-5: #4a3aa7;
+      --cat-6: #e34948;
+
+      /* タイプスケール 12/14/16/20/28/40 */
+      --fs-xs: 0.75rem;
+      --fs-sm: 0.875rem;
+      --fs-md: 1rem;
+      --fs-lg: 1.25rem;
+      --fs-xl: 1.75rem;
+      --fs-2xl: 2.5rem;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0a101c;
+      --surface: #111927;
+      --surface-2: #19243a;
+      --ink: #edf2f9;
+      --ink-2: #c2cddd;
+      --muted: #8fa0b8;
+      --border: #263349;
+      --primary: #60a5fa;
+      --primary-strong: #93c5fd;
+      --on-primary: #0a101c;
+      --accent: #a78bfa;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+      --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.4);
+      --meter-track: #223a63;
+      --cat-1: #3987e5;
+      --cat-2: #17a873;
+      --cat-3: #c98500;
+      --cat-4: #008300;
+      --cat-5: #6f5ce0;
+      --cat-6: #dd5c5c;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0a101c;
+        --surface: #111927;
+        --surface-2: #19243a;
+        --ink: #edf2f9;
+        --ink-2: #c2cddd;
+        --muted: #8fa0b8;
+        --border: #263349;
+        --primary: #60a5fa;
+        --primary-strong: #93c5fd;
+        --on-primary: #0a101c;
+        --accent: #a78bfa;
+        --success: #4ade80;
+        --warning: #fbbf24;
+        --danger: #f87171;
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+        --shadow-2: 0 10px 28px rgba(0, 0, 0, 0.4);
+        --meter-track: #223a63;
+        --cat-1: #3987e5;
+        --cat-2: #17a873;
+        --cat-3: #c98500;
+        --cat-4: #008300;
+        --cat-5: #6f5ce0;
+        --cat-6: #dd5c5c;
+      }
+    }
+
+    /* ============================ 基礎 ============================ */
+    * { box-sizing: border-box; }
+    html { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: var(--fs-md);
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    h1, h2, h3 { margin: 0; line-height: 1.35; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    svg { display: block; }
+    :focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin-inline: auto;
+      padding-inline: clamp(16px, 4vw, 24px);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 100;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      box-shadow: var(--shadow-2);
+      transition: top 0.15s ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    /* ============================ ヘッダー ============================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .site-header .bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      min-height: 60px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: var(--fs-md);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .brand svg { width: 26px; height: 26px; }
+    .brand .mark-bg { fill: var(--primary); }
+    .brand .mark-line { stroke: var(--on-primary); }
+
+    .site-nav { margin-left: 4px; }
+    .site-nav ul { display: flex; gap: 4px; }
+    .site-nav a {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: var(--fs-sm);
+      color: var(--ink-2);
+    }
+    .site-nav a:hover { color: var(--ink); background: var(--surface-2); }
+    .site-nav a[aria-current="page"] {
+      color: var(--ink);
+      font-weight: 600;
+      background: var(--surface-2);
+    }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--ink-2);
+    }
+    .icon-btn:hover { color: var(--ink); background: var(--surface-2); }
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    /* テーマトグルのアイコン切替（トークンと同じ3スコープで駆動） */
+    .theme-toggle .icon-sun { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+    }
+
+    .menu-btn { display: none; }
+    .mobile-nav { display: none; }
+
+    @media (max-width: 899px) {
+      .site-nav { display: none; }
+      .menu-btn { display: inline-flex; }
+      .nav-open .mobile-nav {
+        display: block;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+      }
+      .mobile-nav ul { padding: 8px 0 14px; }
+      .mobile-nav a {
+        display: block;
+        padding: 11px 4px;
+        font-size: var(--fs-md);
+        color: var(--ink-2);
+        border-radius: var(--radius-md);
+      }
+      .mobile-nav a:hover { background: var(--surface-2); color: var(--ink); }
+      .mobile-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+    }
+
+    /* ============================ ヒーロー ============================ */
+    .hero { margin-top: clamp(24px, 5vw, 44px); }
+    .hero-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: clamp(24px, 5vw, 56px);
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-2);
+      padding: clamp(28px, 5.5vw, 52px);
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+    .hero-eyebrow::before {
+      content: "";
+      width: 20px;
+      height: 2px;
+      border-radius: 1px;
+      background: var(--accent);
+    }
+    .hero-title {
+      margin-top: 14px;
+      font-size: clamp(var(--fs-xl), 6vw, var(--fs-2xl));
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .hero-course {
+      margin: 6px 0 0;
+      font-size: var(--fs-lg);
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      margin-top: 12px;
+      font-size: var(--fs-sm);
+      color: var(--muted);
+    }
+    .hero-meta .sep { color: var(--border); }
+    .hero-cta { margin-top: 26px; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 26px;
+      border: 0;
+      border-radius: var(--radius-md);
+      background: var(--primary);
+      color: var(--on-primary);
+      font-size: var(--fs-md);
+      font-weight: 700;
+      box-shadow: var(--shadow-1);
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover { background: var(--primary-strong); }
+    .btn-primary svg { width: 16px; height: 16px; }
+
+    /* 進捗リング（メータ: トラックは同一ランプの薄いステップ） */
+    .hero-ring { width: 148px; }
+    .hero-ring .ring-track { stroke: var(--meter-track); }
+    .hero-ring .ring-fill { stroke: var(--primary); }
+    .hero-ring .ring-value {
+      font-size: 26px;
+      font-weight: 700;
+      fill: var(--ink);
+    }
+    .hero-ring .ring-label {
+      font-size: 11px;
+      fill: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* モバイルはリングの代わりに細い線形メータ */
+    .hero-meter { display: none; }
+    @media (max-width: 639px) {
+      .hero-card { grid-template-columns: minmax(0, 1fr); }
+      .hero-ring { display: none; }
+      .hero-meter {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .hero-meter .track {
+        flex: 1;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--meter-track);
+        overflow: hidden;
+      }
+      .hero-meter .fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: var(--primary);
+      }
+      .hero-meter .frac {
+        font-size: var(--fs-xs);
+        font-weight: 600;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+    }
+
+    /* ============================ スタットストリップ ============================ */
+    .stats-strip { margin-top: clamp(28px, 5vw, 44px); }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-block: 1px solid var(--border);
+    }
+    .stat {
+      background: var(--bg);
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .stat .value {
+      font-size: var(--fs-lg);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .stat .value small {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--muted);
+      margin-left: 2px;
+    }
+    .stat .label {
+      margin-top: 2px;
+      font-size: var(--fs-xs);
+      color: var(--muted);
+    }
+    @media (max-width: 559px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ============================ セクション共通 ============================ */
+    .section { margin-top: clamp(36px, 6vw, 56px); }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .section-head h2 { font-size: var(--fs-lg); font-weight: 700; }
+    .section-head .count { font-size: var(--fs-sm); color: var(--muted); }
+    .section-head .more {
+      margin-left: auto;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .section-head .more:hover { color: var(--primary-strong); text-decoration: underline; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+      overflow: hidden;
+    }
+
+    /* 行リスト（復習キュー・最新アーカイブ） */
+    .rowlist li + li { border-top: 1px solid var(--border); }
+    .rowlist a {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 4px 16px;
+      padding: 16px clamp(16px, 3vw, 22px);
+      transition: background 0.12s ease;
+    }
+    .rowlist a:hover { background: var(--surface-2); }
+    .rowlist .title {
+      grid-column: 1;
+      font-size: var(--fs-md);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+    .rowlist .meta {
+      grid-column: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 10px;
+      font-size: var(--fs-xs);
+      color: var(--muted);
+    }
+    .rowlist .chev {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      color: var(--muted);
+    }
+    .rowlist .chev svg { width: 16px; height: 16px; }
+
+    /* カテゴリチップ: 色ドット + 常時テキストラベル（色のみ判別を回避） */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+    .chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--chip-color, var(--muted));
+    }
+
+    /* ============================ クイズ導線 ============================ */
+    .quiz-band {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px 20px;
+      padding: 18px clamp(16px, 3vw, 22px);
+    }
+    .quiz-band .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--surface-2);
+      color: var(--accent);
+      flex: none;
+    }
+    .quiz-band .icon svg { width: 20px; height: 20px; }
+    .quiz-band .body { flex: 1 1 240px; min-width: 0; }
+    .quiz-band .body strong { font-size: var(--fs-md); }
+    .quiz-band .body p {
+      margin: 2px 0 0;
+      font-size: var(--fs-xs);
+      color: var(--muted);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--primary);
+      white-space: nowrap;
+      transition: background 0.12s ease;
+    }
+    .btn-outline:hover { background: var(--surface-2); color: var(--primary-strong); }
+
+    /* ============================ コース進捗 ============================ */
+    .courses li + li { border-top: 1px solid var(--border); }
+    .course-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 150px 52px;
+      align-items: center;
+      gap: 6px 18px;
+      padding: 15px clamp(16px, 3vw, 22px);
+    }
+    .course-name {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      min-width: 0;
+    }
+    .level {
+      flex: none;
+      padding: 1px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--surface);
+    }
+    .course-row .track {
+      height: 6px;
+      border-radius: 999px;
+      background: var(--meter-track);
+      overflow: hidden;
+    }
+    .course-row .fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+    .course-row .frac {
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--ink-2);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .course-row .frac small {
+      display: block;
+      font-size: var(--fs-xs);
+      font-weight: 400;
+      color: var(--muted);
+    }
+    @media (max-width: 639px) {
+      .course-row { grid-template-columns: minmax(0, 1fr) 44px; }
+      .course-row .track { grid-column: 1; }
+      .course-row .frac { grid-column: 2; grid-row: 2; }
+    }
+
+    /* ============================ 学会カレンダー ============================ */
+    .conf-band {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      padding: 18px clamp(16px, 3vw, 22px);
+    }
+    .conf-band .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--surface-2);
+      color: var(--primary);
+      flex: none;
+    }
+    .conf-band .icon svg { width: 20px; height: 20px; }
+    .conf-band .body { flex: 1 1 260px; min-width: 0; }
+    .conf-band .body strong { font-size: var(--fs-md); }
+    .conf-band .body p {
+      margin: 2px 0 0;
+      font-size: var(--fs-xs);
+      color: var(--muted);
+    }
+    .badge-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      color: var(--success);
+      white-space: nowrap;
+    }
+    .badge-open svg { width: 14px; height: 14px; }
+
+    /* ============================ フッター ============================ */
+    .site-footer {
+      margin-top: clamp(48px, 8vw, 72px);
+      border-top: 1px solid var(--border);
+      padding-block: 28px 36px;
+      font-size: var(--fs-sm);
+      color: var(--muted);
+    }
+    .footer-totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+      font-size: var(--fs-xs);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      margin-top: 16px;
+    }
+    .footer-links a:hover { color: var(--ink); text-decoration: underline; }
+    .footer-owner { margin-top: 16px; font-size: var(--fs-xs); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="wrap bar">
+      <a class="brand" href="#">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <rect class="mark-bg" x="1" y="1" width="30" height="30" rx="9"></rect>
+          <polyline class="mark-line" points="7,16 12.5,16 15.5,10 19.5,22 22.5,16 25,16"
+            fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        </svg>
+        臨床学術WG
+      </a>
+      <nav class="site-nav" aria-label="メイン">
+        <ul>
+          <li><a href="#" aria-current="page">ホーム</a></li>
+          <li><a href="#">アーカイブ</a></li>
+          <li><a href="#">コース</a></li>
+          <li><a href="#">カレンダー</a></li>
+          <li><a href="#">ダッシュボード</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="テーマを切り替える">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"></path>
+          </svg>
+        </button>
+        <button class="icon-btn menu-btn" id="menuBtn" type="button"
+          aria-label="メニューを開閉する" aria-expanded="false" aria-controls="mobileNav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav" aria-label="メイン（モバイル）">
+      <ul class="wrap">
+        <li><a href="#" aria-current="page">ホーム</a></li>
+        <li><a href="#">アーカイブ</a></li>
+        <li><a href="#">コース</a></li>
+        <li><a href="#">カレンダー</a></li>
+        <li><a href="#">ダッシュボード</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- 1. 続きから = 今日の1本（ヒーロー） -->
+    <section class="hero wrap" aria-labelledby="heroTitle">
+      <div class="hero-card">
+        <div>
+          <p class="hero-eyebrow">今日はこれを復習</p>
+          <h1 class="hero-title" id="heroTitle">血液製剤</h1>
+          <p class="hero-course">コース「薬剤師業務の土台を固める」 レッスン 4/6</p>
+          <p class="hero-meta">
+            <span>2026-05-26</span>
+            <span class="sep" aria-hidden="true">|</span>
+            <span>講師: 須賀</span>
+            <span class="sep" aria-hidden="true">|</span>
+            <span>前回の続きから再開できます</span>
+          </p>
+          <p class="hero-meter">
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 66.7%"></span></span>
+            <span class="frac">コース進捗 4/6</span>
+          </p>
+          <p class="hero-cta">
+            <a class="btn-primary" href="#">
+              レッスンを再開する
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </a>
+          </p>
+        </div>
+        <svg class="hero-ring" viewBox="0 0 120 120" role="img"
+          aria-label="コース進捗: 6レッスン中4完了">
+          <circle class="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="8"></circle>
+          <circle class="ring-fill" cx="60" cy="60" r="52" fill="none" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="108.91"
+            transform="rotate(-90 60 60)"></circle>
+          <text class="ring-value" x="60" y="60" text-anchor="middle" dominant-baseline="central">4/6</text>
+          <text class="ring-label" x="60" y="82" text-anchor="middle">レッスン</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 3. 学習ステータス（薄いストリップ） -->
+    <section class="stats-strip wrap" aria-label="学習ステータス">
+      <div class="stats">
+        <div class="stat">
+          <div class="value">12<small>日</small></div>
+          <div class="label">連続学習</div>
+        </div>
+        <div class="stat">
+          <div class="value">5<small>個</small></div>
+          <div class="label">バッジ</div>
+        </div>
+        <div class="stat">
+          <div class="value">14<small>本</small></div>
+          <div class="label">完了レッスン</div>
+        </div>
+        <div class="stat">
+          <div class="value">82<small>%</small></div>
+          <div class="label">クイズ平均正答</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 今日の復習キュー -->
+    <section class="section wrap" aria-labelledby="queueHead">
+      <div class="section-head">
+        <h2 id="queueHead">今日の復習キュー</h2>
+        <span class="count">3件</span>
+        <a class="more" href="#">キューをすべて見る</a>
+      </div>
+      <div class="card">
+        <ul class="rowlist">
+          <li>
+            <a href="#">
+              <span class="title">感染症治療~肺炎~</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-3)">感染症</span>
+                <span>2026-04-24</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="title">「心房細動の薬物治療」</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-1)">循環器</span>
+                <span>2026-02-24</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="title">poly pharmacyについて</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-4)">基礎レクチャー</span>
+                <span>2026-04-08</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 7. クイズ導線 -->
+    <section class="section wrap" aria-label="確認クイズ">
+      <div class="card quiz-band">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5"></path>
+            <circle cx="12" cy="17.8" r="0.6" fill="currentColor" stroke="none"></circle>
+            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+          </svg>
+        </span>
+        <span class="body">
+          <strong>確認クイズ 86問</strong>
+          <p>復習した内容の定着を、数分でチェックできます。</p>
+        </span>
+        <a class="btn-outline" href="#">確認クイズを解く</a>
+      </div>
+    </section>
+
+    <!-- 4. コース進捗 -->
+    <section class="section wrap" aria-labelledby="coursesHead">
+      <div class="section-head">
+        <h2 id="coursesHead">コース進捗</h2>
+        <span class="count">6コース</span>
+        <a class="more" href="#">コース一覧へ</a>
+      </div>
+      <div class="card">
+        <ul class="courses">
+          <li class="course-row">
+            <span class="course-name">薬剤師業務の土台を固める <span class="level">入門</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 66.7%"></span></span>
+            <span class="frac">4/6</span>
+          </li>
+          <li class="course-row">
+            <span class="course-name">循環器の薬物療法を学ぶ <span class="level">標準</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 50%"></span></span>
+            <span class="frac">1/2</span>
+          </li>
+          <li class="course-row">
+            <span class="course-name">脳梗塞・脳卒中の病態と治療を押さえる <span class="level">標準</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 50%"></span></span>
+            <span class="frac">2/4</span>
+          </li>
+          <li class="course-row">
+            <span class="course-name">感染症治療と抗菌薬選択の基本 <span class="level">標準</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 50%"></span></span>
+            <span class="frac">1/2</span>
+          </li>
+          <li class="course-row">
+            <span class="course-name">AIを業務と学習に活かす <span class="level">標準</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 75%"></span></span>
+            <span class="frac">3/4</span>
+          </li>
+          <li class="course-row">
+            <span class="course-name">臨床研究と専門認定への一歩 <span class="level">標準</span></span>
+            <span class="track" aria-hidden="true"><span class="fill" style="width: 0%"></span></span>
+            <span class="frac">0/6<small>未開始</small></span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. 最新アーカイブ -->
+    <section class="section wrap" aria-labelledby="archiveHead">
+      <div class="section-head">
+        <h2 id="archiveHead">最新アーカイブ</h2>
+        <span class="count">全24本</span>
+        <a class="more" href="#">アーカイブ一覧へ</a>
+      </div>
+      <div class="card">
+        <ul class="rowlist">
+          <li>
+            <a href="#">
+              <span class="title">血液製剤</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-4)">基礎レクチャー</span>
+                <span>2026-05-26</span>
+                <span>須賀</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="title">病院薬剤師の仕事</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-4)">基礎レクチャー</span>
+                <span>2026-05-15</span>
+                <span>須賀</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="title">感染症治療~肺炎~</span>
+              <span class="meta">
+                <span class="chip" style="--chip-color: var(--cat-3)">感染症</span>
+                <span>2026-04-24</span>
+                <span>須賀</span>
+              </span>
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6. 学会カレンダー導線 -->
+    <section class="section wrap" aria-labelledby="confHead">
+      <div class="section-head">
+        <h2 id="confHead">学会カレンダー</h2>
+        <a class="more" href="#">カレンダーへ</a>
+      </div>
+      <div class="card conf-band">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4.5" width="18" height="17" rx="3"></rect>
+            <path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path>
+          </svg>
+        </span>
+        <span class="body">
+          <strong>第36回日本医療薬学会年会</strong>
+          <p>2026-10-24〜26・パシフィコ横浜</p>
+        </span>
+        <span class="badge-open">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 6 9 17l-5-5"></path>
+          </svg>
+          事前参加登録 受付中
+        </span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-totals" aria-label="サイト全体の収載数">
+        <span>アーカイブ 24本</span>
+        <span>コース 6本</span>
+        <span>確認クイズ 86問</span>
+      </div>
+      <nav class="footer-links" aria-label="フッター">
+        <a href="#">About</a>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">問い合わせ</a>
+      </nav>
+      <p class="footer-owner">運営: 臨床学術ワーキンググループ</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+
+      // テーマトグル: <html> の data-theme を切替え、選択を保存する
+      var themeToggle = document.getElementById('themeToggle');
+      themeToggle.addEventListener('click', function () {
+        var effective = root.getAttribute('data-theme');
+        if (effective !== 'dark' && effective !== 'light') {
+          effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        var next = effective === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('mock.theme', next); } catch (e) {}
+      });
+
+      // モバイルナビ開閉
+      var header = document.getElementById('siteHeader');
+      var menuBtn = document.getElementById('menuBtn');
+      menuBtn.addEventListener('click', function () {
+        var open = header.classList.toggle('nav-open');
+        menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    })();
+  </script>
+</body>
+</html>
