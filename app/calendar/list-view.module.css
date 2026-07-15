@@ -43,7 +43,9 @@
   display: block;
   aspect-ratio: 16 / 9;
   border-bottom: 1px solid var(--border);
-  background: var(--surface-2);
+  /* 学会公式サイトのロゴ画像は「透過PNG＋濃色文字」が多く、ライト背景を
+     前提に作られているため、テーマに追従させず常に明色で敷く */
+  background: #f5f7fb;
 }
 
 .mediaImage {
