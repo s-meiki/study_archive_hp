@@ -1,0 +1,45 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink-2);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.toggle:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+/* アイコンはテーマトークンと同じカスケードで切り替える
+   （実効ダーク時に太陽、実効ライト時に月を表示） */
+.iconSun {
+  display: none;
+}
+
+.iconMoon {
+  display: block;
+}
+
+:global([data-theme="dark"]) .iconSun {
+  display: block;
+}
+
+:global([data-theme="dark"]) .iconMoon {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(:root:not([data-theme="light"])) .iconSun {
+    display: block;
+  }
+
+  :global(:root:not([data-theme="light"])) .iconMoon {
+    display: none;
+  }
+}

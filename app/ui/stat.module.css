@@ -1,0 +1,43 @@
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.label {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.value {
+  color: var(--ink);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.unit {
+  margin-left: 2px;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.foot {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* 任意スロット（補助メーター等） */
+.slot {
+  margin: 8px 0 4px;
+}

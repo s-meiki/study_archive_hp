@@ -1,0 +1,35 @@
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.nav a {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+.nav a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.note {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
