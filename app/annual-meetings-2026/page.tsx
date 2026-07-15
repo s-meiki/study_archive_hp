@@ -156,8 +156,8 @@ export default async function AnnualMeetingsPage() {
 
       <SiteFooter />
 
-      <Script src="/data/annual-meetings-2026.js" strategy="lazyOnload" />
-      <Script src="/assets/annual-meetings-2026.js" strategy="lazyOnload" />
+      <Script src="/data/annual-meetings-2026.js" strategy="afterInteractive" />
+      <Script src="/assets/annual-meetings-2026.js" strategy="afterInteractive" />
     </div>
   );
 }

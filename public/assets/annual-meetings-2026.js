@@ -17,6 +17,7 @@ const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 const meetingCalendarState = {
   monthKeys: [],
   startIndex: 0,
+  initialized: false,
 };
 const meetingViewState = {
   activeTab: "list",
@@ -172,6 +173,33 @@ function toIsoDate(date) {
 
 function monthKeyFromDate(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}`;
+}
+
+function currentDateInTokyo() {
+  const parts = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function initialCalendarIndex(monthKeys, todayDate) {
+  if (monthKeys.length === 0) {
+    return 0;
+  }
+
+  const currentMonth = todayDate.slice(0, 7);
+  const currentMonthIndex = monthKeys.indexOf(currentMonth);
+
+  if (currentMonthIndex >= 0) {
+    return currentMonthIndex;
+  }
+
+  const nextMonthIndex = monthKeys.findIndex((monthKey) => monthKey > currentMonth);
+  return nextMonthIndex >= 0 ? nextMonthIndex : monthKeys.length - 1;
 }
 
 function formatMonthLabel(monthKey) {
@@ -544,22 +572,18 @@ function renderMeetingCalendar() {
     return;
   }
 
-  const monthKeys = buildCalendarMonths(meetingData.period.start, meetingData.period.end)
-    .map((monthDate) => monthKeyFromDate(monthDate))
-    .filter((monthKey) =>
-      meetings.some((item) => {
-        if (rangeOverlapsMonth(item.startDate, item.endDate, monthKey)) {
-          return true;
-        }
-
-        return (item.milestones || []).filter(isVisibleMilestone).some((milestone) =>
-          rangeOverlapsMonth(milestone.startDate || milestone.endDate, milestone.endDate || milestone.startDate, monthKey),
-        );
-      }),
-    );
+  const monthKeys = buildCalendarMonths(meetingData.period.start, meetingData.period.end).map((monthDate) =>
+    monthKeyFromDate(monthDate),
+  );
+  const todayDate = currentDateInTokyo();
 
   meetingCalendarState.monthKeys = monthKeys;
-  meetingCalendarState.startIndex = clampCalendarIndex(meetingCalendarState.startIndex, monthKeys.length);
+  if (!meetingCalendarState.initialized) {
+    meetingCalendarState.startIndex = initialCalendarIndex(monthKeys, todayDate);
+    meetingCalendarState.initialized = true;
+  } else {
+    meetingCalendarState.startIndex = clampCalendarIndex(meetingCalendarState.startIndex, monthKeys.length);
+  }
 
   clearElement(meetingCalendarEl);
 
@@ -605,7 +629,14 @@ function renderMeetingCalendar() {
 
     for (let index = 0; index < 42; index += 1) {
       const cell = document.createElement("div");
-      cell.className = `calendar-day${cursor.getMonth() !== month ? " is-outside" : ""}`;
+      const cellDate = toIsoDate(cursor);
+      const isToday = cellDate === todayDate;
+      cell.className = `calendar-day${cursor.getMonth() !== month ? " is-outside" : ""}${isToday ? " is-today" : ""}`;
+
+      if (isToday) {
+        cell.setAttribute("aria-current", "date");
+        cell.setAttribute("aria-label", `${cursor.getMonth() + 1}月${cursor.getDate()}日 今日`);
+      }
 
       const dayNumber = document.createElement("div");
       dayNumber.className = "calendar-day-number";
