@@ -2,10 +2,9 @@
 
 アーカイブ「血液製剤」（`archive-20260526-c57ee27d13`）の確認クイズに追加した新規設問（`q5` / `q6`）を
 薬剤師がレビューするための一覧です。既存のクイズファイル（`content/quizzes/archive-20260526-c57ee27d13.json`、
-`reviewStatus: "reviewed"`）に **設問単位で `"reviewStatus": "draft"` を付けて追記**したものです。
-ファイル全体は公開中のままですが、draft の設問だけは `npm run quiz:build` の出力
-（`public/data/quiz-bank.js`）から自動的に除外されます。既存の `q1`〜`q4` および複数選択 `m1`
-（`docs/quiz-review-sheet-multi.md` で承認済み）は変更していません。
+`reviewStatus: "reviewed"`）に **設問単位で `"reviewStatus": "draft"` を付けて追記**したものを確認し、
+2026-07-10 に `q5` / `q6` とも公開対象として承認しました。
+既存の `q1`〜`q4` および複数選択 `m1`（`docs/quiz-review-sheet-multi.md` で承認済み）は変更していません。
 
 ## 使い方
 
@@ -27,8 +26,8 @@
 
 | # | クイズファイル | 対象アーカイブ（タイトル・日付） | 設問ID | type | reviewStatus |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `archive-20260526-c57ee27d13.json` | 血液製剤（2026-05-26） | q5 | single | draft |
-| 2 | `archive-20260526-c57ee27d13.json` | 血液製剤（2026-05-26） | q6 | single | draft |
+| 1 | `archive-20260526-c57ee27d13.json` | 血液製剤（2026-05-26） | q5 | single | reviewed |
+| 2 | `archive-20260526-c57ee27d13.json` | 血液製剤（2026-05-26） | q6 | single | reviewed |
 
 **複数選択の見送りについて**: 依頼では「素材的に成立するなら1問は複数選択に」とのことでしたが、
 この回の素材（`_sources.json`）は summary 1文・overview 2文・keyPoints 3点のみで、keyPoints 3点は
@@ -46,7 +45,7 @@ keyPoints を素材に、既存 `q3` と同型の「現場での確認事項」�
 - テーマ: 基礎レクチャー（foundations）
 - ファイル reviewStatus: `reviewed`（既存設問 q1〜q4, m1 は変更なし）
 
-#### q5（新規・single・reviewStatus: draft）
+#### q5（新規・single・reviewStatus: reviewed）
 
 - 出典: keyPoints「血液製剤の種類と特徴を整理する」
 
@@ -60,15 +59,15 @@ keyPoints を素材に、既存 `q3` と同型の「現場での確認事項」�
 
 **解説**: キーポイントの一つとして、血液製剤の種類と特徴を整理することが挙げられています。
 
-**判定**: 
+**判定**: OK
 
 ---
 
-#### q6（新規・single・reviewStatus: draft）
+#### q6（新規・single・reviewStatus: reviewed）
 
 - 出典: keyPoints「副作用や管理上の確認事項を押さえる」
 
-**設問**: 投与後の対応に関して、この勉強会のキーポイントに挙げられている確認事項はどれですか。
+**設問**: 副作用や管理に関して、この勉強会のキーポイントに挙げられている確認事項はどれですか。
 
 **選択肢**:
 
@@ -78,6 +77,6 @@ keyPoints を素材に、既存 `q3` と同型の「現場での確認事項」�
 
 **解説**: キーポイントの一つとして、副作用や管理上の確認事項を押さえることが挙げられています。
 
-**判定**: 
+**判定**: OK（元の「投与後の対応」は素材にない絞り込みだったため、「副作用や管理に関して」に修正）
 
 ---
