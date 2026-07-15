@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-06-24",
+  "verifiedAt": "2026-07-10",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -80,7 +80,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "探そう・救急医療の3拍子 ―原点から現点。そして頂点へ―",
       "leadLabel": "会長",
       "lead": "藤見 聡（大阪急性期・総合医療センター 高度救命救急センター救急診療科）",
-      "note": "",
+      "note": "公式サイトではカフェ企画の一部事前申込期間が2026-07-12まで延長された旨が重要なお知らせとして案内されています。",
       "milestones": [
         {
           "id": "clinical-emergency-29-abstract",
@@ -231,7 +231,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "cover",
       "scope": "national",
       "displayMonth": 7,
-      "status": "confirmed",
+      "status": "past",
       "society": "日本TDM学会",
       "eventName": "第42回日本TDM学会・学術大会",
       "startDate": "2026-07-04",
@@ -283,7 +283,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "参加登録",
           "url": "https://kwcs.jp/tdm2026/reg.html"
         }
-      ]
+      ],
+      "archivedAt": "2026-07-10"
     },
     {
       "id": "jasds-12",
@@ -376,6 +377,10 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "一般演題登録",
           "url": "https://www.c-linkage.co.jp/36jsphcs/abstract.html"
+        },
+        {
+          "label": "参加登録",
+          "url": "https://www.c-linkage.co.jp/36jsphcs/registration.html"
         }
       ],
       "milestones": [
@@ -387,10 +392,18 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "endDate": "2026-05-27"
         },
         {
-          "id": "jsphcs-36-registration",
-          "label": "参加登録",
+          "id": "jsphcs-36-registration-early",
+          "label": "早期参加登録",
           "category": "registration",
-          "note": "日本医療薬学会の年会一覧では申込期間は未定です。一方、一般演題登録ページには参加登録は6月開始予定と記載があります。"
+          "startDate": "2026-06-26",
+          "endDate": "2026-09-16"
+        },
+        {
+          "id": "jsphcs-36-registration-late-start",
+          "label": "後期参加登録開始",
+          "category": "registration",
+          "startDate": "2026-09-24",
+          "note": "公式ページでは後期参加登録の締切はオンデマンド配信終了までと案内されていますが、終了日は未公表です。"
         }
       ]
     },

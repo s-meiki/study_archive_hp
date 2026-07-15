@@ -461,16 +461,26 @@ async function refreshJasds12() {
 }
 
 async function refreshJsphcs36() {
-  const [abstractPage, annualMeetingPage] = await Promise.all([
+  const [abstractPage, registrationPage] = await Promise.all([
     fetchPage("https://www.c-linkage.co.jp/36jsphcs/abstract.html"),
-    fetchPage("https://www.jsphcs.jp/event/annual-meeting/"),
+    fetchPage("https://www.c-linkage.co.jp/36jsphcs/registration.html"),
   ]);
   const abstractRange = extractRangeFromSection(abstractPage.text, /演題登録受付期間/u, /申し込み方法/u, {
     defaultYear: 2026,
   });
+  const earlyRegistrationRange = extractRangeFromSection(registrationPage.text, /早期参加登録期間/u, /後期参加登録期間/u, {
+    defaultYear: 2026,
+  });
+  const lateRegistrationSection = extractSection(registrationPage.text, /後期参加登録期間/u, /参加登録費/u);
+  const lateRegistrationDates = extractJapaneseDateMentions(lateRegistrationSection, {
+    defaultYear: 2026,
+  });
+  const lateRegistrationStart = lateRegistrationDates[0]
+    ? toIsoDate(lateRegistrationDates[0].year, lateRegistrationDates[0].month, lateRegistrationDates[0].day)
+    : null;
 
-  if (!abstractRange) {
-    throw new Error("jsphcs-36: 演題登録受付期間を抽出できませんでした。");
+  if (!abstractRange || !earlyRegistrationRange || !lateRegistrationStart) {
+    throw new Error("jsphcs-36: 演題登録受付期間または参加登録期間を抽出できませんでした。");
   }
 
   return [
@@ -482,16 +492,18 @@ async function refreshJsphcs36() {
       endDate: abstractRange.endDate,
     },
     {
-      id: "jsphcs-36-registration",
-      label: "参加登録",
+      id: "jsphcs-36-registration-early",
+      label: "早期参加登録",
       category: "registration",
-      note: annualMeetingPage.text.includes("第36回日本医療薬学会年会") && annualMeetingPage.text.includes("申込期間") && annualMeetingPage.text.includes("未定")
-        ? abstractPage.text.includes("6月開始予定")
-          ? "日本医療薬学会の年会一覧では申込期間は未定です。一方、一般演題登録ページには参加登録は6月開始予定と記載があります。"
-          : "日本医療薬学会の年会一覧では申込期間は未定です。"
-        : abstractPage.text.includes("6月開始予定")
-        ? "公式ページでは参加登録は6月開始予定です。"
-        : "公式ページを確認してください。",
+      startDate: earlyRegistrationRange.startDate,
+      endDate: earlyRegistrationRange.endDate,
+    },
+    {
+      id: "jsphcs-36-registration-late-start",
+      label: "後期参加登録開始",
+      category: "registration",
+      startDate: lateRegistrationStart,
+      note: "公式ページでは後期参加登録の締切はオンデマンド配信終了までと案内されていますが、終了日は未公表です。",
     },
   ];
 }
