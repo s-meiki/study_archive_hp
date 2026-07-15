@@ -2,8 +2,14 @@
 
 import { useProgress } from "../learning/progress-context";
 import type { LessonStatus } from "../learning/types";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { ProgressBar } from "../ui/progress-bar";
+import { ProgressRing } from "../ui/progress-ring";
+import styles from "./course-progress.module.css";
 
-type CourseLessonView = {
+export type CourseLessonView = {
   archiveId: string;
   order: number;
   optional: boolean;
@@ -11,53 +17,61 @@ type CourseLessonView = {
   available: boolean;
 };
 
-const STATUS_LABEL: Record<LessonStatus, string> = {
-  unwatched: "未視聴",
-  watched: "視聴済み",
-  completed: "修了"
-};
-
-function archiveHref(archiveId: string) {
-  return `/archive?id=${encodeURIComponent(archiveId)}`;
+function archiveHref(archiveId: string, courseId: string) {
+  return `/archives/${encodeURIComponent(archiveId)}?courseId=${encodeURIComponent(courseId)}`;
 }
 
-export function CourseProgressBadge({ courseArchiveIds }: { courseArchiveIds: string[] }) {
+/** コース一覧カード用の進捗リング（分母は必修レッスンのみ）。 */
+export function CourseProgressRing({ courseArchiveIds }: { courseArchiveIds: string[] }) {
   const { state } = useProgress();
-
   const total = courseArchiveIds.length;
+
   if (total === 0) {
-    return <span className="learn-course-progress-badge">対象なし</span>;
+    return <span className={styles.noTarget}>対象なし</span>;
   }
 
-  const completedCount = courseArchiveIds.filter((archiveId) => state.lessons[archiveId]?.status === "completed")
-    .length;
-  const rate = Math.round((completedCount / total) * 100);
+  const completedCount = courseArchiveIds.filter(
+    (archiveId) => state.lessons[archiveId]?.status === "completed"
+  ).length;
 
   return (
-    <span className="learn-course-progress-badge">
-      {completedCount}/{total}（{rate}%）
-    </span>
+    <ProgressRing
+      value={completedCount}
+      max={total}
+      label={`進捗 ${total}レッスン中${completedCount}件修了`}
+    />
   );
 }
 
+/** レッスン一覧行の視聴状態バッジ。completed のみ status色、それ以外は中立表示。 */
 export function LessonStatusBadge({ archiveId }: { archiveId: string }) {
   const { state } = useProgress();
   const status: LessonStatus = state.lessons[archiveId]?.status ?? "unwatched";
 
-  return (
-    <span
-      className={`learn-status-badge${status === "completed" ? " learn-status-badge--completed" : ""}${
-        status === "watched" ? " learn-status-badge--watched" : ""
-      }`}
-    >
-      {STATUS_LABEL[status]}
-    </span>
-  );
+  if (status === "completed") {
+    return (
+      <Badge variant="status" status="success">
+        修了
+      </Badge>
+    );
+  }
+
+  if (status === "watched") {
+    return <Badge>視聴済み</Badge>;
+  }
+
+  return <Badge>未視聴</Badge>;
 }
 
-export function CourseContinueCard({ lessons }: { lessons: CourseLessonView[] }) {
+/** コースシラバス冒頭の「続きから」導線。必修レッスンのうち最初の未修了回へ誘導する。 */
+export function CourseContinueSection({
+  courseId,
+  lessons
+}: {
+  courseId: string;
+  lessons: CourseLessonView[];
+}) {
   const { state } = useProgress();
-
   const requiredLessons = lessons.filter((lesson) => !lesson.optional && lesson.available);
   const nextLesson = requiredLessons.find((lesson) => state.lessons[lesson.archiveId]?.status !== "completed");
 
@@ -67,53 +81,52 @@ export function CourseContinueCard({ lessons }: { lessons: CourseLessonView[] })
 
   if (!nextLesson) {
     return (
-      <section className="panel learn-course-continue" aria-labelledby="learn-course-continue-heading">
-        <div className="section-kicker">続きから</div>
-        <h2 id="learn-course-continue-heading" className="learn-course-continue-title">
-          このコースは修了しました
-        </h2>
-      </section>
+      <Card className={styles.continueCard}>
+        <p className={styles.eyebrow}>続きから</p>
+        <h2 className={styles.continueTitle}>このコースは修了しました</h2>
+      </Card>
     );
   }
 
   return (
-    <section className="panel learn-course-continue" aria-labelledby="learn-course-continue-heading">
-      <div className="section-kicker">続きから</div>
-      <h2 id="learn-course-continue-heading" className="learn-course-continue-title">
-        {nextLesson.title}
-      </h2>
-      <a className="button button-primary learn-course-continue-link" href={archiveHref(nextLesson.archiveId)}>
+    <Card className={styles.continueCard}>
+      <p className={styles.eyebrow}>続きから</p>
+      <h2 className={styles.continueTitle}>{nextLesson.title}</h2>
+      <Button href={archiveHref(nextLesson.archiveId, courseId)} variant="primary">
         続きを見る
-      </a>
-    </section>
+      </Button>
+    </Card>
   );
 }
 
+/** コース全体の進捗（セグメント式バー）。分母は必修レッスンのみ（optional 除外済みの配列を渡すこと）。 */
 export function CourseProgressSummary({ courseArchiveIds }: { courseArchiveIds: string[] }) {
   const { state } = useProgress();
-
   const total = courseArchiveIds.length;
-  const completedCount = courseArchiveIds.filter((archiveId) => state.lessons[archiveId]?.status === "completed")
-    .length;
-  const rate = total > 0 ? Math.round((completedCount / total) * 100) : null;
+
+  if (total === 0) {
+    return <p className={styles.noTarget}>進捗の対象となるレッスンがありません。</p>;
+  }
+
+  const completedCount = courseArchiveIds.filter(
+    (archiveId) => state.lessons[archiveId]?.status === "completed"
+  ).length;
+  const rate = Math.round((completedCount / total) * 100);
 
   return (
-    <section className="panel learn-course-progress" aria-labelledby="learn-course-progress-heading">
-      <div className="section-kicker">進捗</div>
-      <h2 id="learn-course-progress-heading" className="learn-visually-hidden">
-        進捗
-      </h2>
-      <div className="learn-course-progress-head">
-        <span className="learn-course-progress-count">
-          {total > 0 ? `${completedCount}/${total}件 修了` : "対象なし"}
+    <div className={styles.summary}>
+      <div className={styles.summaryHead}>
+        <span className={styles.summaryCount}>
+          {completedCount}/{total}件 修了
         </span>
-        {total > 0 ? <span className="learn-course-progress-rate">{rate}%</span> : null}
+        <span className={styles.summaryRate}>{rate}%</span>
       </div>
-      {total > 0 ? (
-        <div className="learn-progress-bar" role="presentation">
-          <div className="learn-progress-bar-fill" style={{ width: `${rate}%` }} />
-        </div>
-      ) : null}
-    </section>
+      <ProgressBar
+        mode="segmented"
+        value={completedCount}
+        max={total}
+        label={`コース進捗 ${total}レッスン中${completedCount}件修了`}
+      />
+    </div>
   );
 }

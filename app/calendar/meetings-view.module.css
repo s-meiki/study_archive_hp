@@ -1,0 +1,10 @@
+.view {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.panel {
+  width: 100%;
+  min-width: 0;
+}

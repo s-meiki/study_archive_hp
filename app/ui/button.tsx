@@ -10,6 +10,7 @@ type ButtonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
   href?: string;
+  external?: boolean;
   type?: "button" | "submit";
   disabled?: boolean;
   onClick?: () => void;
@@ -27,6 +28,7 @@ export function Button({
   variant = "primary",
   size = "md",
   href,
+  external,
   type = "button",
   disabled,
   onClick,
@@ -43,6 +45,20 @@ export function Button({
   }
 
   const buttonClassName = classes.join(" ");
+
+  if (href && external) {
+    return (
+      <a
+        className={buttonClassName}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    );
+  }
 
   if (href) {
     return (

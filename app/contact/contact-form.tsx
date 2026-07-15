@@ -2,6 +2,8 @@
 
 import Script from "next/script";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { Button } from "../ui/button";
+import styles from "./contact-form.module.css";
 
 type ContactFormProps = {
   siteKey: string;
@@ -82,12 +84,12 @@ function getTurnstileErrorMessage(errorCode?: string | number) {
 
 function RequiredLabel({ htmlFor, children }: { htmlFor: string; children: string }) {
   return (
-    <label htmlFor={htmlFor} className="contact-field-label">
+    <label htmlFor={htmlFor} className={styles.fieldLabel}>
       <span>{children}</span>
-      <span className="contact-required-badge" aria-hidden="true">
+      <span className={styles.requiredBadge} aria-hidden="true">
         **
       </span>
-      <span className="contact-visually-hidden">必須項目</span>
+      <span className="visually-hidden">必須項目</span>
     </label>
   );
 }
@@ -270,8 +272,8 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
         }}
       />
 
-      <form className="contact-form" ref={formRef} onSubmit={handleSubmit}>
-        <div className="contact-field">
+      <form className={styles.form} ref={formRef} onSubmit={handleSubmit}>
+        <div className={styles.field}>
           <RequiredLabel htmlFor="contact-name">お名前</RequiredLabel>
           <input
             id="contact-name"
@@ -286,7 +288,7 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
           />
         </div>
 
-        <div className="contact-field">
+        <div className={styles.field}>
           <RequiredLabel htmlFor="contact-email">メールアドレス</RequiredLabel>
           <input
             id="contact-email"
@@ -301,7 +303,7 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
           />
         </div>
 
-        <div className="contact-field">
+        <div className={styles.field}>
           <RequiredLabel htmlFor="contact-message">お問い合わせ内容</RequiredLabel>
           <textarea
             id="contact-message"
@@ -314,27 +316,27 @@ export default function ContactForm({ siteKey }: ContactFormProps) {
           />
         </div>
 
-        <div className="contact-turnstile">
+        <div className={styles.turnstile}>
           <span>ボット判定</span>
-          <div className="contact-turnstile-shell">
+          <div className={styles.turnstileShell}>
             <div ref={widgetContainerRef} />
           </div>
         </div>
 
         {submitState.type !== "idle" ? (
           <div
-            className={`contact-feedback ${submitState.type === "success" ? "is-success" : "is-error"}`}
+            className={`${styles.feedback} ${submitState.type === "success" ? styles.feedbackSuccess : styles.feedbackError}`}
             role={submitState.type === "error" ? "alert" : "status"}
           >
             {submitState.message}
           </div>
         ) : null}
 
-        <div className="contact-actions">
-          <button className="button button-primary contact-submit" type="submit" disabled={isSubmitting}>
+        <div className={styles.actions}>
+          <Button disabled={isSubmitting} type="submit">
             {isSubmitting ? "送信中..." : "送信する"}
-          </button>
-          <span className="archive-note">送信前に Turnstile 認証を完了してください。</span>
+          </Button>
+          <span className={styles.helperNote}>送信前に Turnstile 認証を完了してください。</span>
         </div>
       </form>
     </>

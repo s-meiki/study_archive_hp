@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import SiteFooter from "../../site-footer";
-import { siteLegal, siteNavigation } from "../../site-legal";
+import Link from "next/link";
+import { siteLegal } from "../../site-legal";
 import { absoluteSiteUrl } from "../../site-url";
 import { loadLearningContent, loadSiteContent } from "../../site-data";
-import CourseAwareContinueCard from "../../archive/course-aware-continue-card";
-import { CourseProgressSummary, LessonStatusBadge } from "../course-progress";
+import { Badge } from "../../ui/badge";
+import { Card, CardHeader } from "../../ui/card";
+import { CourseContinueSection, CourseProgressSummary, LessonStatusBadge } from "../course-progress";
+import { themeCatOf } from "../../lib/theme-category";
+import styles from "./course-detail.module.css";
 
 type CourseDetailPageProps = {
   params: Promise<{ courseId: string }>;
 };
 
 function archiveHref(archiveId: string, courseId: string) {
-  return `/archive?id=${encodeURIComponent(archiveId)}&courseId=${encodeURIComponent(courseId)}`;
+  return `/archives/${encodeURIComponent(archiveId)}?courseId=${encodeURIComponent(courseId)}`;
 }
 
 async function getCourse(courseId: string) {
@@ -53,6 +56,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
   const archiveById = new Map(siteContent.archives.map((archive) => [archive.id, archive]));
   const themeName = siteContent.themes.find((theme) => theme.id === course.themeId)?.name ?? course.themeId;
+  const themeCat = themeCatOf(course.themeId);
 
   const sortedLessons = [...course.lessons].sort((a, b) => a.order - b.order);
 
@@ -68,86 +72,65 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
     };
   });
 
-  const requiredArchiveIds = lessonViews.filter((lesson) => !lesson.optional && lesson.available).map((lesson) => lesson.archiveId);
+  // 分母は必修レッスンのみ（optional=true は分母から除外する現行規約を踏襲）。
+  const requiredArchiveIds = lessonViews
+    .filter((lesson) => !lesson.optional && lesson.available)
+    .map((lesson) => lesson.archiveId);
 
   return (
-    <div className="page-shell">
-      <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true"></span>
-          <div className="brand-copy">
-            <span className="brand-label">Clinical Academic Working Group</span>
-            <span className="brand-name">{siteLegal.shortSiteName}</span>
-          </div>
+    <>
+      <div className={styles.head}>
+        <p className={styles.eyebrow}>{themeName}</p>
+        <h1 className={styles.title}>{course.title}</h1>
+        <p className={styles.summary}>{course.summary}</p>
+        <div className={styles.meta}>
+          <Badge variant={themeCat ? "theme" : "neutral"} cat={themeCat}>
+            {themeName}
+          </Badge>
+          {course.level ? <Badge>{course.level}</Badge> : null}
+          <span className={styles.lessonCount}>全{course.lessons.length}回</span>
         </div>
-        <div className="topbar-actions">
-          <a className="topbar-link" href="/courses">
-            コース一覧へ
-          </a>
-          <a className="topbar-link" href={siteNavigation.archiveUrl}>
-            アーカイブ一覧へ
-          </a>
-          <a className="topbar-link" href={siteLegal.contactUrl}>
-            問い合わせ
-          </a>
-        </div>
-      </header>
+      </div>
 
-      <main>
-        <div className="learn-course-detail">
-          <section className="panel learn-header">
-            <div className="section-kicker">{themeName}</div>
-            <h1>{course.title}</h1>
-            <p className="learn-header-copy">{course.summary}</p>
-            <div className="learn-course-detail-meta">
-              {course.level ? <span className="learn-course-level">{course.level}</span> : null}
-              <span className="learn-course-lesson-count">全{course.lessons.length}回</span>
-            </div>
-          </section>
+      <div className={styles.stack}>
+        <CourseContinueSection courseId={course.id} lessons={lessonViews} />
 
-          <CourseAwareContinueCard courseId={course.id} lessons={lessonViews} />
-
+        <Card>
+          <CardHeader title="コース全体の進捗" />
           <CourseProgressSummary courseArchiveIds={requiredArchiveIds} />
+        </Card>
 
-          <section className="panel learn-course-lesson-section" aria-labelledby="learn-course-lesson-heading">
-            <div className="section-kicker">レッスン一覧</div>
-            <h2 id="learn-course-lesson-heading" className="learn-visually-hidden">
-              レッスン一覧
-            </h2>
-            <ol className="learn-course-lesson-list">
-              {lessonViews.map((lesson) => (
-                <li className="learn-course-lesson-row" key={lesson.archiveId}>
-                  <span className="learn-course-lesson-order">{lesson.order}</span>
-                  <div className="learn-course-lesson-body">
-                    {lesson.available ? (
-                      <a
-                        className="learn-course-lesson-title"
-                        href={archiveHref(lesson.archiveId, course.id)}
-                      >
-                        {lesson.title}
-                      </a>
-                    ) : (
-                      <span className="learn-course-lesson-title learn-course-lesson-title--unavailable">
-                        {lesson.title}
-                      </span>
-                    )}
-                    <div className="learn-course-lesson-meta">
-                      {lesson.date ? <span className="learn-course-lesson-date">{lesson.date}</span> : null}
-                      {lesson.optional ? <span className="learn-course-lesson-optional">任意</span> : null}
-                      {!lesson.available ? (
-                        <span className="learn-course-lesson-unavailable">この回は現在利用できません</span>
-                      ) : null}
-                    </div>
+        <Card>
+          <CardHeader title="レッスン一覧" />
+          <ol className={styles.lessonList}>
+            {lessonViews.map((lesson) => (
+              <li className={styles.lessonRow} key={lesson.archiveId}>
+                <span className={styles.lessonOrder}>{lesson.order}</span>
+                <div className={styles.lessonBody}>
+                  {lesson.available ? (
+                    <Link className={styles.lessonTitle} href={archiveHref(lesson.archiveId, course.id)}>
+                      {lesson.title}
+                    </Link>
+                  ) : (
+                    <span className={`${styles.lessonTitle} ${styles.lessonTitleUnavailable}`}>{lesson.title}</span>
+                  )}
+                  <div className={styles.lessonMeta}>
+                    {lesson.date ? <span>{lesson.date}</span> : null}
+                    {/* optional は分母外であることが分かるよう「補足」と明示表記する */}
+                    {lesson.optional ? <Badge>補足（進捗の対象外）</Badge> : null}
+                    {!lesson.available ? <span>この回は現在利用できません</span> : null}
                   </div>
-                  {lesson.available ? <LessonStatusBadge archiveId={lesson.archiveId} /> : null}
-                </li>
-              ))}
-            </ol>
-          </section>
-        </div>
-      </main>
-
-      <SiteFooter />
-    </div>
+                </div>
+                {lesson.available ? (
+                  <span className={styles.lessonStatus}>
+                    <LessonStatusBadge archiveId={lesson.archiveId} />
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ol>
+        </Card>
+      </div>
+    </>
   );
 }

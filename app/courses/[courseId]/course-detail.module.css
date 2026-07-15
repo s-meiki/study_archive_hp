@@ -1,0 +1,108 @@
+.head {
+  padding-block: 28px 4px;
+}
+
+.eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.title {
+  margin-top: 4px;
+}
+
+.summary {
+  margin-top: 8px;
+  color: var(--ink-2);
+  font-size: var(--fs-md);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.lessonCount {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-block: 16px 48px;
+}
+
+.lessonList {
+  display: flex;
+  flex-direction: column;
+}
+
+.lessonRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+
+.lessonRow:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.lessonOrder {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.lessonBody {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.lessonTitle {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.lessonTitle:hover {
+  color: var(--primary);
+}
+
+.lessonTitleUnavailable {
+  color: var(--muted);
+}
+
+.lessonMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.lessonStatus {
+  flex: none;
+  padding-top: 2px;
+}

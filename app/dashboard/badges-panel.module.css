@@ -1,0 +1,73 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.badgeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.earned {
+  border-color: color-mix(in srgb, var(--success) 40%, var(--border));
+  background: color-mix(in srgb, var(--success) 8%, var(--surface));
+}
+
+.locked {
+  opacity: 0.7;
+}
+
+.badgeIcon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.earned .badgeIcon {
+  color: var(--success);
+}
+
+.locked .badgeIcon {
+  color: var(--muted);
+}
+
+.badgeIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.badgeTitle {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.badgeDesc {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+
+.badgeDate {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}

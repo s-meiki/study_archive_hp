@@ -1,0 +1,23 @@
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 28px 0 20px;
+}
+
+.totals {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 479px) {
+  .head {
+    padding-top: 20px;
+  }
+
+  .head h1 {
+    font-size: 24px;
+  }
+}
