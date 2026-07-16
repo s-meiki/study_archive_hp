@@ -28,6 +28,12 @@ export async function generateStaticParams() {
   return learningContent.courses.map((course) => ({ courseId: course.id }));
 }
 
+// コース一覧はビルド時に確定した固定集合（content/courses/*.json 由来）。
+// 未知の courseId はオンデマンドSSRフォールバックさせず、ビルド時点の
+// 静的404にする（Vercel の実行時ファイルトレースに乗らない読み込みで
+// 500化するのを避けるため）。
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: CourseDetailPageProps): Promise<Metadata> {
   const { courseId } = await params;
   const course = await getCourse(courseId);

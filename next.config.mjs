@@ -2,6 +2,13 @@
 const nextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   outputFileTracingRoot: process.cwd(),
+  // public/data/*.js は vm 経由の動的パスで読むため、Vercel のビルド時
+  // ファイルトレースが検出できないことがある（動的レンダリングの
+  // ページで実際に発生し 500 の原因になった）。将来また動的ルートが
+  // 増えたときのために明示的にトレース対象へ含めておく。
+  outputFileTracingIncludes: {
+    "/**": ["public/data/*.js"]
+  },
   async redirects() {
     // 旧IA → 新IA の恒久リダイレクト。共有済みリンク・ブックマーク保護のため
     // 本番置き換え後も維持する（noindex サイトなので SEO 影響は軽微）。

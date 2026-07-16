@@ -40,6 +40,12 @@ export async function generateStaticParams() {
   return siteContent.archives.map((archive) => ({ archiveId: archive.id }));
 }
 
+// アーカイブ一覧はビルド時に確定した固定集合（xlsx→scripts経由の生成物）。
+// 未知の archiveId はオンデマンドSSRフォールバックさせず、ビルド時点の
+// 静的404にする（Vercel の実行時ファイルトレースに乗らない読み込みで
+// 500化するのを避けるため）。
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: ArchiveDetailPageProps): Promise<Metadata> {
   const { archiveId } = await params;
   const archive = await findArchiveById(archiveId);
