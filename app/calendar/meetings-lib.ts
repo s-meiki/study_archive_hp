@@ -13,11 +13,15 @@ export type CalendarCategory = "event" | "abstract" | "registration" | "deadline
 
 export type CalendarSegment = {
   key: string;
+  meetingId: string;
+  milestoneId?: string;
   type: "meeting" | "milestone";
   category: CalendarCategory;
   text: string;
   title: string;
   url: string;
+  startDate: string;
+  endDate: string;
   rowIndex: number;
   startColumn: number;
   endColumn: number;
@@ -342,19 +346,37 @@ export function rangeOverlapsMonth(
 }
 
 function shortMilestoneLabel(label: string) {
-  if (label === "演題募集") {
+  if (label.includes("演題")) {
     return "演題";
   }
 
-  if (label === "参加登録") {
+  if (label.includes("登録")) {
     return "登録";
+  }
+
+  if (label.includes("締切")) {
+    return "締切";
   }
 
   return label;
 }
 
+const calendarSocietyLabels: Record<string, string> = {
+  "日本TDM学会": "TDM学会",
+  "日本医薬品安全性学会": "医薬品安全性学会",
+  "日本医療薬学会": "医療薬学会",
+  "日本薬理学会": "薬理学会",
+  "日本脳卒中学会": "脳卒中学会"
+};
+
+export function calendarSocietyLabel(item: Pick<AnnualMeeting, "society">) {
+  return calendarSocietyLabels[item.society] ?? item.society;
+}
+
 type SegmentSeed = {
   key: string;
+  meetingId: string;
+  milestoneId?: string;
   type: "meeting" | "milestone";
   category: CalendarCategory;
   text: string;
@@ -370,14 +392,16 @@ function collectSegmentSeeds(meetings: AnnualMeeting[], monthKey: string) {
 
   for (const item of meetings) {
     const url = resolveMeetingUrl(item);
+    const societyLabel = calendarSocietyLabel(item);
     let hasSegment = false;
 
     if (item.startDate && item.endDate && rangeOverlapsMonth(item.startDate, item.endDate, monthKey)) {
       seeds.push({
         key: `${item.id}-${monthKey}-meeting`,
+        meetingId: item.id,
         type: "meeting",
         category: "event",
-        text: `開催 | ${item.society}`,
+        text: societyLabel,
         title: `${item.eventName} / ${formatDateRange(item)}`,
         url,
         startDate: item.startDate,
@@ -400,9 +424,11 @@ function collectSegmentSeeds(meetings: AnnualMeeting[], monthKey: string) {
       const label = milestoneLabel(milestone);
       seeds.push({
         key: `${item.id}-${milestone.id}-${monthKey}`,
+        meetingId: item.id,
+        milestoneId: milestone.id,
         type: "milestone",
         category: milestoneCategory(milestone),
-        text: `${shortMilestoneLabel(label)} | ${item.society}`,
+        text: `${shortMilestoneLabel(label)}・${societyLabel}`,
         title: `${item.eventName} / ${label}${milestone.note ? ` / ${milestone.note}` : ""}`,
         url,
         startDate: window.startDate,
@@ -442,11 +468,15 @@ function splitSeedIntoRows(seed: SegmentSeed, gridStart: Date, gridEnd: Date) {
 
     segments.push({
       key: `${seed.key}-r${rowIndex}`,
+      meetingId: seed.meetingId,
+      milestoneId: seed.milestoneId,
       type: seed.type,
       category: seed.category,
-      text: seed.text,
+      text: isFirstVisibleSegment ? seed.text : "",
       title: seed.title,
       url: seed.url,
+      startDate: seed.startDate,
+      endDate: seed.endDate,
       rowIndex,
       startColumn,
       endColumn,

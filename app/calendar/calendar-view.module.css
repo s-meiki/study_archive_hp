@@ -79,13 +79,21 @@
 }
 
 .scroller {
+  min-width: 0;
   overflow-x: auto;
 }
 
+.calendarLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 16px;
+  align-items: start;
+}
+
 .gridInner {
-  --lane-step: 26px;
+  --lane-step: 30px;
   --bar-offset: 30px;
-  --row-height: calc(38px + var(--lane-count, 1) * var(--lane-step));
+  --row-height: calc(42px + var(--lane-count, 1) * var(--lane-step));
 
   display: grid;
   gap: 6px;
@@ -163,20 +171,31 @@
   align-self: start;
   display: block;
   min-width: 0;
-  height: 22px;
-  padding: 0 8px;
+  height: 26px;
+  padding: 0 9px;
   border: 1px solid;
-  border-radius: 999px;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  line-height: 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
-a.span:hover {
-  text-decoration: underline;
+.span:hover {
+  filter: brightness(0.97);
+}
+
+.span:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.spanSelected {
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px currentColor;
 }
 
 .spanContinuation {
@@ -227,6 +246,114 @@ a.span:hover {
   color: var(--ink-2);
 }
 
+.detail {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.detailEmpty {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.detailHead {
+  display: grid;
+  gap: 6px;
+}
+
+.detailHead h3 {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+}
+
+.detailHead p {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+.detailCategory {
+  width: fit-content;
+  padding: 2px 9px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.detailFacts {
+  display: grid;
+  gap: 10px;
+}
+
+.detailFacts div {
+  display: grid;
+  gap: 2px;
+}
+
+.detailFacts dt,
+.detailMilestones h4 {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.detailFacts dd {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.detailMilestones {
+  display: grid;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.detailMilestones ul {
+  display: grid;
+  gap: 8px;
+}
+
+.detailMilestones li {
+  display: grid;
+  gap: 1px;
+}
+
+.detailMilestones span {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+
+.detailMilestones strong {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.detailAction {
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .calendarLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .detail {
+    grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+    align-items: start;
+  }
+
+  .detailAction {
+    width: fit-content;
+  }
+}
+
 @media (max-width: 719px) {
   .monthCard {
     padding: 12px;
@@ -241,5 +368,13 @@ a.span:hover {
     order: -1;
     width: 100%;
     text-align: center;
+  }
+
+  .detail {
+    grid-template-columns: 1fr;
+  }
+
+  .detailAction {
+    width: 100%;
   }
 }
