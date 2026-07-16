@@ -3,8 +3,8 @@
   使い方 (AI向け):
   - 勉強会の登壇スライドはこの5種を組み合わせて構成する。1スライド1メッセージ、本文の要点は3つまで。
   - スライド枠は .slide { width:1280px; height:720px } 固定。外周パディング64px以上・背景は --bg を守る。
-  - 数字の中扉・統計スライドを差し込むと単調にならない。免責はまとめスライドに muted で必ず残す。
-  - スライド外の muted ラベル (.slide-kind) は種別の目印。書き出し時は不要なら外す。
+  - 表紙は開催前の告知パターン (第◯回ラベル+テーマチップ・日時・形式・事務局表記)。再生ボタン・時間バッジは付けない。
+  - 免責文言はまとめスライドに一字一句そのまま残す。スライド外の muted ラベルは種別の目印で、書き出し時は不要なら外す。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,117 +14,164 @@
 <title>スライド (16:9) — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec; --bg-soft: #efebe2; --surface: #fffdf9; --surface-muted: #faf6ef;
-    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
-    --on-primary: #ffffff; --primary-tint: rgba(54, 90, 92, 0.12);
-    --accent-tint: rgba(151, 114, 75, 0.14); --accent-strong: #8c4f1f;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
+    --on-primary: #ffffff;
+    --accent: #0369a1;
+
+    --success: #15803d;
+    --warning: #b45309;
+    --danger: #b91c1c;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-2: 0 8px 24px rgba(16, 24, 40, 0.08);
+
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-md: 16px;
+    --fs-lg: 20px;
+    --fs-xl: 28px;
+    --fs-2xl: 40px;
+
+    /* カテゴリ6色（固定順: 1循環器 2脳神経 3感染症 4基礎レクチャー 5研究・認定 6AI活用） */
+    --cat-1: #2a78d6;
+    --cat-2: #1baf7a;
+    --cat-3: #eda100;
+    --cat-4: #008300;
+    --cat-5: #4a3aa7;
+    --cat-6: #e34948;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 24px 0; width: 1280px;
-    font-family: var(--font-sans); color: var(--ink); background: var(--bg-soft);
+    font-family: var(--font-sans); color: var(--ink); background: var(--surface-2);
   }
   .slide-block { margin-bottom: 24px; }
   .slide-kind {
-    margin: 0 0 8px 4px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 8px 4px; font-size: var(--fs-xs); font-weight: 600;
+    letter-spacing: 0.04em; color: var(--muted);
   }
   .slide {
     position: relative; width: 1280px; height: 720px; overflow: hidden;
     padding: 68px; background: var(--bg);
-    border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
     display: flex; flex-direction: column;
   }
 
   /* ---- 共通パーツ ---- */
-  .eyebrow {
-    display: inline-flex; align-items: center; align-self: flex-start; min-height: 34px;
-    padding: 0 16px; border-radius: var(--radius-pill);
-    background: var(--primary-soft); color: var(--primary);
-    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
+    padding: 4px 14px 4px 12px; border-radius: 999px; background: var(--surface-2);
+    color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600;
   }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--muted)); flex: none; }
+  .cat-1 { --c: var(--cat-1); }
+  .cat-2 { --c: var(--cat-2); }
+  .cat-3 { --c: var(--cat-3); }
+  .cat-4 { --c: var(--cat-4); }
+  .cat-5 { --c: var(--cat-5); }
+  .cat-6 { --c: var(--cat-6); }
+  .chip-row { display: flex; gap: 10px; }
+
   .lockup { display: inline-flex; align-items: center; gap: 12px; }
-  .lockup-mark { width: 42px; height: 42px; flex: none; display: block; }
-  .lockup-copy { display: grid; gap: 2px; }
-  .lockup-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
-  .lockup-name { color: var(--ink); font-size: 0.98rem; font-weight: 700; letter-spacing: -0.02em; }
-  .slide h1 { margin: 0; font-size: 3.3rem; line-height: 1.04; letter-spacing: -0.05em; font-weight: 600; }
-  .slide h2 { margin: 0; font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; font-weight: 700; }
+  .lockup-mark { width: 32px; height: 32px; flex: none; display: block; }
+  .lockup-name { color: var(--ink); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.01em; }
+
+  .slide h1 { margin: 0; font-size: 56px; line-height: 1.25; letter-spacing: -0.02em; font-weight: 700; }
+  .slide h2 { margin: 0; font-size: var(--fs-xl); line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; }
 
   /* ---- (1) 表紙 ---- */
-  .cover-body { margin-top: auto; }
-  .cover-body h1 { max-width: 20ch; }
-  .cover-sub { margin: 22px 0 0; color: var(--muted); font-size: 1.08rem; line-height: 1.7; }
-  .cover-foot { margin-top: auto; display: flex; justify-content: flex-end; }
+  .cover-body { margin-top: auto; max-width: 900px; }
+  .cover-body h1 { max-width: 860px; }
+  .cover-meta { margin: 20px 0 0; max-width: 560px; color: var(--muted); font-size: var(--fs-md); line-height: 1.7; }
+  .cover-meta .org { margin-top: 4px; display: block; font-size: var(--fs-sm); }
+  .cover-foot { margin-top: auto; padding-top: 32px; display: flex; justify-content: flex-end; }
 
   /* ---- (2) 中扉 ---- */
   .divider { justify-content: center; }
-  .divider-num {
-    font-size: 15rem; line-height: 0.8; font-weight: 800; letter-spacing: -0.05em;
-    color: var(--primary-tint);
-  }
-  .divider-name { margin-top: 6px; font-size: 2.4rem; letter-spacing: -0.04em; font-weight: 700; }
-  .divider-lead { margin: 16px 0 0; max-width: 42ch; color: var(--muted); font-size: 1.05rem; line-height: 1.72; }
+  .divider-eyebrow { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em; color: var(--primary); }
+  .divider h1 { margin-top: 14px; max-width: 760px; }
+  .divider-lead { margin: 18px 0 0; max-width: 560px; color: var(--muted); font-size: var(--fs-md); line-height: 1.7; }
 
   /* ---- (3) 本文 ---- */
   .content-head { display: flex; align-items: baseline; gap: 16px; }
-  .content-index { color: var(--primary); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; }
+  .content-index { color: var(--primary); font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.02em; }
   .point-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: auto; }
   .point-card {
-    padding: 28px 24px; background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 24px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
   }
   .point-no {
-    display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 1.05rem; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+    border-radius: 50%; background: var(--surface-2); color: var(--primary);
+    font-size: var(--fs-md); font-weight: 700;
   }
-  .point-card h3 { margin: 18px 0 0; font-size: 1.24rem; line-height: 1.3; letter-spacing: -0.03em; }
-  .point-card p { margin: 12px 0 0; color: var(--muted); font-size: 0.98rem; line-height: 1.72; }
+  .point-card h3 { margin: 16px 0 0; font-size: var(--fs-md); line-height: 1.3; font-weight: 700; letter-spacing: 0.01em; }
+  .point-card p { margin: 10px 0 0; color: var(--muted); font-size: var(--fs-sm); line-height: 1.7; }
   .slide-foot {
     margin-top: auto; padding-top: 24px; display: flex; justify-content: space-between;
-    align-items: center; color: var(--muted); font-size: 0.86rem;
-    border-top: 1px solid var(--line);
+    align-items: center; color: var(--muted); font-size: var(--fs-sm);
+    border-top: 1px solid var(--border);
   }
 
   /* ---- (4) データ ---- */
   .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: auto; }
   .stat-tile {
-    padding: 30px 26px; background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92); border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    padding: 24px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
   }
-  .stat-num { font-size: 3rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
-  .stat-num small { font-size: 1.2rem; font-weight: 700; margin-left: 4px; }
-  .stat-label { margin-top: 10px; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
-  .stat-note { margin: 30px 0 auto; color: var(--muted); font-size: 0.98rem; line-height: 1.72; }
+  .stat-tile .stat-label {
+    color: var(--muted); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em;
+  }
+  .stat-tile .stat-value {
+    margin-top: 6px; font-size: var(--fs-2xl); line-height: 1.25; font-weight: 700;
+    letter-spacing: -0.01em; color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .stat-tile .stat-value small { margin-left: 4px; font-size: var(--fs-md); font-weight: 600; color: var(--ink-2); }
+  .stat-tile .stat-foot { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.6; }
+  .stat-note { margin: 24px 0 auto; color: var(--muted); font-size: var(--fs-sm); line-height: 1.7; }
 
   /* ---- (5) まとめ ---- */
-  .summary-list { list-style: none; margin: auto 0 0; padding: 0; display: grid; gap: 18px; }
+  .summary-list { list-style: none; margin: auto 0 0; padding: 0; display: grid; gap: 16px; }
   .summary-list li {
-    position: relative; padding-left: 40px; font-size: 1.5rem; line-height: 1.4;
-    letter-spacing: -0.03em; font-weight: 600;
+    position: relative; padding-left: 30px; font-size: var(--fs-lg); line-height: 1.4;
+    letter-spacing: -0.01em; font-weight: 600;
   }
   .summary-list li::before {
-    content: ""; position: absolute; left: 0; top: 0.55em; width: 18px; height: 18px;
-    border-radius: var(--radius-pill); background: var(--primary-soft);
-    border: 4px solid var(--primary);
+    content: ""; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--primary);
   }
-  .disclaimer { margin: 30px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
+  .note {
+    margin: 28px 0 0; padding: 14px 18px; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.6;
+  }
   .next-band {
     margin-top: auto; display: flex; align-items: center; gap: 16px;
-    padding: 18px 24px; background: var(--surface-muted);
-    border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 16px 20px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-1);
   }
   .next-tag {
-    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
-    border-radius: var(--radius-pill); background: var(--accent-tint); color: var(--accent-strong);
-    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; flex: none;
+    display: inline-flex; align-items: center; padding: 4px 14px;
+    border-radius: 999px; background: var(--surface-2); color: var(--ink-2);
+    font-size: var(--fs-xs); font-weight: 600; flex: none;
   }
-  .next-text { color: var(--ink); font-size: 1rem; line-height: 1.5; }
+  .next-text { color: var(--ink); font-size: var(--fs-sm); line-height: 1.5; }
   .next-text span { color: var(--muted); }
 </style>
 </head>
@@ -132,28 +179,23 @@
 
   <!-- (1) 表紙 -->
   <div class="slide-block">
-    <p class="slide-kind">表紙 — Cover</p>
+    <p class="slide-kind">表紙</p>
     <section class="slide">
-      <span class="eyebrow">第64回 勉強会</span>
+      <div class="chip-row">
+        <span class="chip">第64回 勉強会</span>
+        <span class="chip"><span class="dot cat-1"></span>循環器</span>
+      </div>
       <div class="cover-body">
-        <h1>抗凝固療法の<br>実践ポイント</h1>
-        <p class="cover-sub">2026-07-18（土）14:00–15:30 ／ ハイブリッド開催（会場・オンライン）<br>主催: 臨床学術ワーキンググループ</p>
+        <h1>抗凝固療法の実践ポイント</h1>
+        <p class="cover-meta">
+          2026-07-18（土）14:00–15:30 ／ ハイブリッド開催（会場・オンライン）
+          <span class="org">主催: 臨床学術ワーキンググループ事務局</span>
+        </p>
       </div>
       <div class="cover-foot">
         <div class="lockup">
-          <svg class="lockup-mark" viewBox="0 0 96 96" aria-hidden="true">
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
-    <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
-    <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
-    <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
-    <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
-  </g>
-</svg>
-          <span class="lockup-copy">
-            <span class="lockup-label">Clinical Academic WG</span>
-            <span class="lockup-name">臨床学術ワーキンググループ</span>
-          </span>
+          <svg class="lockup-mark" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#4f46e5"/><path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="lockup-name">臨床学術WG</span>
         </div>
       </div>
     </section>
@@ -161,17 +203,17 @@
 
   <!-- (2) 中扉 -->
   <div class="slide-block">
-    <p class="slide-kind">中扉 — Section Divider</p>
+    <p class="slide-kind">中扉</p>
     <section class="slide divider">
-      <span class="divider-num" aria-hidden="true">01</span>
-      <h2 class="divider-name">本日の到達目標</h2>
+      <span class="divider-eyebrow">セクション 01</span>
+      <h1>本日の到達目標</h1>
       <p class="divider-lead">抗凝固薬の使い分けと、開始・中止の判断に必要な観点を整理します。</p>
     </section>
   </div>
 
   <!-- (3) 本文 -->
   <div class="slide-block">
-    <p class="slide-kind">本文 — Content</p>
+    <p class="slide-kind">本文</p>
     <section class="slide">
       <div class="content-head">
         <span class="content-index">01 / 到達目標</span>
@@ -203,7 +245,7 @@
 
   <!-- (4) データ -->
   <div class="slide-block">
-    <p class="slide-kind">データ — Metrics</p>
+    <p class="slide-kind">データ</p>
     <section class="slide">
       <div class="content-head">
         <span class="content-index">02 / 活動データ</span>
@@ -211,16 +253,19 @@
       </div>
       <div class="stat-grid">
         <div class="stat-tile">
-          <div class="stat-num">64<small>回</small></div>
-          <div class="stat-label">これまでの開催回数（2024年以降）</div>
+          <div class="stat-label">開催回数</div>
+          <div class="stat-value">64<small>回</small></div>
+          <div class="stat-foot">2024年以降の累計</div>
         </div>
         <div class="stat-tile">
-          <div class="stat-num">6<small>領域</small></div>
-          <div class="stat-label">循環器・脳神経・感染症ほかのテーマ分類</div>
+          <div class="stat-label">テーマ分類</div>
+          <div class="stat-value">6<small>領域</small></div>
+          <div class="stat-foot">循環器・脳神経・感染症ほか</div>
         </div>
         <div class="stat-tile">
-          <div class="stat-num">2<small>回/月</small></div>
-          <div class="stat-label">ハイブリッドでの定例開催ペース</div>
+          <div class="stat-label">開催ペース</div>
+          <div class="stat-value">2<small>回/月</small></div>
+          <div class="stat-foot">ハイブリッドでの定例開催</div>
         </div>
       </div>
       <p class="stat-note">数値は運営記録に基づく概数です。録画・資料はアーカイブから領域別に確認できます。</p>
@@ -229,7 +274,7 @@
 
   <!-- (5) まとめ -->
   <div class="slide-block">
-    <p class="slide-kind">まとめ — Summary</p>
+    <p class="slide-kind">まとめ</p>
     <section class="slide">
       <h2>本日のまとめ</h2>
       <ul class="summary-list">
@@ -237,7 +282,7 @@
         <li>薬剤選択の根拠は、腎機能と相互作用から言語化する。</li>
         <li>継続中も確認項目を定め、見返せる形で記録する。</li>
       </ul>
-      <p class="disclaimer">本アーカイブは個別診療の判断を代替するものではありません。</p>
+      <p class="note">本アーカイブは個別診療の判断を代替するものではありません。</p>
       <div class="next-band">
         <span class="next-tag">次回予告</span>
         <span class="next-text">第65回 パーキンソン病治療薬の使い分け <span>／ 2026-08-01（土）ハイブリッド開催</span></span>

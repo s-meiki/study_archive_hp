@@ -1,10 +1,9 @@
-<!-- @dsCard group="Foundations" name="余白・角丸・影" subtitle="角丸4段階・標準影・8px余白スケール・ボーダー比較" width="900" height="640" -->
+<!-- @dsCard group="Foundations" name="余白・角丸・影" subtitle="角丸4段・影2段・8px余白スケール・面の作り方・コンテナ幅" width="900" height="760" -->
 <!--
   使い方 (AI向け):
-  - 角丸はパネル28px・カード20px・内部要素16px・ボタン/チップ/入力欄は完全ピル(999px)の4段階のみを使う。中間値を発明しない。
-  - 影は 0 12px 30px rgba(36,52,59,0.07) の一種類だけ。濃い影・多重影・カラー影は使わない。
-  - 余白は8px基調(8/12/16/24/28…)で組む。カードpadding18〜22px、パネルpadding24〜36pxが目安。
-  - ボーダーは通常 --line、写真やカラー面の上に白カードを重ねる時だけ白縁 rgba(255,255,255,0.92) を使う。
+  - 角丸は sm 6px(タブ内要素) / md 10px(ボタン・入力欄・ナビ項目) / lg 14px(カード) / xl 20px(大型パネル・ヒーロー) の4段のみ。中間値やピル型ボタン(999px)は発明しない。
+  - 影は shadow-1(カード基本) と shadow-2(メニュー・モーダル等の浮遊面) の2段のみ。濃い影・多重影は使わない。
+  - 面は必ず「surface + 1px border + shadow-1」の組合せで作る。ボーダーレスの面や影だけのカードを作らない。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,118 +13,138 @@
 <title>余白・角丸・影 — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec; --surface: #fffdf9; --surface-muted: #faf6ef;
-    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-2: 0 8px 24px rgba(16, 24, 40, 0.08);
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --fs-xs: 12px;
+    --fs-sm: 14px;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; padding: 28px; font-family: var(--font-sans);
+    margin: 0; padding: 24px; font-family: var(--font-sans);
     color: var(--ink); background: var(--bg);
   }
   .spec-label {
-    width: 100%; margin: 24px 0 10px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    width: 100%; margin: 20px 0 10px; font-size: var(--fs-xs); font-weight: 600;
+    letter-spacing: 0.06em; color: var(--muted);
   }
   .spec-label:first-child { margin-top: 0; }
-  .spec-note { margin: -4px 0 12px; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  .spec-note { margin: -4px 0 12px; font-size: var(--fs-sm); color: var(--muted); line-height: 1.6; }
 
+  /* ===== 角丸4段 ===== */
   .radius-row { display: flex; gap: 16px; flex-wrap: wrap; }
   .radius-item { text-align: center; }
   .radius-box {
-    width: 108px; height: 84px; background: var(--surface);
-    border: 1px solid var(--line);
+    width: 108px; height: 76px; background: var(--surface);
+    border: 1px solid var(--border);
   }
-  .radius-caption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); }
-  .radius-caption b { display: block; color: var(--ink); font-size: 0.86rem; }
+  .radius-caption { margin-top: 8px; font-size: var(--fs-xs); color: var(--muted); }
+  .radius-caption b { display: block; color: var(--ink); font-size: var(--fs-sm); }
 
+  /* ===== 影2段 ===== */
   .shadow-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
   .shadow-box {
-    width: 220px; height: 100px; background: var(--surface);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    width: 200px; height: 92px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.86rem; font-weight: 700; color: var(--ink);
+    font-size: var(--fs-sm); font-weight: 700; color: var(--ink);
   }
-  .shadow-caption { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .shadow-caption { font-size: var(--fs-xs); color: var(--muted); line-height: 1.7; }
   .shadow-caption code {
-    font-family: var(--font-sans); background: var(--surface-muted);
+    font-family: var(--font-sans); background: var(--surface-2);
     padding: 2px 6px; border-radius: 6px; color: var(--ink);
   }
 
+  /* ===== 余白スケール ===== */
   .space-scale { display: grid; gap: 10px; max-width: 520px; }
   .space-row { display: flex; align-items: center; gap: 14px; }
   .space-bar { height: 16px; background: var(--primary); border-radius: 4px; }
   .space-row .space-label {
-    width: 46px; flex: none; font-size: 0.82rem; font-weight: 700; color: var(--ink);
+    width: 46px; flex: none; font-size: var(--fs-sm); font-weight: 700; color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
-  .space-row .space-usage { font-size: 0.78rem; color: var(--muted); }
+  .space-row .space-usage { font-size: var(--fs-xs); color: var(--muted); }
 
-  .border-demo { display: flex; gap: 20px; flex-wrap: wrap; }
-  .border-plain-wrap {
-    width: 260px; padding: 20px; border-radius: var(--radius-lg);
-    background: var(--surface-muted);
+  /* ===== 面の作り方 ===== */
+  .face-demo { display: flex; gap: 20px; flex-wrap: wrap; }
+  .face-card {
+    width: 260px; padding: 20px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+    font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.6;
   }
-  .border-plain {
-    padding: 14px 16px; border-radius: var(--radius-md);
-    background: var(--surface); border: 1px solid var(--line);
-    font-size: 0.82rem;
+  .face-card b { display: block; color: var(--ink); font-size: var(--fs-md); margin-bottom: 6px; }
+  .face-bad {
+    width: 260px; padding: 20px; background: var(--surface); border-radius: var(--radius-lg);
+    font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.6;
   }
-  .border-photo-wrap {
-    width: 260px; height: 150px; padding: 14px; border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, #2f4d50, #7f9f99);
-    position: relative; display: flex; align-items: flex-start; justify-content: center;
+  .face-bad b { display: block; color: var(--ink); font-size: var(--fs-md); margin-bottom: 6px; }
+  .face-caption { margin-top: 8px; font-size: var(--fs-xs); color: var(--muted); text-align: center; }
+
+  /* ===== コンテナ幅 ===== */
+  .container-demo {
+    width: 100%; background: var(--surface-2); border-radius: var(--radius-md);
+    padding: 16px; overflow-x: auto;
   }
-  .border-photo-label {
-    margin-top: 6px; color: rgba(255, 255, 255, 0.78); font-size: 0.74rem; letter-spacing: 0.04em;
+  .container-track { min-width: 640px; }
+  .container-max {
+    max-width: 400px; margin: 0 auto; padding: 0 24px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    height: 56px; display: flex; align-items: center; justify-content: space-between;
+    font-size: var(--fs-xs); color: var(--muted);
   }
-  .border-white {
-    position: absolute; left: 14px; right: 14px; bottom: 14px;
-    padding: 12px 14px; border-radius: var(--radius-md);
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    font-size: 0.8rem;
-  }
-  .border-caption { margin-top: 8px; font-size: 0.78rem; color: var(--muted); text-align: center; }
+  .container-max span:first-child, .container-max span:last-child { color: var(--primary); font-weight: 700; }
 </style>
 </head>
 <body>
-  <div class="spec-label">角丸 4段階</div>
+  <div class="spec-label">角丸4段</div>
   <div class="radius-row">
     <div class="radius-item">
-      <div class="radius-box" style="border-radius:var(--radius-xl);"></div>
-      <div class="radius-caption"><b>28px</b>パネル</div>
-    </div>
-    <div class="radius-item">
-      <div class="radius-box" style="border-radius:var(--radius-lg);"></div>
-      <div class="radius-caption"><b>20px</b>カード</div>
+      <div class="radius-box" style="border-radius:var(--radius-sm);"></div>
+      <div class="radius-caption"><b>6px</b>タブ内要素</div>
     </div>
     <div class="radius-item">
       <div class="radius-box" style="border-radius:var(--radius-md);"></div>
-      <div class="radius-caption"><b>16px</b>内部要素</div>
+      <div class="radius-caption"><b>10px</b>ボタン・入力欄・ナビ項目</div>
     </div>
     <div class="radius-item">
-      <div class="radius-box" style="border-radius:var(--radius-pill);"></div>
-      <div class="radius-caption"><b>999px</b>ボタン・チップ・入力欄</div>
+      <div class="radius-box" style="border-radius:var(--radius-lg);"></div>
+      <div class="radius-caption"><b>14px</b>カード・パネル</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:var(--radius-xl);"></div>
+      <div class="radius-caption"><b>20px</b>大型パネル・ヒーロー</div>
     </div>
   </div>
 
-  <div class="spec-label">影 (標準影のみ)</div>
+  <div class="spec-label">影2段</div>
   <div class="shadow-row">
-    <div class="shadow-box">カード・パネル</div>
+    <div class="shadow-box" style="box-shadow:var(--shadow-1);">カード基本</div>
+    <div class="shadow-box" style="box-shadow:var(--shadow-2);">メニュー・モーダル</div>
     <div class="shadow-caption">
-      値は一種類のみ:<br><code>0 12px 30px rgba(36,52,59,0.07)</code><br>
+      shadow-1: <code>0 1px 2px rgba(16,24,40,.05)</code><br>
+      shadow-2: <code>0 8px 24px rgba(16,24,40,.08)</code><br>
       濃い影・複数影・カラー影は使わない。
     </div>
   </div>
 
-  <div class="spec-label">スペーシングスケール (8px基調)</div>
+  <div class="spec-label">余白スケール (8px基調)</div>
   <div class="space-scale">
     <div class="space-row">
       <div class="space-label">8px</div>
       <div class="space-bar" style="width:8px;"></div>
-      <div class="space-usage">チップ内側の最小間隔</div>
+      <div class="space-usage">要素内側の最小間隔</div>
     </div>
     <div class="space-row">
       <div class="space-label">12px</div>
@@ -135,34 +154,42 @@
     <div class="space-row">
       <div class="space-label">16px</div>
       <div class="space-bar" style="width:16px;"></div>
-      <div class="space-usage">カード内padding下限</div>
+      <div class="space-usage">スタットタイルpadding・モバイルコンテナ余白</div>
+    </div>
+    <div class="space-row">
+      <div class="space-label">20px</div>
+      <div class="space-bar" style="width:20px;"></div>
+      <div class="space-usage">カードpadding標準・スタットタイル高さ</div>
     </div>
     <div class="space-row">
       <div class="space-label">24px</div>
       <div class="space-bar" style="width:24px;"></div>
-      <div class="space-usage">パネルpadding下限・セクション間隔</div>
-    </div>
-    <div class="space-row">
-      <div class="space-label">28px</div>
-      <div class="space-bar" style="width:28px;"></div>
-      <div class="space-usage">パネルpadding上限・カード最大padding</div>
+      <div class="space-usage">広い画面のカードpadding・コンテナ左右余白</div>
     </div>
   </div>
 
-  <div class="spec-label">ボーダー: --line / 白縁</div>
-  <div class="border-demo">
+  <div class="spec-label">面の作り方</div>
+  <div class="spec-note">面は必ず surface + 1pxボーダー + shadow-1 の組合せで作る。右のようなボーダーレス・影なしの面は作らない。</div>
+  <div class="face-demo">
     <div>
-      <div class="border-plain-wrap">
-        <div class="border-plain">--line (標準) を使う通常のカード。地色との差が小さい面の上で使う。</div>
-      </div>
-      <div class="border-caption">1px solid var(--line)</div>
+      <div class="face-card"><b>正しい面</b>surface + 1px border + shadow-1。カード・パネルの標準構成。</div>
+      <div class="face-caption">推奨</div>
     </div>
     <div>
-      <div class="border-photo-wrap">
-        <span class="border-photo-label">写真: 勉強会の様子</span>
-        <div class="border-white">白縁カードは写真の上に重ねる時だけ使う。</div>
+      <div class="face-bad"><b>誤った面</b>ボーダーも影もない、地色と同化した面。</div>
+      <div class="face-caption">非推奨</div>
+    </div>
+  </div>
+
+  <div class="spec-label">コンテナ幅</div>
+  <div class="spec-note">最大幅1200px・左右padding 24px (モバイルは16px)。下の帯は幅を縮めた模式図。</div>
+  <div class="container-demo">
+    <div class="container-track">
+      <div class="container-max">
+        <span>24px</span>
+        <span>コンテナ最大幅 1200px (縮小表示)</span>
+        <span>24px</span>
       </div>
-      <div class="border-caption">1px solid rgba(255,255,255,0.92)</div>
     </div>
   </div>
 </body>

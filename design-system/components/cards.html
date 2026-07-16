@@ -1,10 +1,10 @@
-<!-- @dsCard group="Components" name="カード" subtitle="アーカイブ/コース/パネル" width="1000" height="900" -->
+<!-- @dsCard group="Components" name="カード" subtitle="基本カード/head+title+sub/統計タイルとの違い/空状態" width="900" height="820" -->
 <!--
   使い方 (AI向け):
-  - アーカイブカード (.panel.archive-card) はアーカイブ一覧のメイン部品。サムネ260px+本文の2カラム固定。
-  - コースカード (.learn-course-card) は学習コース一覧用。レベルpill(primary-soft)とテーマpill(茶系)を必ず両方置く。
-  - .panel は共通の土台。padding や見出し構成は用途ごとの子クラス (.hero-copy 等) で足す。単体では余白を持たない。
-  - テーマ分類チップは .learn-course-pill--theme を流用しており、アーカイブカード内でもコースカードと同じ見た目で揃える。
+  - 基本カード (.card) は見出し+本文の汎用コンテナ。padding 20px・border 1px・shadow-1・radius-lg(14px) を固定値として使う。
+  - head は title(必須)+action(任意)、その下に sub(任意・muted)。本文はカード内に自由に続けてよい。
+  - 統計タイル (.stat) は見た目が近いが単一指標専用の別部品。詳細と全状態は stats.html を参照する。
+  - 空状態は検索・絞り込み結果が0件のときのみ使う。破線ボーダーで通常カードと区別し、リセット導線を必ず添える。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,205 +14,130 @@
 <title>カード — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --surface: #fffdf9;
-    --surface-muted: #faf6ef;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
-    --primary-soft: #e5efee;
-    --accent: #97724b;
-    --accent-strong: #8c4f1f;
-    --accent-tint: rgba(151, 114, 75, 0.14);
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
     --on-primary: #ffffff;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-xl: 28px;
-    --radius-lg: 20px;
-    --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-md: 16px;
+    --fs-xl: 28px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 28px; font-family: var(--font-sans);
-    color: var(--ink); background: var(--bg);
+    color: var(--ink); background: var(--bg); line-height: 1.6;
   }
   .spec-label {
-    margin: 0 0 12px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 10px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
-  .spec-block + .spec-label { margin-top: 28px; }
+  .spec-block + .spec-block { margin-top: 26px; }
 
-  /* ===== 基底パネル ===== */
-  .panel {
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow);
+  /* ===== 基本カード (app/ui/card.module.css を忠実に移植) ===== */
+  .card {
+    min-width: 0; padding: 20px; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-1);
   }
-  .base-panel { padding: 28px; display: grid; gap: 10px; max-width: 640px; }
-  .section-kicker {
-    color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+  .card-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px;
   }
-  .base-panel h2 { margin: 6px 0 0; font-size: 1.64rem; letter-spacing: -0.03em; }
-  .base-panel p { margin: 0; color: var(--muted); line-height: 1.7; }
+  .card-title { font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.01em; }
+  .card-sub { margin-bottom: 8px; color: var(--muted); font-size: var(--fs-xs); }
+  .card-body { color: var(--ink-2); font-size: var(--fs-sm); }
+  .text-link { color: var(--primary); font-size: var(--fs-sm); font-weight: 600; text-decoration: none; }
 
-  /* ===== テーマ/レベル分類チップ (コースカード・アーカイブカードで共通利用) ===== */
-  .learn-course-pill {
-    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
-    border-radius: var(--radius-pill); background: rgba(107, 123, 130, 0.14);
-    color: var(--muted); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+  /* ===== 統計タイル (対比用。詳細は stats.html) ===== */
+  .compare-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .stat {
+    display: flex; flex-direction: column; gap: 2px; padding: 16px 18px;
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    background: var(--surface); box-shadow: var(--shadow-1);
   }
-  .learn-course-pill--level { background: var(--primary-soft); color: var(--primary); }
-  .learn-course-pill--theme { background: var(--accent-tint); color: var(--accent-strong); }
+  .stat-label { color: var(--muted); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em; }
+  .stat-value {
+    color: var(--ink); font-size: var(--fs-xl); font-weight: 700;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .stat-foot { color: var(--muted); font-size: var(--fs-xs); }
+  .compare-note { margin-top: 8px; color: var(--muted); font-size: var(--fs-xs); }
 
-  /* ===== アーカイブカード ===== */
-  .archive-card {
-    display: grid; grid-template-columns: 260px 1fr; gap: 18px; padding: 18px;
+  /* ===== 空状態 (app/ui/empty-state.module.css を忠実に移植) ===== */
+  .empty {
+    display: grid; justify-items: center; gap: 8px; padding: 40px 24px;
+    border: 1px dashed var(--border); border-radius: var(--radius-lg);
+    background: var(--surface); text-align: center;
   }
-  .archive-media-link { display: block; color: inherit; }
-  .archive-media {
-    position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden;
-    background-image:
-      linear-gradient(155deg, rgba(23, 34, 40, 0.18), rgba(23, 34, 40, 0.06)),
-      linear-gradient(135deg, #35585b, #8ea9a2);
-    background-position: center; background-size: cover;
-  }
-  .archive-media::before {
-    content: ""; position: absolute; inset: 12px; border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-  .archive-media-caption {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    padding: 0 40px; text-align: center; color: rgba(255, 255, 255, 0.78);
-    font-size: 0.72rem; line-height: 1.5;
-  }
-  .archive-media .play-button {
-    position: absolute; left: 14px; bottom: 14px; width: 46px; height: 46px;
-    border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 14px 28px rgba(23, 34, 40, 0.16);
-  }
-  .archive-media .play-button::before {
-    content: ""; position: absolute; left: 18px; top: 14px;
-    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
-    border-left: 12px solid var(--primary);
-  }
-  .archive-media .duration {
-    position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center;
-    min-height: 28px; padding: 0 12px; border-radius: var(--radius-pill);
-    background: rgba(23, 34, 40, 0.56); color: #ffffff; font-size: 0.78rem;
-  }
-  .archive-content { display: flex; flex-direction: column; justify-content: center; }
-  .archive-meta {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
-    color: var(--muted); font-size: 0.84rem;
-  }
-  .archive-meta .status { color: var(--accent); font-weight: 700; }
-  .archive-content h3 { margin-top: 10px; font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; }
-  .archive-title-link { color: inherit; text-decoration: none; }
-  .archive-content p { margin-top: 10px; color: var(--muted); line-height: 1.72; }
-  .archive-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
-  .archive-links { display: flex; flex-wrap: wrap; gap: 10px; }
-  .mini-link {
-    display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px;
-    border-radius: var(--radius-pill); border: 1px solid var(--line);
-    background: var(--surface-muted); font-size: 0.87rem; font-weight: 700; color: var(--ink);
-    text-decoration: none;
-  }
-  .mini-link.primary { background: var(--primary); border-color: transparent; color: #ffffff; }
-  .archive-note { color: var(--muted); font-size: 0.85rem; }
+  .empty-icon { display: inline-flex; color: var(--muted); }
+  .empty-icon svg { width: 28px; height: 28px; }
+  .empty-title { color: var(--ink); font-size: var(--fs-md); font-weight: 600; }
+  .empty-description { max-width: 40em; color: var(--muted); font-size: var(--fs-sm); }
+  .empty-action { margin-top: 8px; }
 
-  /* ===== コースカード ===== */
-  .course-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  .learn-course-card {
-    display: grid; gap: 10px; padding: 22px; border: 1px solid var(--line);
-    border-radius: var(--radius-lg); background: var(--surface); color: inherit; text-decoration: none;
-  }
-  .learn-course-card-head { display: flex; flex-wrap: wrap; gap: 8px; }
-  .learn-course-title { margin: 0; font-size: 1.1rem; line-height: 1.45; letter-spacing: -0.01em; }
-  .learn-course-summary { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.68; }
-  .learn-course-card-foot {
-    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-    gap: 10px; margin-top: 4px; color: var(--muted); font-size: 0.82rem;
-  }
-  .learn-course-lesson-count { color: var(--muted); font-size: 0.86rem; }
-  .learn-course-progress-badge {
-    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 0.8rem; font-weight: 700;
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px 16px; border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--surface); color: var(--ink-2); font-family: inherit;
+    font-size: var(--fs-sm); font-weight: 600; line-height: 1.4; cursor: pointer;
   }
 </style>
 </head>
 <body>
 
   <div class="spec-block">
-    <div class="spec-label">アーカイブカード (.panel.archive-card) — 一覧のメイン部品。サムネ16:9+内側白枠+再生ボタン+時間バッジ。本文は日付・テーマ・アセット有無をmeta行に、要約下にリンクと担当を配置。</div>
-    <article class="panel archive-card">
-      <a class="archive-media-link" href="#" aria-label="抗凝固療法の実践ポイントの詳細を見る">
-        <div class="archive-media">
-          <span class="archive-media-caption">写真: 勉強会の様子</span>
-          <span class="play-button" aria-hidden="true"></span>
-          <span class="duration">32:05</span>
-        </div>
-      </a>
-      <div class="archive-content">
-        <div class="archive-meta">
-          <span class="status">最新</span>
-          <span>2026-06-24</span>
-          <!-- テーマチップは学習コースの .learn-course-pill--theme と同じ見た目を流用 -->
-          <span class="learn-course-pill learn-course-pill--theme">循環器</span>
-          <span>スライドあり</span>
-        </div>
-        <h3><a class="archive-title-link" href="#">抗凝固療法の実践ポイント</a></h3>
-        <p>DOACとワルファリンの使い分け、周術期休薬の考え方を実臨床の質問形式で整理します。</p>
-        <div class="archive-footer">
-          <div class="archive-links">
-            <a class="mini-link primary" href="#">この回を見る</a>
-            <a class="mini-link" href="#">動画</a>
-            <a class="mini-link" href="#">スライド</a>
-          </div>
-          <div class="archive-note">担当: 事務局</div>
-        </div>
+    <p class="spec-label">基本カード (.card) — padding 20px・border 1px・shadow-1・radius-lg(14px)。head(title+action)+sub+本文の構成。</p>
+    <div class="card" style="max-width: 480px;">
+      <div class="card-head">
+        <h2 class="card-title">最新アーカイブ</h2>
+        <a class="text-link" href="#">すべて見る</a>
       </div>
-    </article>
-  </div>
-
-  <div class="spec-block">
-    <div class="spec-label">コースカード (.learn-course-card) — レベルpill+テーマpillを上部に、下部に「n/m レッスン」と進捗バッジ。進捗状態は文言のみ差し替え、色クラスは増やさない。</div>
-    <div class="course-card-grid">
-      <a class="learn-course-card" href="#">
-        <div class="learn-course-card-head">
-          <span class="learn-course-pill learn-course-pill--level">初級</span>
-          <span class="learn-course-pill learn-course-pill--theme">循環器</span>
-        </div>
-        <h3 class="learn-course-title">抗凝固療法の基礎を理解する</h3>
-        <p class="learn-course-summary">DOACとワルファリンの薬理・相互作用・モニタリングを、架空症例をもとに段階的に学びます。</p>
-        <div class="learn-course-card-foot">
-          <span class="learn-course-lesson-count">3/8 レッスン</span>
-          <span class="learn-course-progress-badge">学習中</span>
-        </div>
-      </a>
-      <a class="learn-course-card" href="#">
-        <div class="learn-course-card-head">
-          <span class="learn-course-pill learn-course-pill--level">中級</span>
-          <span class="learn-course-pill learn-course-pill--theme">感染症</span>
-        </div>
-        <h3 class="learn-course-title">抗菌薬適正使用の考え方</h3>
-        <p class="learn-course-summary">経験的治療から標的治療への移行判断と、デエスカレーションの実践ポイントを扱います。</p>
-        <div class="learn-course-card-foot">
-          <span class="learn-course-lesson-count">8/8 レッスン</span>
-          <span class="learn-course-progress-badge">完了</span>
-        </div>
-      </a>
+      <p class="card-sub">直近30日に公開した回</p>
+      <p class="card-body">抗凝固療法の実践ポイント、抗菌薬適正使用の考え方など、直近の勉強会アーカイブを新着順に確認できます。</p>
     </div>
   </div>
 
   <div class="spec-block">
-    <div class="spec-label">基底パネル (.panel) — カード/ヒーロー/統計等の共通土台。白縁1px+標準影+角丸28px。単体では余白を持たず、用途別クラス (.base-panel 等) でpaddingと構成を足す。</div>
-    <div class="panel base-panel">
-      <span class="section-kicker">開催案内</span>
-      <h2>会場とオンライン参加の案内</h2>
-      <p>ハイブリッド開催のため、会場参加・オンライン参加のいずれも録画をアーカイブとして後日公開します。当日参加できない場合も、資料とあわせて内容を確認できます。</p>
+    <p class="spec-label">統計タイルとの違い — 見た目(padding・角丸・shadow-1)は近いが、統計タイルは単一指標専用の別部品 (.stat、詳細は stats.html)。</p>
+    <div class="compare-row">
+      <div class="card">
+        <div class="card-head">
+          <h2 class="card-title">テーマ別進捗</h2>
+        </div>
+        <p class="card-body">見出し+本文を自由に構成できる汎用コンテナ。リストや複数の指標を並べる場合はこちらを使う。</p>
+      </div>
+      <div class="stat">
+        <span class="stat-label">公開アーカイブ</span>
+        <span class="stat-value tabular-nums">52<span style="margin-left:2px; color: var(--ink-2); font-size: var(--fs-sm); font-weight:600;">件</span></span>
+        <span class="stat-foot">全64回中</span>
+      </div>
+    </div>
+    <p class="compare-note">カードは見出し+本文の汎用コンテナ、統計タイルは「ラベル→数値→補足」の固定レイアウトで単一指標のみを表す。</p>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">空状態 (dashed border) — 検索・絞り込み結果が0件のときのみ表示。リセット導線を必ず添える。</p>
+    <div class="empty" style="max-width: 480px;">
+      <div class="empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 28 28">
+          <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M17 17l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="empty-title">該当するアーカイブがありません</p>
+      <p class="empty-description">条件を減らすか、別のテーマを選んでください。</p>
+      <div class="empty-action">
+        <button class="button" type="button">条件をリセット</button>
+      </div>
     </div>
   </div>
 

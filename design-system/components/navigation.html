@@ -1,9 +1,10 @@
-<!-- @dsCard group="Components" name="ナビゲーション" subtitle="トップバー/フッター" width="1100" height="520" -->
+<!-- @dsCard group="Components" name="ナビゲーション" subtitle="ヘッダー/タブ/フッター" width="1100" height="560" -->
 <!--
   使い方 (AI向け):
-  - トップバーは全ページ共通。左にブランドロックアップ、右に注記チップ+ピル型ナビリンクを並べる。
-  - ナビリンクは3〜5件を目安に、ページの文脈に応じて出し分ける (強調用の下線・色替えはしない)。
-  - フッターも全ページ共通。panel(角丸28px)の中に、左=著作権表示、右=法務リンク(primary文字+下線)。
+  - ヘッダーは全ページ共通・高さ60px・sticky・surface地+下ボーダー。ロゴ+「臨床学術WG」、ナビ5項目 (ホーム/アーカイブ/コース/カレンダー/ダッシュボード)、右端にテーマ切替ボタン。
+  - アクティブなナビ項目は aria-current="page" でsurface-2地+primary文字+太字にする。下線や色替えの独自表現を足さない。
+  - タブは surface-2地のコンテナ(radius-md・padding4px)に、アクティブだけsurface面+primary文字+shadow-1。
+  - フッターはpanelではなくsurface地+上ボーダーの帯。左に法務リンク、右に運営表記。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -13,161 +14,118 @@
 <title>ナビゲーション — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --surface: #fffdf9;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
-    --accent: #97724b;
-    --radius-xl: 28px;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-md: 16px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; padding: 28px; font-family: var(--font-sans);
+    margin: 0; padding: 0; font-family: var(--font-sans);
     color: var(--ink); background: var(--bg);
   }
   .spec-label {
-    margin: 0 0 10px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 10px; padding: 0 28px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
-  .spec-block + .spec-block { margin-top: 26px; }
+  .spec-block { padding-bottom: 26px; }
+  .wrap { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 24px; }
 
-  /* ===== トップバー (public/assets/styles.css .topbar 系を再現) ===== */
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    color: var(--muted);
-    font-size: 0.88rem;
-  }
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .brand-mark { width: 50px; height: 50px; flex: none; display: block; }
-  .brand-copy { display: grid; gap: 2px; }
-  .brand-label {
-    color: var(--muted);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .brand-name {
-    color: var(--ink);
-    font-size: 1.02rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .topbar-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  .topbar-note {
-    display: inline-flex;
-    align-items: center;
-    min-height: 38px;
-    padding: 0 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgba(255, 253, 249, 0.8);
-  }
-  .topbar-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 38px;
-    padding: 0 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgba(255, 253, 249, 0.8);
-    color: var(--ink);
-    font-size: 0.88rem;
-    font-weight: 700;
-    text-decoration: none;
+  /* ===== ヘッダー (app/components/app-header.module.css を忠実に移植) ===== */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .header-inner { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.02em; text-decoration: none; }
+  .brand svg { flex: none; }
+  .site-nav { display: flex; align-items: center; gap: 4px; margin-right: auto; }
+  .site-nav a { padding: 6px 12px; border-radius: var(--radius-md); color: var(--ink-2); font-size: var(--fs-sm); font-weight: 500; text-decoration: none; }
+  .site-nav a:hover { background: var(--surface-2); color: var(--ink); }
+  .site-nav a[aria-current="page"] { background: var(--surface-2); color: var(--primary); font-weight: 600; }
+  .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .toggle-button {
+    display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-2);
   }
 
-  /* ===== フッター (public/assets/styles.css .site-footer 系を再現) ===== */
-  .panel {
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow);
-  }
-  .site-footer {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) auto;
-    gap: 12px 18px;
-    padding: 18px 24px;
-    align-items: center;
-  }
-  .site-footer-copy {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.86rem;
-    line-height: 1.6;
-  }
-  .site-footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  .site-footer-link {
-    color: var(--primary);
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: underline;
-    text-decoration-color: rgba(54, 90, 92, 0.28);
-    text-underline-offset: 0.18em;
-  }
+  /* ===== タブ (app/ui/tabs.module.css を忠実に移植) ===== */
+  .tabs { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-2); }
+  .tab { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-2); font-family: inherit; font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; }
+  .tab.active { background: var(--surface); color: var(--primary); font-weight: 600; box-shadow: var(--shadow-1); }
+
+  /* ===== フッター (app/components/app-footer.module.css を忠実に移植) ===== */
+  .footer { border-top: 1px solid var(--border); background: var(--surface); }
+  .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 24px; padding-bottom: 24px; }
+  .footer-nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .footer-nav a { color: var(--ink-2); font-size: var(--fs-sm); text-decoration: none; }
+  .footer-nav a:hover { color: var(--primary); text-decoration: underline; }
+  .footer-note { color: var(--muted); font-size: var(--fs-xs); }
 </style>
 </head>
 <body>
+
   <div class="spec-block">
-    <p class="spec-label">トップバー — ブランドロックアップ + ピル型ナビ</p>
-    <header class="topbar">
-      <div class="brand">
-        <svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true">
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
-    <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
-    <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
-    <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
-    <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
-  </g>
-</svg>
-        <div class="brand-copy">
-          <span class="brand-label">Clinical Academic Working Group</span>
-          <span class="brand-name">臨床学術ワーキンググループ</span>
+    <p class="spec-label">ヘッダー — 高さ60px・sticky・ロゴ+ブランド名・ナビ5項目(aria-current)・右端にテーマ切替</p>
+    <header class="header">
+      <div class="wrap header-inner">
+        <a class="brand" href="#">
+          <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+            <rect x="1" y="1" width="26" height="26" rx="7" fill="#4f46e5"/>
+            <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>臨床学術WG</span>
+        </a>
+        <nav class="site-nav" aria-label="メイン">
+          <a href="#">ホーム</a>
+          <a href="#" aria-current="page">アーカイブ</a>
+          <a href="#">コース</a>
+          <a href="#">カレンダー</a>
+          <a href="#">ダッシュボード</a>
+        </nav>
+        <div class="header-actions">
+          <button class="toggle-button" type="button" aria-label="ライト/ダークテーマを切り替え">
+            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M17 12.6A7.6 7.6 0 0 1 7.4 3 7.6 7.6 0 1 0 17 12.6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
-      </div>
-      <div class="topbar-actions">
-        <div class="topbar-note">薬剤師向け勉強会アーカイブ</div>
-        <a class="topbar-link" href="#">アーカイブ</a>
-        <a class="topbar-link" href="#">コース</a>
-        <a class="topbar-link" href="#">学習</a>
-        <a class="topbar-link" href="#">参加案内</a>
       </div>
     </header>
   </div>
 
   <div class="spec-block">
-    <p class="spec-label">フッター — 著作権表示 + 法務リンク</p>
-    <footer class="panel site-footer">
-      <p class="site-footer-copy">© 2026 臨床学術ワーキンググループ. All rights reserved.</p>
-      <div class="site-footer-links" aria-label="法務リンク">
-        <a class="site-footer-link" href="#">利用規約</a>
-        <a class="site-footer-link" href="#">プライバシーポリシー</a>
-        <a class="site-footer-link" href="#">問い合わせ</a>
+    <p class="spec-label">タブ (.tabs) — surface-2地のコンテナに、アクティブのみsurface面+primary文字+shadow-1</p>
+    <div class="wrap">
+      <div class="tabs" role="tablist" aria-label="学会情報の表示切り替え">
+        <button class="tab active" type="button" role="tab" aria-selected="true">カレンダー</button>
+        <button class="tab" type="button" role="tab" aria-selected="false">リスト</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">フッター — 法務リンク + 運営表記</p>
+    <footer class="footer">
+      <div class="wrap footer-inner">
+        <nav class="footer-nav" aria-label="フッター">
+          <a href="#">About</a>
+          <a href="#">利用規約</a>
+          <a href="#">プライバシーポリシー</a>
+          <a href="#">問い合わせ</a>
+        </nav>
+        <p class="footer-note">運営: 臨床学術ワーキンググループ</p>
       </div>
     </footer>
   </div>
+
 </body>
 </html>

@@ -1,10 +1,10 @@
-<!-- @dsCard group="Foundations" name="カラー" subtitle="コア10色・セマンティック配色・配分の目安・ロゴマークの色" width="900" height="640" -->
+<!-- @dsCard group="Foundations" name="カラー" subtitle="コア7色・ブランド4色・セマンティック・カテゴリ6色・進捗トラック" width="900" height="820" -->
 <!--
   使い方 (AI向け):
-  - 背景・面(--bg/--surface/--surface-muted)を地として使い、primaryは強調用途(ボタン・アクティブ状態)に1割弱だけ使う。accentは差し色のみで多用しない。
-  - セマンティック色(成功/注意/エラー)は状態表示専用。装飾目的の彩色には使わない。
-  - Learning Loop マークは確定済みの色・形・比率を改変しない。色変更や単色化は行わない。
-  - 新しい色を作る前に、このページの10色+拡張色で表現できないか必ず確認する。
+  - 背景・面 (--bg/--surface/--surface-2) を地として使い、primaryは強調用途(ボタン・アクティブ状態・進捗フィル)に少量だけ使う。accentは差し色のみで多用しない。
+  - セマンティック色(成功/注意/エラー)は状態表示専用。バッジ地は各色の12%ティントを使う。装飾目的の彩色には使わない。
+  - カテゴリ6色はテーマ分類の固定順専用。順番の入れ替え・文字色への転用はしない。
+  - 新しい色を作る前に、このページの色で表現できないか必ず確認する。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,245 +14,248 @@
 <title>カラー — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --bg-soft: #efebe2;
-    --surface: #fffdf9;
-    --surface-muted: #faf6ef;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
-    --primary-soft: #e5efee;
-    --accent: #97724b;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
     --on-primary: #ffffff;
-    --accent-strong: #8c4f1f;
-    --accent-tint: rgba(151, 114, 75, 0.14);
-    --danger: #8a3f30;
-    --danger-tint: rgba(150, 70, 55, 0.12);
-    --success: #2d6c45;
-    --success-tint: rgba(56, 118, 78, 0.14);
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-lg: 20px;
-    --radius-md: 16px;
-    --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --accent: #0369a1;
+    --success: #15803d;
+    --warning: #b45309;
+    --danger: #b91c1c;
+    --success-tint: rgba(21, 128, 61, 0.12);
+    --warning-tint: rgba(180, 83, 9, 0.12);
+    --danger-tint: rgba(185, 28, 28, 0.12);
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --cat-1: #2a78d6;
+    --cat-2: #1baf7a;
+    --cat-3: #eda100;
+    --cat-4: #008300;
+    --cat-5: #4a3aa7;
+    --cat-6: #e34948;
+    --track-primary: #e0e7ff;
+    --track-accent: #cde6f5;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; padding: 28px; font-family: var(--font-sans);
+    margin: 0; padding: 24px; font-family: var(--font-sans);
     color: var(--ink); background: var(--bg);
   }
   .spec-label {
-    width: 100%; margin: 22px 0 10px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    width: 100%; margin: 20px 0 10px; font-size: var(--fs-xs); font-weight: 600;
+    letter-spacing: 0.06em; color: var(--muted);
   }
   .spec-label:first-child { margin-top: 0; }
-  .spec-note {
-    margin: -4px 0 12px; font-size: 0.8rem; color: var(--muted); line-height: 1.6;
-  }
+  .spec-note { margin: -4px 0 12px; font-size: var(--fs-sm); color: var(--muted); line-height: 1.6; }
 
   .swatch-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
   }
   .swatch-card {
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
     padding: 12px;
   }
   .swatch-fill {
-    height: 56px;
+    height: 52px;
     border-radius: var(--radius-md);
-    border: 1px solid var(--line);
+    border: 1px solid var(--border);
     margin-bottom: 10px;
   }
-  .swatch-name { font-size: 0.86rem; font-weight: 700; }
-  .swatch-hex {
-    margin-top: 2px; font-size: 0.76rem; color: var(--muted); font-weight: 400;
-  }
-  .swatch-usage {
-    margin-top: 6px; font-size: 0.76rem; color: var(--muted); line-height: 1.5;
-  }
+  .swatch-name { font-size: var(--fs-sm); font-weight: 700; }
+  .swatch-hex { margin-top: 2px; font-size: var(--fs-xs); color: var(--muted); }
+  .swatch-usage { margin-top: 6px; font-size: var(--fs-xs); color: var(--muted); line-height: 1.5; }
 
-  .ratio-wrap {
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 18px 20px;
+  .track-bar {
+    width: 100%; height: 6px; border-radius: 3px; margin-bottom: 10px;
+    display: flex; align-items: center;
   }
-  .ratio-bar {
-    display: flex; height: 46px; border-radius: var(--radius-md);
-    overflow: hidden; border: 1px solid var(--line);
-  }
-  .ratio-seg {
-    display: flex; align-items: center; justify-content: center; min-width: 0;
-    font-size: 0.74rem; font-weight: 700; color: var(--ink); overflow: hidden; white-space: nowrap;
-  }
-  .ratio-seg.bg { background: var(--bg); flex: 90 1 0; }
-  .ratio-seg.primary { background: var(--primary); color: var(--on-primary); flex: 8 1 0; }
-  .ratio-seg.accent { background: var(--accent); flex: 2 1 0; }
-  .ratio-legend {
-    display: flex; gap: 18px; margin-top: 10px; font-size: 0.78rem; color: var(--muted); flex-wrap: wrap;
-  }
-  .ratio-legend span { font-weight: 700; color: var(--ink); }
-
-  .logo-warning {
-    display: flex; gap: 18px; align-items: center;
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 16px 20px;
-  }
-  .logo-chip { width: 64px; height: 64px; flex: none; display: block; }
-  .logo-warning-body h3 {
-    margin: 0 0 4px; font-size: 0.95rem; font-weight: 700; color: var(--accent-strong);
-  }
-  .logo-warning-body p {
-    margin: 0; font-size: 0.8rem; color: var(--muted); line-height: 1.6;
-  }
-  .logo-warning-body .badge {
-    display: inline-block; margin-top: 8px; padding: 4px 12px;
-    border-radius: var(--radius-pill); background: var(--accent-tint);
-    color: var(--accent-strong); font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.04em;
-  }
+  .track-fill { height: 6px; border-radius: 3px; width: 60%; }
 </style>
 </head>
 <body>
-  <div class="spec-label">コア10色</div>
-  <div class="spec-note">背景・面が全体の9割を占める。primary・accentはこの上に少量だけ乗せる。</div>
+  <div class="spec-label">コア7色</div>
+  <div class="spec-note">背景・面が全体の9割を占める。文字・罫線もここに含む。</div>
   <div class="swatch-grid">
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--bg)"></div>
       <div class="swatch-name">--bg</div>
-      <div class="swatch-hex">#f6f3ec</div>
-      <div class="swatch-usage">ページ・スライドの地色。純白は使わない</div>
-    </div>
-    <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--bg-soft)"></div>
-      <div class="swatch-name">--bg-soft</div>
-      <div class="swatch-hex">#efebe2</div>
-      <div class="swatch-usage">背景内の区切り面・セクション帯</div>
+      <div class="swatch-hex">#f5f7fb</div>
+      <div class="swatch-usage">ページ・スライドの地。クールなオフホワイト</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--surface)"></div>
       <div class="swatch-name">--surface</div>
-      <div class="swatch-hex">#fffdf9</div>
-      <div class="swatch-usage">アーカイブカード・パネルの面</div>
+      <div class="swatch-hex">#ffffff</div>
+      <div class="swatch-usage">カード・パネル面。1pxボーダーで背景に載せる</div>
     </div>
     <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--surface-muted)"></div>
-      <div class="swatch-name">--surface-muted</div>
-      <div class="swatch-hex">#faf6ef</div>
-      <div class="swatch-usage">検索窓・引用・沈めた面</div>
+      <div class="swatch-fill" style="background:var(--surface-2)"></div>
+      <div class="swatch-name">--surface-2</div>
+      <div class="swatch-hex">#eef2f8</div>
+      <div class="swatch-usage">入力欄・タブ地・ホバー・引用</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--ink)"></div>
       <div class="swatch-name">--ink</div>
-      <div class="swatch-hex">#24343b</div>
-      <div class="swatch-usage">見出し・本文の文字色</div>
+      <div class="swatch-hex">#0f172a</div>
+      <div class="swatch-usage">見出し・本文</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--ink-2)"></div>
+      <div class="swatch-name">--ink-2</div>
+      <div class="swatch-hex">#475569</div>
+      <div class="swatch-usage">ナビ・ボタン文字・単位</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--muted)"></div>
       <div class="swatch-name">--muted</div>
-      <div class="swatch-hex">#6b7b82</div>
-      <div class="swatch-usage">日付・回数などの補助情報</div>
+      <div class="swatch-hex">#64748b</div>
+      <div class="swatch-usage">キャプション・メタ情報・スタットラベル</div>
     </div>
     <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--surface-muted);border:1px solid var(--line)"></div>
-      <div class="swatch-name">--line</div>
-      <div class="swatch-hex">rgba(36,52,59,.1)</div>
-      <div class="swatch-usage">カード・入力欄の標準ボーダー</div>
+      <div class="swatch-fill" style="background:var(--surface);border:1px solid var(--border)"></div>
+      <div class="swatch-name">--border</div>
+      <div class="swatch-hex">#e3e8f0</div>
+      <div class="swatch-usage">1px精密ボーダー。常にこの色で統一</div>
     </div>
+  </div>
+
+  <div class="spec-label">ブランド4色</div>
+  <div class="spec-note">primaryは強調・主ボタン・アクティブ状態・進捗フィルに使う。塗り面の文字は on-primary。accentは差し色のみ。</div>
+  <div class="swatch-grid">
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--primary)"></div>
       <div class="swatch-name">--primary</div>
-      <div class="swatch-hex">#365a5c</div>
-      <div class="swatch-usage">主要ボタン・アクティブ状態</div>
+      <div class="swatch-hex">#4f46e5</div>
+      <div class="swatch-usage">主ボタン・アクティブ状態・進捗フィル</div>
     </div>
     <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--primary-soft)"></div>
-      <div class="swatch-name">--primary-soft</div>
-      <div class="swatch-hex">#e5efee</div>
-      <div class="swatch-usage">eyebrowラベル・バッジの背景</div>
+      <div class="swatch-fill" style="background:var(--primary-strong)"></div>
+      <div class="swatch-name">--primary-strong</div>
+      <div class="swatch-hex">#4338ca</div>
+      <div class="swatch-usage">主ボタンhover・リンク強調</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--on-primary);border:1px solid var(--border)"></div>
+      <div class="swatch-name">--on-primary</div>
+      <div class="swatch-hex">#ffffff</div>
+      <div class="swatch-usage">primary塗り面の上の文字色</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--accent)"></div>
       <div class="swatch-name">--accent</div>
-      <div class="swatch-hex">#97724b</div>
-      <div class="swatch-usage">リンクhover・差し色のみ</div>
+      <div class="swatch-hex">#0369a1</div>
+      <div class="swatch-usage">副次的な強調のみ。多用しない</div>
     </div>
   </div>
 
-  <div class="spec-label">拡張(セマンティック): 成功 / 注意・保留 / エラー</div>
-  <div class="spec-note">状態表示専用。装飾目的では使わない。各ペアは「濃色=文字・強調」「淡色=背景・チップ地」。</div>
+  <div class="spec-label">セマンティック</div>
+  <div class="spec-note">状態表示専用。バッジ地は各色の12%ティント。装飾目的では使わない。</div>
   <div class="swatch-grid">
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--success)"></div>
       <div class="swatch-name">--success</div>
-      <div class="swatch-hex">#2d6c45</div>
-      <div class="swatch-usage">受講登録完了・クイズ正解</div>
+      <div class="swatch-hex">#15803d</div>
+      <div class="swatch-usage">完了・正解</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--success-tint)"></div>
       <div class="swatch-name">--success-tint</div>
-      <div class="swatch-hex">rgba(56,118,78,.14)</div>
-      <div class="swatch-usage">成功系チップ・バッジの背景</div>
+      <div class="swatch-hex">rgba(21,128,61,.12)</div>
+      <div class="swatch-usage">成功系バッジの地</div>
     </div>
     <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--accent-strong)"></div>
-      <div class="swatch-name">--accent-strong</div>
-      <div class="swatch-hex">#8c4f1f</div>
-      <div class="swatch-usage">開催保留・注意喚起の文字</div>
+      <div class="swatch-fill" style="background:var(--warning)"></div>
+      <div class="swatch-name">--warning</div>
+      <div class="swatch-hex">#b45309</div>
+      <div class="swatch-usage">注意・保留</div>
     </div>
     <div class="swatch-card">
-      <div class="swatch-fill" style="background:var(--accent-tint)"></div>
-      <div class="swatch-name">--accent-tint</div>
-      <div class="swatch-hex">rgba(151,114,75,.14)</div>
-      <div class="swatch-usage">注意系チップの背景</div>
+      <div class="swatch-fill" style="background:var(--warning-tint)"></div>
+      <div class="swatch-name">--warning-tint</div>
+      <div class="swatch-hex">rgba(180,83,9,.12)</div>
+      <div class="swatch-usage">注意系バッジの地</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--danger)"></div>
       <div class="swatch-name">--danger</div>
-      <div class="swatch-hex">#8a3f30</div>
-      <div class="swatch-usage">不正解表示・破壊的操作</div>
+      <div class="swatch-hex">#b91c1c</div>
+      <div class="swatch-usage">エラー・不正解</div>
     </div>
     <div class="swatch-card">
       <div class="swatch-fill" style="background:var(--danger-tint)"></div>
       <div class="swatch-name">--danger-tint</div>
-      <div class="swatch-hex">rgba(150,70,55,.12)</div>
-      <div class="swatch-usage">危険操作ボタンの背景</div>
+      <div class="swatch-hex">rgba(185,28,28,.12)</div>
+      <div class="swatch-usage">危険系バッジの地</div>
     </div>
   </div>
 
-  <div class="spec-label">配分の目安</div>
-  <div class="ratio-wrap">
-    <div class="ratio-bar">
-      <div class="ratio-seg bg">背景・面 約90%</div>
-      <div class="ratio-seg primary"></div>
-      <div class="ratio-seg accent"></div>
+  <div class="spec-label">カテゴリ6色 (固定順・テーマ分類専用)</div>
+  <div class="spec-note">順番を入れ替えたり、文字色として使ったりしない。</div>
+  <div class="swatch-grid">
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-1)"></div>
+      <div class="swatch-name">--cat-1 循環器</div>
+      <div class="swatch-hex">#2a78d6</div>
     </div>
-    <div class="ratio-legend">
-      <div><span>背景・面</span> 約9割 (--bg / --surface / --surface-muted)</div>
-      <div><span>primary</span> 1割弱 (ボタン・強調のみ)</div>
-      <div><span>accent</span> 差し色のみ (hover・一部強調)</div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-2)"></div>
+      <div class="swatch-name">--cat-2 脳神経</div>
+      <div class="swatch-hex">#1baf7a</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-3)"></div>
+      <div class="swatch-name">--cat-3 感染症</div>
+      <div class="swatch-hex">#eda100</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-4)"></div>
+      <div class="swatch-name">--cat-4 基礎レクチャー</div>
+      <div class="swatch-hex">#008300</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-5)"></div>
+      <div class="swatch-name">--cat-5 研究・認定</div>
+      <div class="swatch-hex">#4a3aa7</div>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-fill" style="background:var(--cat-6)"></div>
+      <div class="swatch-name">--cat-6 AI活用</div>
+      <div class="swatch-hex">#e34948</div>
     </div>
   </div>
 
-  <div class="spec-label">ロゴマークの色</div>
-  <div class="logo-warning">
-    <svg class="logo-chip" viewBox="0 0 96 96" aria-hidden="true">
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
-    <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
-    <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
-    <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
-    <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
-  </g>
-</svg>
-    <div class="logo-warning-body">
-      <h3>Learning Loop — 色・形・比率を固定</h3>
-      <p>循環する矢印と開いた本で、復習から実践へつながる学びを表す。foundations/brand.html の埋め込みデータをそのまま使い、旧ロゴや代替アイコンを混在させない。</p>
-      <span class="badge">形・色の改変禁止</span>
+  <div class="spec-label">進捗トラック</div>
+  <div class="spec-note">進捗バー・リングの未達部分。フィルは primary / accent を対応させる。</div>
+  <div class="swatch-grid">
+    <div class="swatch-card">
+      <div class="track-bar" style="background:var(--track-primary)">
+        <div class="track-fill" style="background:var(--primary)"></div>
+      </div>
+      <div class="swatch-name">--track-primary</div>
+      <div class="swatch-hex">#e0e7ff</div>
+      <div class="swatch-usage">primaryフィルの進捗トラック</div>
+    </div>
+    <div class="swatch-card">
+      <div class="track-bar" style="background:var(--track-accent)">
+        <div class="track-fill" style="background:var(--accent)"></div>
+      </div>
+      <div class="swatch-name">--track-accent</div>
+      <div class="swatch-hex">#cde6f5</div>
+      <div class="swatch-usage">accentフィルの進捗トラック</div>
     </div>
   </div>
 </body>

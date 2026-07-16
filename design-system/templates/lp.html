@@ -1,10 +1,10 @@
-<!-- @dsCard group="Templates" name="LPセクション" subtitle="ヒーロー/特徴/実績/CTA/フッター" width="1180" height="2600" -->
+<!-- @dsCard group="Templates" name="LPセクション" subtitle="開催案内LP: ヘッダー/ヒーロー/概要/プログラム/注意事項/フッター" width="1180" height="2200" -->
 <!--
   使い方 (AI向け):
-  - 勉強会サイトの紹介ページ・募集ページはこの縦一連を上から流用する。コンテナ最大幅は1180px。
-  - ヒーローは 0.94fr/1.06fr の左右非対称。左に文言、右に注目回カード。primary塗りボタンは1つだけ。
-  - 特徴カードは3枚、実績帯は統計タイル3連、CTAはpanel内に見出し+ボタンで締める。
-  - primary は全体の1割弱、accent は差し色のみ。装飾グラデは使わない（ロゴとサムネ地のみ例外）。
+  - 1回分の勉強会を告知するLPの型。上から順にそのまま流用する。コンテナ最大幅は1180px。
+  - ヒーローはラベル(回数チップ+テーマチップ)→h1→リード→primary塗りボタン1つのみ。CTAを2つ以上並べない。
+  - 開催概要はラベル+値の2カラム表、プログラムは時刻+項目のリスト、注意事項はnoteブロックで統一する。
+  - 単発の告知物なので免責文言は付けない（免責は教育資料・アーカイブページ専用）。個人名は「事務局」表記。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,141 +14,144 @@
 <title>LPセクション — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec; --bg-soft: #efebe2; --surface: #fffdf9; --surface-muted: #faf6ef;
-    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
-    --on-primary: #ffffff; --accent-tint: rgba(151, 114, 75, 0.14); --accent-strong: #8c4f1f;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-xl: 28px; --radius-lg: 20px; --radius-md: 16px; --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
+    --on-primary: #ffffff;
+    --accent: #0369a1;
+
+    --success: #15803d;
+    --warning: #b45309;
+    --danger: #b91c1c;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-2: 0 8px 24px rgba(16, 24, 40, 0.08);
+
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-md: 16px;
+    --fs-lg: 20px;
+    --fs-xl: 28px;
+    --fs-2xl: 40px;
+
+    /* カテゴリ6色（固定順: 1循環器 2脳神経 3感染症 4基礎レクチャー 5研究・認定 6AI活用） */
+    --cat-1: #2a78d6;
+    --cat-2: #1baf7a;
+    --cat-3: #eda100;
+    --cat-4: #008300;
+    --cat-5: #4a3aa7;
+    --cat-6: #e34948;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 24px; width: 1180px;
     font-family: var(--font-sans); color: var(--ink); background: var(--bg);
   }
-  .lp { display: grid; gap: 18px; }
+  .lp { display: grid; gap: 20px; }
   .panel {
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-xl); box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
   }
-  .eyebrow {
-    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+
+  /* ---- 共通パーツ ---- */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 14px 4px 12px; border-radius: 999px; background: var(--surface-2);
+    color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600;
   }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--muted)); flex: none; }
+  .cat-1 { --c: var(--cat-1); } .cat-2 { --c: var(--cat-2); } .cat-3 { --c: var(--cat-3); }
+  .cat-4 { --c: var(--cat-4); } .cat-5 { --c: var(--cat-5); } .cat-6 { --c: var(--cat-6); }
+  .chip-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
   .button {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 46px; padding: 0 20px; border-radius: var(--radius-pill);
-    border: 1px solid var(--line); background: transparent; color: var(--ink);
-    font-family: inherit; font-size: 0.93rem; font-weight: 700; text-decoration: none; cursor: pointer;
+    min-height: 38px; padding: 9px 20px; border: 1px solid transparent; border-radius: var(--radius-md);
+    font-family: inherit; font-size: var(--fs-sm); font-weight: 600; text-decoration: none; cursor: pointer;
   }
-  .button-primary { background: var(--primary); border-color: transparent; color: var(--on-primary); }
-  .button-ghost { background: var(--surface-muted); }
+  .button-primary { background: var(--primary); color: var(--on-primary); }
+  .button-ghost { background: var(--surface); border-color: var(--border); color: var(--ink-2); }
 
   /* ---- (a) トップバー ---- */
   .topbar {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 16px 24px;
+    display: flex; align-items: center; gap: 24px; height: 60px; padding: 0 24px;
   }
-  .lockup { display: inline-flex; align-items: center; gap: 12px; }
-  .lockup-mark { width: 44px; height: 44px; flex: none; display: block; }
-  .lockup-copy { display: grid; gap: 2px; }
-  .lockup-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
-  .lockup-name { color: var(--ink); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
-  .topnav { display: flex; align-items: center; gap: 22px; }
-  .topnav a { color: var(--muted); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
-  .topnav a:hover { color: var(--primary); }
+  .lockup { display: inline-flex; align-items: center; gap: 10px; }
+  .lockup-mark { width: 28px; height: 28px; flex: none; display: block; }
+  .lockup-name { color: var(--ink); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.01em; }
+  .topnav { display: flex; align-items: center; gap: 4px; margin-right: auto; }
+  .topnav a {
+    padding: 6px 12px; border-radius: var(--radius-md); color: var(--ink-2);
+    font-size: var(--fs-sm); font-weight: 500; text-decoration: none;
+  }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-2);
+  }
 
   /* ---- (b) ヒーロー ---- */
-  .hero { display: grid; grid-template-columns: 0.94fr 1.06fr; gap: 18px; }
-  .hero-copy { padding: 40px; }
-  .hero-copy h1 {
-    margin: 16px 0 0; font-size: clamp(2.2rem, 4.4vw, 3.4rem);
-    line-height: 1.06; letter-spacing: -0.05em; font-weight: 600;
+  .hero { border-radius: var(--radius-xl); padding: 44px; text-align: left; }
+  .hero h1 {
+    margin: 18px 0 0; font-size: 40px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; max-width: 620px;
   }
-  .lead { margin: 16px 0 0; max-width: 30rem; color: var(--muted); font-size: 1.02rem; line-height: 1.72; }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .hero-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
-  .stat-chip {
-    display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px;
-    border-radius: var(--radius-pill); background: var(--surface-muted); border: 1px solid var(--line);
-    color: var(--muted); font-size: 0.84rem;
+  .lead { margin: 16px 0 0; max-width: 42rem; color: var(--muted); font-size: var(--fs-md); line-height: 1.7; }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 20px;
+    color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600;
   }
-  .stat-chip b { color: var(--ink); font-weight: 700; margin-right: 6px; }
-
-  .hero-feature { display: grid; gap: 14px; padding: 18px; align-content: start; }
-  .feature-media {
-    position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden;
-    background:
-      linear-gradient(160deg, rgba(23, 34, 40, 0.2), rgba(23, 34, 40, 0.06)),
-      linear-gradient(135deg, #2f4d50, #7f9f99);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .feature-media::before {
-    content: ""; position: absolute; inset: 14px; border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-  .media-label { position: relative; color: rgba(255, 255, 255, 0.82); font-size: 0.82rem; letter-spacing: 0.04em; }
-  .feature-badge {
-    position: absolute; top: 16px; left: 16px; min-height: 30px; display: inline-flex; align-items: center;
-    padding: 0 12px; border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.9);
-    color: var(--accent); font-size: 0.8rem; font-weight: 700;
-  }
-  .feature-body { padding: 4px 6px 6px; }
-  .feature-meta { display: flex; flex-wrap: wrap; gap: 8px 12px; color: var(--muted); font-size: 0.84rem; }
-  .feature-body h3 { margin: 10px 0 0; font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; }
-  .feature-body p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; line-height: 1.72; }
+  .hero .button { margin-top: 28px; }
 
   /* ---- 共通セクション見出し ---- */
-  .section { padding: 40px; }
-  .section-head { max-width: 40rem; }
-  .section-head h2 { margin: 14px 0 0; font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; }
-  .section-head p { margin: 12px 0 0; color: var(--muted); line-height: 1.72; }
+  .section { padding: 32px 40px; }
+  .section-head { max-width: 42rem; }
+  .section-label { font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em; color: var(--muted); }
+  .section-head h2 { margin: 8px 0 0; font-size: var(--fs-xl); line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; }
 
-  /* ---- (c) 特徴3カード ---- */
-  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
-  .feature-card {
-    padding: 26px 22px; background: var(--surface-muted);
-    border: 1px solid var(--line); border-radius: var(--radius-lg);
-  }
-  .feature-tag {
-    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .feature-card h3 { margin: 16px 0 0; font-size: 1.2rem; line-height: 1.3; letter-spacing: -0.03em; }
-  .feature-card p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; line-height: 1.72; }
+  /* ---- (c) 開催概要 ---- */
+  .overview-table { margin-top: 20px; display: grid; grid-template-columns: 120px 1fr; gap: 14px 16px; }
+  .ov-key { color: var(--muted); font-size: var(--fs-sm); font-weight: 700; }
+  .ov-val { color: var(--ink); font-size: var(--fs-md); line-height: 1.6; }
 
-  /* ---- (d) 実績・統計帯 ---- */
-  .stats-band { padding: 40px; }
-  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
-  .stat-tile {
-    padding: 26px 22px; background: var(--surface-muted);
-    border: 1px solid var(--line); border-radius: var(--radius-lg);
+  /* ---- (d) プログラム ---- */
+  .program-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; }
+  .program-list li {
+    display: grid; grid-template-columns: 128px 1fr; gap: 16px; padding: 14px 0;
+    border-top: 1px solid var(--border);
   }
-  .stat-num { font-size: 1.9rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); }
-  .stat-num small { font-size: 1rem; font-weight: 700; margin-left: 4px; }
-  .stat-label { margin-top: 8px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+  .program-list li:last-child { padding-bottom: 0; }
+  .program-time { color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .program-title { color: var(--ink); font-size: var(--fs-md); font-weight: 700; letter-spacing: 0.01em; }
+  .program-sub { margin-top: 4px; color: var(--muted); font-size: var(--fs-sm); line-height: 1.6; }
 
-  /* ---- (e) CTA ---- */
-  .cta { padding: 44px; text-align: center; }
-  .cta h2 { margin: 14px auto 0; max-width: 24ch; font-size: 1.64rem; line-height: 1.24; letter-spacing: -0.03em; }
-  .cta p { margin: 12px auto 0; max-width: 34rem; color: var(--muted); line-height: 1.72; }
-  .cta-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  /* ---- (e) 注意事項 ---- */
+  .note-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .note-list li {
+    padding: 14px 18px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-md); color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.6;
+  }
 
   /* ---- (f) フッター ---- */
   .site-footer {
     display: grid; grid-template-columns: minmax(0, 1.3fr) auto; gap: 12px 18px;
     padding: 22px 28px; align-items: center;
   }
-  .site-footer-copy { color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
-  .site-footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
-  .site-footer-link {
-    color: var(--primary); font-size: 0.88rem; font-weight: 600; text-decoration: underline;
-    text-decoration-color: rgba(54, 90, 92, 0.28); text-underline-offset: 0.18em;
-  }
-  .site-footer-link:hover { color: var(--accent); }
+  .site-footer-copy { color: var(--muted); font-size: var(--fs-sm); line-height: 1.6; }
+  .site-footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 16px; }
+  .site-footer-link { color: var(--primary); font-size: var(--fs-sm); font-weight: 600; text-decoration: underline; text-underline-offset: 0.18em; }
 </style>
 </head>
 <body>
@@ -157,126 +160,97 @@
     <!-- (a) トップバー -->
     <header class="panel topbar">
       <div class="lockup">
-        <svg class="lockup-mark" viewBox="0 0 96 96" aria-hidden="true">
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="#365a5c" stroke-width="3.6" d="M20 40A29 29 0 0 1 66 17" />
-    <path fill="#365a5c" stroke="none" d="m65 10 16 8-16 8z" />
-    <circle cx="48" cy="40" r="23" stroke="#97724b" stroke-width="2" />
-    <path stroke="#24343b" stroke-width="4" d="m38 52 10-27 10 27M42 43.5h12" />
-    <path stroke="#365a5c" stroke-width="3.2" d="M27 65c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4M27 65v11c7-3.6 14-2.5 21 2.4 7-4.9 14-6 21-2.4V65M48 67.4v11" />
-  </g>
-</svg>
-        <span class="lockup-copy">
-          <span class="lockup-label">Clinical Academic WG</span>
-          <span class="lockup-name">臨床学術ワーキンググループ</span>
-        </span>
+        <svg class="lockup-mark" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="#4f46e5"/><path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="lockup-name">臨床学術WG</span>
       </div>
       <nav class="topnav">
         <a href="#">アーカイブ</a>
         <a href="#">学習コース</a>
-        <a href="#">開催予定</a>
-        <a class="button button-ghost" href="#">参加方法</a>
+        <a href="#">カレンダー</a>
       </nav>
+      <button type="button" class="icon-btn" aria-label="ライト/ダークテーマを切り替え">
+        <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true"><path d="M17 12.6A7.6 7.6 0 0 1 7.4 3 7.6 7.6 0 1 0 17 12.6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </button>
     </header>
 
     <!-- (b) ヒーロー -->
-    <section class="hero">
-      <div class="panel hero-copy">
-        <span class="eyebrow">臨床 × 学術のアーカイブ</span>
-        <h1>必要な勉強会に、<br>すぐ届く。</h1>
-        <p class="lead">薬剤師・医療従事者の勉強会を、テーマ別に整理して公開しています。録画と資料をまとめて残すので、参加できなかった回も短時間でたどり着けます。</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#">アーカイブを見る</a>
-          <a class="button button-ghost" href="#">参加方法を確認</a>
-        </div>
-        <div class="hero-stats">
-          <span class="stat-chip"><b>64回</b>開催アーカイブ</span>
-          <span class="stat-chip"><b>6領域</b>テーマ分類</span>
-          <span class="stat-chip"><b>月2回</b>ハイブリッド開催</span>
-        </div>
+    <section class="panel hero">
+      <div class="chip-row">
+        <span class="chip">第65回 勉強会</span>
+        <span class="chip"><span class="dot cat-2"></span>脳神経</span>
       </div>
-      <div class="panel hero-feature">
-        <div class="feature-media">
-          <span class="feature-badge">注目の回</span>
-          <span class="media-label">写真: 勉強会の様子</span>
-        </div>
-        <div class="feature-body">
-          <div class="feature-meta">
-            <span>2026-07-18</span>
-            <span>循環器</span>
-            <span>録画 90分</span>
-          </div>
-          <h3>抗凝固療法の実践ポイント</h3>
-          <p>出血リスクと血栓リスクの対比から、薬剤選択とモニタリングの観点までを整理した回です。</p>
-        </div>
+      <h1>パーキンソン病治療薬の使い分け</h1>
+      <p class="lead">診断後の薬剤選択と、経過に応じた調整の考え方を整理します。薬剤師・医療従事者の方はどなたでもご参加いただけます。</p>
+      <div class="hero-meta">
+        <span>2026-08-01（土）14:00–15:30</span>
+        <span>ハイブリッド開催（会場・オンライン）</span>
       </div>
+      <a class="button button-primary" href="#">参加を申し込む</a>
     </section>
 
-    <!-- (c) 特徴3カード -->
+    <!-- (c) 開催概要 -->
     <section class="panel section">
       <div class="section-head">
-        <span class="eyebrow">できること</span>
-        <h2>参加できなかった回も、あとから追いつける</h2>
-        <p>忙しい臨床現場でも学びを止めないための、3つの仕組みを用意しています。</p>
+        <p class="section-label">開催概要</p>
+        <h2>日時・形式・参加方法</h2>
       </div>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <span class="feature-tag">Archive</span>
-          <h3>テーマ別に整理</h3>
-          <p>循環器・脳神経・感染症などの領域で分類し、必要な回にすぐたどり着けます。</p>
-        </div>
-        <div class="feature-card">
-          <span class="feature-tag">Library</span>
-          <h3>録画・資料を保存</h3>
-          <p>当日の録画とスライドをまとめて公開。見返しながら復習できます。</p>
-        </div>
-        <div class="feature-card">
-          <span class="feature-tag">Hybrid</span>
-          <h3>月2回ハイブリッド</h3>
-          <p>会場とオンラインの両方で定例開催。都合に合わせて参加できます。</p>
-        </div>
+      <div class="overview-table">
+        <div class="ov-key">日時</div>
+        <div class="ov-val">2026-08-01（土）14:00–15:30（受付 13:45〜）</div>
+        <div class="ov-key">形式</div>
+        <div class="ov-val">ハイブリッド開催（会場参加／オンライン参加を選択）</div>
+        <div class="ov-key">対象</div>
+        <div class="ov-val">薬剤師・医療従事者、および学びを深めたい関係職種</div>
+        <div class="ov-key">参加費</div>
+        <div class="ov-val">無料（事前申込制）</div>
       </div>
     </section>
 
-    <!-- (d) 実績・統計帯 -->
-    <section class="panel stats-band">
+    <!-- (d) プログラム -->
+    <section class="panel section">
       <div class="section-head">
-        <span class="eyebrow">これまでの活動</span>
-        <h2>積み重ねてきたアーカイブ</h2>
+        <p class="section-label">プログラム</p>
+        <h2>当日の進行</h2>
       </div>
-      <div class="stat-grid">
-        <div class="stat-tile">
-          <div class="stat-num">64<small>回</small></div>
-          <div class="stat-label">2024年以降の開催回数</div>
-        </div>
-        <div class="stat-tile">
-          <div class="stat-num">6<small>領域</small></div>
-          <div class="stat-label">循環器・脳神経・感染症ほか</div>
-        </div>
-        <div class="stat-tile">
-          <div class="stat-num">2<small>回/月</small></div>
-          <div class="stat-label">ハイブリッド定例のペース</div>
-        </div>
-      </div>
+      <ul class="program-list">
+        <li>
+          <span class="program-time">14:00–14:05</span>
+          <div><p class="program-title">開会挨拶</p><p class="program-sub">事務局より、開催概要と当日の進行を案内します。</p></div>
+        </li>
+        <li>
+          <span class="program-time">14:05–14:45</span>
+          <div><p class="program-title">講義：薬剤選択の枠組みと経過別の調整</p></div>
+        </li>
+        <li>
+          <span class="program-time">14:45–15:15</span>
+          <div><p class="program-title">症例検討（架空例）</p><p class="program-sub">匿名化した架空例をもとに、判断の観点を整理します。</p></div>
+        </li>
+        <li>
+          <span class="program-time">15:15–15:30</span>
+          <div><p class="program-title">質疑応答</p></div>
+        </li>
+      </ul>
     </section>
 
-    <!-- (e) CTA -->
-    <section class="panel cta">
-      <span class="eyebrow">はじめての方へ</span>
-      <h2>次の勉強会から、一緒に学びませんか</h2>
-      <p>参加は無料です。開催予定を確認し、当日はハイブリッドのどちらからでもご参加いただけます。</p>
-      <div class="cta-actions">
-        <a class="button button-primary" href="#">開催予定を見る</a>
-        <a class="button button-ghost" href="#">アーカイブを見る</a>
+    <!-- (e) 注意事項 -->
+    <section class="panel section">
+      <div class="section-head">
+        <p class="section-label">注意事項</p>
+        <h2>参加にあたって</h2>
       </div>
+      <ul class="note-list">
+        <li>定員に達し次第、受付を締め切ります。お早めにお申し込みください。</li>
+        <li>当日の録画・資料は、開催後にアーカイブページへ掲載します。</li>
+        <li>ご不明な点は、開催予定ページに記載の事務局連絡先までお問い合わせください。</li>
+      </ul>
     </section>
 
     <!-- (f) フッター -->
     <footer class="panel site-footer">
-      <p class="site-footer-copy">臨床学術ワーキンググループ ／ Clinical Academic Working Group<br>本アーカイブは個別診療の判断を代替するものではありません。</p>
+      <p class="site-footer-copy">臨床学術ワーキンググループ ／ Clinical Academic Working Group<br>掲載内容は開催案内の公開時点の情報です。</p>
       <div class="site-footer-links">
+        <a class="site-footer-link" href="#">開催予定</a>
         <a class="site-footer-link" href="#">アーカイブ</a>
-        <a class="site-footer-link" href="#">学習コース</a>
         <a class="site-footer-link" href="#">お問い合わせ</a>
       </div>
     </footer>

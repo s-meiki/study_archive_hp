@@ -1,44 +1,109 @@
 /*
  * 臨床学術ワーキンググループ — デザイントークン (単一の正)
- * 出典: public/assets/styles.css の :root (コア) + サイト実装で頻出する値の正規化 (拡張)
+ * 出典: app/globals.css の :root (コア・ライトテーマ) ＝ 案A「クリニカル・モダン」
+ *       (契約: mockups/DESIGN_BRIEF.md、選定モック: mockups/home-a.html)
  * 他ブランドへ転用する場合はこのファイルの値だけを差し替える。
  * プレビューHTML群は自己完結のため同じ値をインラインで持つ。値を変えたら
  * README.md の「トークン差し替え手順」に従って全プレビューへ反映すること。
  */
 :root {
   /* ===== コア (サイト本体と同値・変更禁止) ===== */
-  --bg: #f6f3ec;                 /* ページ背景: 暖色オフホワイト */
-  --bg-soft: #efebe2;            /* 背景ソフト */
-  --surface: #fffdf9;            /* カード面 */
-  --surface-muted: #faf6ef;      /* 沈めた面・入力欄背景 */
-  --ink: #24343b;                /* 本文・見出し: ダークティール寄りチャコール */
-  --muted: #6b7b82;              /* 補助テキスト */
-  --line: rgba(36, 52, 59, 0.1); /* 標準ボーダー */
-  --primary: #365a5c;            /* ブランド主色: ディープティール */
-  --primary-soft: #e5efee;       /* 主色の淡色面 (バッジ・強調背景) */
-  --accent: #97724b;             /* アクセント: ブラウン */
-  --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-  --radius-xl: 28px;             /* パネル */
-  --radius-lg: 20px;             /* カード */
-  --radius-md: 16px;             /* カード内要素 */
-  --max-width: 1180px;
+  --bg: #f5f7fb;                 /* ページ背景: クールなオフホワイト */
+  --surface: #ffffff;            /* カード・パネル面 */
+  --surface-2: #eef2f8;          /* 沈めた面・入力欄背景・ホバー */
+  --ink: #0f172a;                /* 見出し・本文 */
+  --ink-2: #475569;              /* 準本文・ナビ・ボタン文字 */
+  --muted: #64748b;              /* キャプション・メタ情報 */
+  --border: #e3e8f0;             /* 1px精密ボーダー */
 
-  /* ===== 拡張 (サイト実装に散在する値の正規化) ===== */
-  --on-primary: #ffffff;                       /* primary面上の文字 */
-  --primary-tint: rgba(54, 90, 92, 0.12);      /* 主色の淡いフィル (進捗バー地など) */
-  --primary-tint-strong: rgba(54, 90, 92, 0.18);
-  --accent-strong: #8c4f1f;                    /* 茶系チップの文字色 */
-  --accent-tint: rgba(151, 114, 75, 0.14);     /* 茶系チップの背景 */
-  --danger: #8a3f30;                           /* 不正解・危険操作 */
-  --danger-tint: rgba(150, 70, 55, 0.12);
-  --success: #2d6c45;                          /* 登録・正解系の緑 */
-  --success-tint: rgba(56, 118, 78, 0.14);
-  --radius-pill: 999px;                        /* ボタン・チップ・入力欄 */
-  --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+  --primary: #4f46e5;            /* ブランド主色: インディゴ */
+  --primary-strong: #4338ca;     /* 主色ホバー・強調 */
+  --on-primary: #ffffff;         /* primary塗り面上の文字 */
+  --accent: #0369a1;             /* 副次アクセント: スカイブルー。多用しない */
 
-  /* ロゴマーク (Learning Loop)
-     循環する矢印と開いた本を組み合わせ、復習から実践へつながる学びを表す。
-     サイト実体は public/images/brand-mark.svg。色・形・比率は改変しない。
-     プレビューHTMLでは自己完結のため、同じマークの縮小PNGを base64 で埋め込む
-     (foundations/brand.html が正)。 */
+  --success: #15803d;            /* 完了・正解 */
+  --warning: #b45309;            /* 注意・保留 */
+  --danger: #b91c1c;             /* エラー・不正解 */
+
+  --radius-sm: 6px;              /* タブ内要素・フォーカスリング */
+  --radius-md: 10px;             /* ボタン・入力欄・ナビ項目 */
+  --radius-lg: 14px;             /* カード・パネル */
+  --radius-xl: 20px;             /* 大型パネル・ヒーロー */
+
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);   /* カード基本 */
+  --shadow-2: 0 8px 24px rgba(16, 24, 40, 0.08);  /* 浮遊面 (メニュー等) */
+
+  --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+
+  /* タイプスケール */
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 28px;
+  --fs-2xl: 40px;
+
+  /* カテゴリ6色 (固定順: 1循環器 2脳神経 3感染症 4基礎レクチャー 5研究・認定 6AI活用)
+     dataviz validate_palette.js --mode light --surface #ffffff 合格 */
+  --cat-1: #2a78d6;
+  --cat-2: #1baf7a;
+  --cat-3: #eda100;
+  --cat-4: #008300;
+  --cat-5: #4a3aa7;
+  --cat-6: #e34948;
+
+  /* 進捗トラック (未達部分。同一色相の明るいステップ) */
+  --track-primary: #e0e7ff;
+  --track-accent: #cde6f5;
+
+  /* ===== 拡張 (プレビュー自己完結用の派生値) ===== */
+  --max-width: 1200px;                              /* .wrap のコンテナ幅 */
+  --success-tint: rgba(21, 128, 61, 0.12);          /* statusバッジ地 (color-mix 12% 相当) */
+  --warning-tint: rgba(180, 83, 9, 0.12);
+  --danger-tint: rgba(185, 28, 28, 0.12);
+
+  /* ロゴマーク (パルス波形)
+     角丸スクエア (rx=7/28) の primary塗りに、白のパルス波形ライン (stroke 2/28)。
+     学びの継続的なリズム・臨床のバイタルサインを表す。
+     サイト実体は public/images/logo.svg (ヘッダーは app/components/app-header.tsx に同一パス)。
+     SVGパス: <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary)"/>
+              <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="var(--on-primary)"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> (viewBox 0 0 28 28)
+     色・形・比率は改変しない。プレビューHTMLには同じインラインSVGを複製する。 */
+}
+
+/* ===== ダークテーマ (参考値・サイト本体と同値)
+   プレビューHTMLはライト固定で描画する。Claude Design 成果物でダーク面が
+   必要な場合のみ、この値を使う (自動反転や独自のダーク値を発明しない)。 ===== */
+:root[data-theme="dark"] {
+  --bg: #0b0f1d;
+  --surface: #121829;
+  --surface-2: #1a2138;
+  --ink: #edf0f9;
+  --ink-2: #c3cadb;
+  --muted: #8b94a8;
+  --border: #262f49;
+
+  --primary: #818cf8;
+  --primary-strong: #a5b4fc;
+  --on-primary: #101433;
+  --accent: #38bdf8;
+
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  /* validate_palette.js --mode dark --surface #121829 合格 */
+  --cat-1: #3987e5;
+  --cat-2: #199e70;
+  --cat-3: #c98500;
+  --cat-4: #008300;
+  --cat-5: #9085e9;
+  --cat-6: #e66767;
+
+  --track-primary: #323c6b;
+  --track-accent: #1c3b52;
 }

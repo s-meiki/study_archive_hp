@@ -1,10 +1,9 @@
-<!-- @dsCard group="Components" name="統計・進捗" subtitle="統計タイル/進捗バー/ストリーク" width="900" height="640" -->
+<!-- @dsCard group="Components" name="統計・進捗" subtitle="統計タイル/進捗バー(メーター・セグメント)/進捗リング" width="900" height="640" -->
 <!--
   使い方 (AI向け):
-  - 統計タイルは「数値1.9rem/800 + 下にmutedの説明」を3列グリッドで並べるのが基本形。単体使用も可。
-  - 進捗バーは常にラベル(件数)+パーセントをバーの上に添える。バー単体で置かない。
-  - ストリークの曜日ドットは達成=primary塗り、未達=primary-tintの2値のみ。中間色を作らない。
-  - 獲得バッジカードは未獲得を色替えせず grayscale(1)+opacity .62 で表現する (新しい「無効色」を作らない)。
+  - 統計タイルは「12px/600/+0.06em muted ラベル → 28px/700 tabular 数値(+単位14px ink-2) → 12px muted 補足」の固定順。数値は必ず tabular-nums。
+  - 進捗バーはメーター型(高さ6px・連続値)とセグメント型(nブロック・2pxギャップ)の2種。地は track-primary、フィルは primary (補助メーターのみ accent 可)。
+  - 進捗リングは44px・ストローク4・丸端。0進捗時は弧を描かない(stroke-linecapのドット化を避ける)。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,158 +13,135 @@
 <title>統計・進捗 — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --surface: #fffdf9;
-    --surface-muted: #faf6ef;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
-    --primary-soft: #e5efee;
-    --primary-tint: rgba(54, 90, 92, 0.12);
-    --on-primary: #ffffff;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-xl: 28px;
-    --radius-lg: 20px;
-    --radius-md: 16px;
-    --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --accent: #0369a1;
+    --radius-lg: 14px;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-xl: 28px;
+    --track-primary: #e0e7ff;
+    --track-accent: #cde6f5;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 28px; font-family: var(--font-sans);
-    color: var(--ink); background: var(--bg);
+    color: var(--ink); background: #f5f7fb;
   }
-  .spec-block + .spec-label { margin-top: 28px; }
   .spec-label {
-    margin: 0 0 12px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 12px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
+  .spec-block + .spec-block { margin-top: 28px; }
 
-  /* ===== 統計タイル ===== */
-  .learn-summary-grid {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+  /* ===== 統計タイル (app/ui/stat.module.css を忠実に移植) ===== */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 640px; }
+  .stat {
+    display: flex; flex-direction: column; gap: 2px; padding: 16px 18px;
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    background: var(--surface); box-shadow: var(--shadow-1);
   }
-  .learn-summary-item {
-    display: grid; gap: 4px; padding: 18px; border: 1px solid var(--line);
-    border-radius: var(--radius-md); background: var(--surface-muted); text-align: center;
+  .stat-label { color: var(--muted); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em; }
+  .stat-value {
+    color: var(--ink); font-size: var(--fs-xl); font-weight: 700;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.01em; line-height: 1.25;
   }
-  .learn-summary-value { color: var(--primary); font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
-  .learn-summary-label { color: var(--muted); font-size: 0.84rem; }
+  .stat-unit { margin-left: 2px; color: var(--ink-2); font-size: var(--fs-sm); font-weight: 600; }
+  .stat-slot { margin: 8px 0 4px; }
+  .stat-foot { color: var(--muted); font-size: var(--fs-xs); }
 
-  /* ===== 進捗バー ===== */
-  .progress-demo-stack { display: grid; gap: 16px; max-width: 420px; }
-  .learn-course-progress { display: grid; gap: 6px; }
-  .learn-course-progress-head {
+  /* ===== 進捗バー (app/ui/progress-bar.module.css を忠実に移植) ===== */
+  .bar-stack { display: grid; gap: 16px; max-width: 420px; }
+  .bar-head {
     display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
-    color: var(--muted); font-size: 0.82rem;
+    margin-bottom: 6px; color: var(--muted); font-size: var(--fs-xs);
   }
-  .learn-course-progress-count { color: var(--ink); font-weight: 700; }
-  .learn-course-progress-rate { color: var(--primary); font-weight: 800; }
-  .learn-progress-bar { width: 100%; height: 10px; border-radius: var(--radius-pill); background: var(--primary-tint); overflow: hidden; }
-  .learn-progress-bar-fill { height: 100%; min-width: 4px; border-radius: inherit; background: var(--primary); }
+  .bar-head strong { color: var(--ink); font-weight: 700; }
+  .meter { height: 6px; border-radius: 3px; background: var(--track-primary); overflow: hidden; }
+  .meter.accent { background: var(--track-accent); }
+  .meter-fill { display: block; height: 100%; border-radius: 3px; background: var(--primary); }
+  .meter.accent .meter-fill { background: var(--accent); }
+  .segments { display: grid; gap: 2px; }
+  .segments > span { height: 6px; background: var(--track-primary); }
+  .segments > span:first-child { border-radius: 3px 0 0 3px; }
+  .segments > span:last-child { border-radius: 0 3px 3px 0; }
+  .segments > span.done { background: var(--primary); }
 
-  /* ===== ストリーク表示 ===== */
-  .panel {
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-xl); box-shadow: var(--shadow);
-  }
-  .learn-streak { padding: 20px 28px; display: grid; gap: 14px; max-width: 480px; }
-  .learn-streak-copy { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
-  .learn-streak-value { color: var(--primary); font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; }
-  .streak-dots { display: flex; gap: 8px; }
-  .streak-dot {
-    display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
-    border-radius: var(--radius-pill); background: var(--primary-tint); color: var(--primary);
-    font-size: 0.72rem; font-weight: 700;
-  }
-  .streak-dot.is-done { background: var(--primary); color: var(--on-primary); }
-
-  /* ===== 獲得バッジカード ===== */
-  .learn-badge-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px;
-    margin: 0; padding: 0; list-style: none;
-  }
-  .learn-badge-card {
-    display: grid; gap: 6px; padding: 16px 18px; border: 1px solid var(--line);
-    border-radius: var(--radius-md); background: var(--surface-muted);
-  }
-  .learn-badge-card--locked { background: var(--surface); filter: grayscale(1); opacity: 0.62; }
-  .learn-badge-title { color: var(--ink); font-weight: 700; line-height: 1.5; }
-  .learn-badge-card--locked .learn-badge-title { color: var(--muted); }
-  .learn-badge-desc { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
-  .learn-badge-date { color: var(--primary); font-size: 0.78rem; font-weight: 700; }
+  /* ===== 進捗リング (app/ui/progress-ring.module.css を忠実に移植) ===== */
+  .ring-row { display: flex; gap: 24px; align-items: center; }
+  .ring { flex: none; width: 44px; height: 44px; }
+  .ring-track { fill: none; stroke: var(--track-primary); stroke-width: 4; }
+  .ring-fill { fill: none; stroke: var(--primary); stroke-width: 4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 22px 22px; }
+  .ring-value { fill: var(--ink); font-family: var(--font-sans); font-size: 11px; font-weight: 600; }
 </style>
 </head>
 <body>
 
   <div class="spec-block">
-    <div class="spec-label">統計タイル (.learn-summary-item) — 数値1.9rem/800 + muted説明。3列グリッドが基本形。</div>
-    <div class="learn-summary-grid">
-      <div class="learn-summary-item">
-        <span class="learn-summary-value">64</span>
-        <span class="learn-summary-label">開催回数</span>
+    <p class="spec-label">統計タイル (.stat) — label → value(+unit) → 任意スロット → foot の固定順</p>
+    <div class="stat-grid">
+      <div class="stat">
+        <span class="stat-label">開催回数</span>
+        <span class="stat-value tabular-nums">64<span class="stat-unit">回</span></span>
+        <span class="stat-foot">2020年開始</span>
       </div>
-      <div class="learn-summary-item">
-        <span class="learn-summary-value">52</span>
-        <span class="learn-summary-label">公開アーカイブ</span>
-      </div>
-      <div class="learn-summary-item">
-        <span class="learn-summary-value">6</span>
-        <span class="learn-summary-label">テーマ分類</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="spec-block">
-    <div class="spec-label">進捗バー (.learn-progress-bar) — 高さ10px、地=primary-tint、フィル=primary。ラベル+パーセント併記。</div>
-    <div class="progress-demo-stack">
-      <div class="learn-course-progress">
-        <div class="learn-course-progress-head">
-          <span class="learn-course-progress-count">3/8 レッスン完了</span>
-          <span class="learn-course-progress-rate">38%</span>
+      <div class="stat">
+        <span class="stat-label">公開アーカイブ</span>
+        <span class="stat-value tabular-nums">52<span class="stat-unit">件</span></span>
+        <div class="stat-slot">
+          <div class="meter accent" role="progressbar" aria-valuemin="0" aria-valuemax="64" aria-valuenow="52">
+            <span class="meter-fill" style="width: 81%;"></span>
+          </div>
         </div>
-        <div class="learn-progress-bar"><div class="learn-progress-bar-fill" style="width: 38%;"></div></div>
+        <span class="stat-foot">全64回中</span>
       </div>
-      <div class="learn-course-progress">
-        <div class="learn-course-progress-head">
-          <span class="learn-course-progress-count">7/8 レッスン完了</span>
-          <span class="learn-course-progress-rate">88%</span>
+      <div class="stat">
+        <span class="stat-label">テーマ分類</span>
+        <span class="stat-value tabular-nums">6</span>
+        <span class="stat-foot">固定6分類</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spec-block">
+    <p class="spec-label">進捗バー — メーター型(連続値・高さ6px)とセグメント型(nブロック・2pxギャップ)</p>
+    <div class="bar-stack">
+      <div>
+        <div class="bar-head"><strong>7/8 レッスン完了</strong><span>88%</span></div>
+        <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="7">
+          <span class="meter-fill" style="width: 88%;"></span>
         </div>
-        <div class="learn-progress-bar"><div class="learn-progress-bar-fill" style="width: 88%;"></div></div>
+      </div>
+      <div>
+        <div class="bar-head"><strong>3/8 レッスン完了</strong><span>38%</span></div>
+        <div class="segments" style="grid-template-columns: repeat(8, 1fr);" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="3">
+          <span class="done"></span><span class="done"></span><span class="done"></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="spec-block">
-    <div class="spec-label">ストリーク表示 (.learn-streak) — 連続日数を強調し、曜日ドットで達成/未達を可視化。</div>
-    <div class="panel learn-streak">
-      <p class="learn-streak-copy">今週も学習を継続しています。<br><span class="learn-streak-value">連続学習 12日</span></p>
-      <div class="streak-dots">
-        <span class="streak-dot is-done">月</span>
-        <span class="streak-dot is-done">火</span>
-        <span class="streak-dot is-done">水</span>
-        <span class="streak-dot is-done">木</span>
-        <span class="streak-dot is-done">金</span>
-        <span class="streak-dot">土</span>
-        <span class="streak-dot">日</span>
-      </div>
+    <p class="spec-label">進捗リング (44px・ストローク4・丸端)</p>
+    <div class="ring-row">
+      <svg class="ring" viewBox="0 0 44 44" role="img" aria-label="進捗 6/8">
+        <circle class="ring-track" cx="22" cy="22" r="18"/>
+        <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="84.8 113.1"/>
+        <text class="ring-value" x="22" y="26" text-anchor="middle">6/8</text>
+      </svg>
+      <svg class="ring" viewBox="0 0 44 44" role="img" aria-label="進捗 8/8">
+        <circle class="ring-track" cx="22" cy="22" r="18"/>
+        <circle class="ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1 113.1"/>
+        <text class="ring-value" x="22" y="26" text-anchor="middle">8/8</text>
+      </svg>
     </div>
-  </div>
-
-  <div class="spec-block">
-    <div class="spec-label">獲得バッジカード (.learn-badge-card) — 未獲得は grayscale(1) + opacity .62 で通常表示と対比。</div>
-    <ul class="learn-badge-grid">
-      <li class="learn-badge-card">
-        <span class="learn-badge-title">7日連続学習</span>
-        <p class="learn-badge-desc">1週間続けて学習を記録しました。</p>
-        <span class="learn-badge-date">2026-06-30 達成</span>
-      </li>
-      <li class="learn-badge-card learn-badge-card--locked">
-        <span class="learn-badge-title">30日連続学習</span>
-        <p class="learn-badge-desc">30日間の継続学習で獲得できます。</p>
-      </li>
-    </ul>
   </div>
 
 </body>

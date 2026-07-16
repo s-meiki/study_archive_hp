@@ -1,249 +1,137 @@
-<!-- @dsCard group="Components" name="フォーム・検索" subtitle="入力/セレクト/検索フィルタ" width="1000" height="720" -->
+<!-- @dsCard group="Components" name="フォーム" subtitle="入力欄/必須マーク/ボット判定枠/送信結果" width="640" height="820" -->
 <!--
   使い方 (AI向け):
-  - 検索フィルタ列はアーカイブ一覧などの絞り込みUI。キーワード欄を最も広く(1.4fr)取り、セレクトは横並び。
-  - フォームは問い合わせ等の入力UI。必須項目には赤(#c0302b)の「**」を付け、送信ボタンはprimary1つだけ。
-  - クイズ選択肢は採点前がsurface-muted地の中立表示、採点後に正解=緑系、選択した誤答=赤系で結果を示す。
+  - app/contact/contact-form.tsx とそのCSSからの忠実な移植。ラベル横の赤い「**」が必須マークの正式仕様(視覚的には規約外に見えるがサイト実装が正)。
+  - placeholderは実装のまま流用する: お名前は「例: 山田 太郎」、メールは「example@example.com」。
+  - ボット判定枠は外部ウィジェット(Cloudflare Turnstile)の読み込み位置を示すプレースホルダーで、実際のウィジェットは埋め込まない。
+  - 送信結果は成功(success-tint)/エラー(danger-tint)の2状態のみ。中間状態(警告色)は作らない。
 -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>フォーム・検索 — 臨床学術WG Design System</title>
+<title>フォーム — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --surface: #fffdf9;
-    --surface-muted: #faf6ef;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
     --on-primary: #ffffff;
-    --success: #2d6c45;
-    --success-tint: rgba(56, 118, 78, 0.14);
-    --danger: #8a3f30;
-    --danger-tint: rgba(150, 70, 55, 0.12);
-    --radius-xl: 28px;
-    --radius-lg: 20px;
-    --radius-md: 16px;
-    --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --danger: #b91c1c;
+    --success-tint: rgba(21, 128, 61, 0.12);
+    --danger-tint: rgba(185, 28, 28, 0.12);
+    --success: #15803d;
+    --radius-md: 10px;
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 28px; font-family: var(--font-sans);
-    color: var(--ink); background: var(--bg);
+    color: var(--ink); background: #f5f7fb;
   }
   .spec-label {
-    margin: 0 0 10px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 10px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
-  .spec-block + .spec-block { margin-top: 26px; }
-  .panel {
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-  }
-
-  /* ===== (a) 検索フィルタ列 (public/assets/styles.css .controls を再現) ===== */
-  .controls {
-    display: grid;
-    grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(120px, 0.4fr));
-    gap: 10px;
-    align-items: center;
-    padding: 14px;
-  }
-  .search-field, .select-field { display: block; }
-  .search-field input, .select-field select {
-    width: 100%;
-    min-height: 44px;
-    padding: 0 14px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--line);
-    background: var(--surface-muted);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 0.9rem;
-  }
-  .search-field input::placeholder { color: var(--muted); }
+  .spec-block + .spec-block { margin-top: 22px; }
   .visually-hidden {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
 
-  /* ===== (b) フォーム ===== */
-  .form-panel { padding: 28px; }
-  .form-grid { display: grid; gap: 16px; max-width: 560px; }
-  .form-field { display: grid; gap: 8px; }
-  .form-field-label {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 0.78rem; font-weight: 700; color: var(--ink);
+  /* ===== フォーム (app/contact/contact-form.module.css を忠実に移植) ===== */
+  .form { display: flex; flex-direction: column; gap: 18px; max-width: 480px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); font-size: var(--fs-sm); font-weight: 600; }
+  .required-badge { color: var(--danger); font-weight: 700; }
+  .field input, .field textarea {
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--surface); color: var(--ink); font-family: inherit; font-size: var(--fs-sm);
   }
-  .required-badge {
-    display: inline-flex; align-items: center;
-    color: #c0302b; font-size: 0.95rem; font-weight: 800;
-    letter-spacing: 0.08em; line-height: 1;
+  .field textarea { min-height: 140px; resize: vertical; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+
+  .turnstile { display: flex; flex-direction: column; gap: 8px; }
+  .turnstile > span { color: var(--muted); font-size: var(--fs-xs); font-weight: 600; }
+  .turnstile-shell {
+    display: flex; align-items: center; justify-content: center; min-height: 66px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-2);
+    color: var(--muted); font-size: var(--fs-xs);
   }
-  .form-field input[type="text"],
-  .form-field input[type="email"] {
-    width: 100%; min-height: 50px; padding: 0 16px;
-    border: 1px solid var(--line); border-radius: var(--radius-lg);
-    background: var(--surface-muted); color: var(--ink);
-    font-family: inherit; font-size: 0.92rem;
-  }
-  .form-field textarea {
-    width: 100%; min-height: 140px; padding: 16px;
-    border: 1px solid var(--line); border-radius: var(--radius-md);
-    background: var(--surface-muted); color: var(--ink);
-    font-family: inherit; font-size: 0.92rem; line-height: 1.7; resize: vertical;
-  }
-  .form-field input::placeholder, .form-field textarea::placeholder { color: var(--muted); }
-  .form-actions { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
-  .btn {
+
+  .feedback { padding: 10px 14px; border-radius: var(--radius-md); font-size: var(--fs-sm); font-weight: 600; }
+  .feedback-success { background: var(--success-tint); color: var(--success); }
+  .feedback-error { background: var(--danger-tint); color: var(--danger); }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .helper-note { color: var(--muted); font-size: var(--fs-xs); }
+
+  .button {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 46px; padding: 0 18px; border-radius: var(--radius-pill);
-    border: 1px solid var(--line); background: transparent; color: var(--ink);
-    font-family: inherit; font-size: 0.93rem; font-weight: 700; cursor: pointer;
+    padding: 9px 16px; border: 1px solid transparent; border-radius: var(--radius-md);
+    background: var(--primary); color: var(--on-primary); font-family: inherit;
+    font-size: var(--fs-sm); font-weight: 600; line-height: 1.4; cursor: pointer;
   }
-  .btn-primary { background: var(--primary); border-color: transparent; color: var(--on-primary); }
-  .form-note { color: var(--muted); font-size: 0.86rem; }
-
-  /* ===== (c) クイズ選択肢 (app/globals.css .learn-quiz-choice 系を再現) ===== */
-  .quiz-panel { padding: 28px; }
-  .quiz-prompt {
-    margin: 0 0 14px;
-    font-size: 0.98rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .quiz-choices { display: grid; gap: 10px; max-width: 560px; }
-  .quiz-choice {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 12px;
-    min-height: 52px;
-    padding: 12px 16px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: var(--surface-muted);
-    color: var(--ink);
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-  .quiz-radio { width: 20px; height: 20px; accent-color: var(--primary); }
-  .quiz-choice--correct {
-    border-color: var(--success);
-    background: var(--success-tint);
-    color: var(--success);
-  }
-  .quiz-choice--incorrect {
-    border-color: var(--danger);
-    background: var(--danger-tint);
-    color: var(--danger);
-  }
+  .button:disabled { opacity: 0.55; cursor: not-allowed; }
 </style>
 </head>
 <body>
+
   <div class="spec-block">
-    <p class="spec-label">検索フィルタ列 — キーワード + セレクト3種</p>
-    <form class="panel controls" aria-label="検索と絞り込み">
-      <label class="search-field">
-        <span class="visually-hidden">キーワード検索</span>
-        <input type="search" placeholder="キーワードで検索 (例: 抗凝固療法)">
-      </label>
-      <label class="select-field">
-        <span class="visually-hidden">テーマ</span>
-        <select>
-          <option value="all">テーマ</option>
-          <option>循環器</option>
-          <option>脳神経</option>
-          <option>感染症</option>
-          <option>基礎レクチャー</option>
-          <option>研究・認定</option>
-          <option>AI活用</option>
-        </select>
-      </label>
-      <label class="select-field">
-        <span class="visually-hidden">年度</span>
-        <select>
-          <option value="all">年度</option>
-          <option>2026</option>
-          <option>2025</option>
-          <option>2024</option>
-        </select>
-      </label>
-      <label class="select-field">
-        <span class="visually-hidden">資料種別</span>
-        <select>
-          <option value="all">資料種別</option>
-          <option>録画あり</option>
-          <option>スライドあり</option>
-          <option>要点メモあり</option>
-        </select>
-      </label>
+    <p class="spec-label">入力欄 — ラベル+必須マーク(赤い **)+placeholder。フォームは18pxの縦積み</p>
+    <form class="form">
+      <div class="field">
+        <label class="field-label" for="ds-name">
+          <span>お名前</span>
+          <span class="required-badge" aria-hidden="true">**</span>
+          <span class="visually-hidden">必須項目</span>
+        </label>
+        <input id="ds-name" type="text" autocomplete="name" placeholder="例: 山田 太郎">
+      </div>
+      <div class="field">
+        <label class="field-label" for="ds-email">
+          <span>メールアドレス</span>
+          <span class="required-badge" aria-hidden="true">**</span>
+          <span class="visually-hidden">必須項目</span>
+        </label>
+        <input id="ds-email" type="email" autocomplete="email" placeholder="example@example.com">
+      </div>
+      <div class="field">
+        <label class="field-label" for="ds-message">
+          <span>お問い合わせ内容</span>
+          <span class="required-badge" aria-hidden="true">**</span>
+          <span class="visually-hidden">必須項目</span>
+        </label>
+        <textarea id="ds-message" placeholder="対象ページや確認したい点を記載してください"></textarea>
+      </div>
+
+      <div class="turnstile">
+        <span>ボット判定</span>
+        <div class="turnstile-shell">Cloudflare Turnstile ウィジェット表示枠</div>
+      </div>
+
+      <div class="actions">
+        <button class="button" type="submit">送信する</button>
+        <span class="helper-note">送信前に Turnstile 認証を完了してください。</span>
+      </div>
     </form>
   </div>
 
   <div class="spec-block">
-    <p class="spec-label">フォーム — テキスト入力/テキストエリア/必須マーク</p>
-    <div class="panel form-panel">
-      <form class="form-grid">
-        <div class="form-field">
-          <label class="form-field-label" for="ds-name">
-            <span>お名前</span>
-            <span class="required-badge" aria-hidden="true">**</span>
-          </label>
-          <input id="ds-name" type="text" placeholder="例: 山田 太郎">
-        </div>
-        <div class="form-field">
-          <label class="form-field-label" for="ds-email">
-            <span>メールアドレス</span>
-            <span class="required-badge" aria-hidden="true">**</span>
-          </label>
-          <input id="ds-email" type="email" placeholder="example@example.com">
-        </div>
-        <div class="form-field">
-          <label class="form-field-label" for="ds-message">
-            <span>お問い合わせ内容</span>
-            <span class="required-badge" aria-hidden="true">**</span>
-          </label>
-          <textarea id="ds-message" placeholder="対象ページや確認したい点を記載してください"></textarea>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">送信する</button>
-          <span class="form-note">** は必須項目です。</span>
-        </div>
-      </form>
+    <p class="spec-label">送信結果 — 成功(success-tint) / エラー(danger-tint)の2状態のみ</p>
+    <div class="form" style="gap: 10px;">
+      <div class="feedback feedback-success" role="status">送信しました。担当者が内容を確認します。</div>
+      <div class="feedback feedback-error" role="alert">必須項目が入力されていません。赤い ** の付いた項目を確認してください。</div>
     </div>
   </div>
 
-  <div class="spec-block">
-    <p class="spec-label">選択式クイズ — 未選択/正解/不正解の状態</p>
-    <div class="panel quiz-panel">
-      <p class="quiz-prompt">文献検索の枠組みであるPICOのうち、「C」が指すものはどれか。</p>
-      <div class="quiz-choices" role="radiogroup">
-        <label class="quiz-choice">
-          <input class="quiz-radio" type="radio" name="ds-quiz" disabled>
-          <span>対象となる患者像 (Patient)</span>
-        </label>
-        <label class="quiz-choice quiz-choice--correct">
-          <input class="quiz-radio" type="radio" name="ds-quiz" disabled>
-          <span>比較の対象 (Comparison)</span>
-        </label>
-        <label class="quiz-choice quiz-choice--incorrect">
-          <input class="quiz-radio" type="radio" name="ds-quiz" disabled checked>
-          <span>行う介入 (Intervention)</span>
-        </label>
-        <label class="quiz-choice">
-          <input class="quiz-radio" type="radio" name="ds-quiz" disabled>
-          <span>得られる転帰 (Outcome)</span>
-        </label>
-      </div>
-    </div>
-  </div>
 </body>
 </html>

@@ -1,9 +1,10 @@
-<!-- @dsCard group="Components" name="ボタン" subtitle="Primary / Ghost / テキスト / 危険操作" width="760" height="420" -->
+<!-- @dsCard group="Components" name="ボタン" subtitle="Primary / Secondary / Ghost / アイコン付き / 無効状態" width="760" height="440" -->
 <!--
   使い方 (AI向け):
-  - 主要アクションは1画面に1つだけ .btn-primary。並べる場合、残りは .btn-ghost。
-  - 高さ46px・ピル型・font-weight:700 は固定。角丸や高さを変えない。
-  - 破壊的操作のみ .btn-danger。成功系の緑ボタンは作らない (緑はステータス表示専用)。
+  - 主要アクションは1画面に1つだけ .primary。並列アクションは .secondary、行内の軽い操作は .ghost。
+  - 高さ約38px・radius-md(10px)・14px/600 は固定。角丸をピル型 (999px) にしない。
+  - 小サイズ (.sm) は padding 5px 12px / 12px。アイコンは gap 8px で文字の前後どちらにも置ける。
+  - 無効状態は opacity .55 + cursor not-allowed。専用の危険色ボタンは作らない (危険操作は本文側の警告文で示す)。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -13,61 +14,87 @@
 <title>ボタン — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec; --surface: #fffdf9; --surface-muted: #faf6ef;
-    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c; --primary-soft: #e5efee; --accent: #97724b;
-    --on-primary: #ffffff; --danger: #8a3f30; --danger-tint: rgba(150, 70, 55, 0.12);
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-pill: 999px; --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --primary-strong: #4338ca;
+    --on-primary: #ffffff;
+    --radius-md: 10px;
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 28px; font-family: var(--font-sans);
     color: var(--ink); background: var(--bg);
   }
-  .spec-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin: 0 0 10px; }
+  .spec-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 10px; }
   .spec-label {
-    width: 100%; margin: 18px 0 8px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    width: 100%; margin: 22px 0 8px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
   .spec-label:first-child { margin-top: 0; }
 
-  .btn {
+  /* ===== ボタン (app/ui/button.module.css を忠実に移植) ===== */
+  .button {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    min-height: 46px; padding: 0 18px; border-radius: var(--radius-pill);
-    border: 1px solid var(--line); background: transparent; color: var(--ink);
-    font-family: inherit; font-size: 0.93rem; font-weight: 700; cursor: pointer;
-    text-decoration: none;
+    padding: 9px 16px; border: 1px solid transparent; border-radius: var(--radius-md);
+    font-family: inherit; font-size: var(--fs-sm); font-weight: 600; line-height: 1.4;
+    cursor: pointer; text-decoration: none;
   }
-  .btn-primary { background: var(--primary); border-color: transparent; color: var(--on-primary); }
-  .btn-ghost { background: var(--surface-muted); }
-  .btn-text {
-    min-height: auto; padding: 4px 2px; border: none; border-radius: 0;
-    background: none; color: var(--primary); text-decoration: underline;
-    text-underline-offset: 4px; font-size: 0.9rem;
-  }
-  .btn-danger { background: var(--danger-tint); border-color: transparent; color: var(--danger); }
-  .btn-small { min-height: 38px; padding: 0 14px; font-size: 0.86rem; }
+  .primary { background: var(--primary); color: var(--on-primary); }
+  .primary:hover { background: var(--primary-strong); }
+  .secondary { background: var(--surface); border-color: var(--border); color: var(--ink-2); }
+  .secondary:hover { background: var(--surface-2); color: var(--ink); }
+  .ghost { background: transparent; color: var(--ink-2); }
+  .ghost:hover { background: var(--surface-2); color: var(--ink); }
+  .sm { padding: 5px 12px; font-size: var(--fs-xs); }
+  .button:disabled { opacity: 0.55; cursor: not-allowed; }
 </style>
 </head>
 <body>
-  <div class="spec-label">主要 + 併記 (primaryは1つだけ)</div>
+
+  <div class="spec-label">通常サイズ (primary は1画面に1つだけ / secondary は並列アクション / ghost は行内の軽い操作)</div>
   <div class="spec-row">
-    <a class="btn btn-primary" href="#">アーカイブを見る</a>
-    <a class="btn btn-ghost" href="#">参加方法を確認</a>
-    <a class="btn btn-text" href="#">開催カレンダーへ</a>
+    <button class="button primary" type="button">視聴済みにする</button>
+    <button class="button secondary" type="button">条件をリセット</button>
+    <button class="button ghost" type="button">未視聴に戻す</button>
   </div>
 
-  <div class="spec-label">サイズ (標準46px / 小38px)</div>
+  <div class="spec-label">小サイズ (.sm — padding 5px 12px / 12px)</div>
   <div class="spec-row">
-    <button class="btn btn-primary">録画を再生</button>
-    <button class="btn btn-primary btn-small">資料を開く</button>
-    <button class="btn btn-ghost btn-small">あとで見る</button>
+    <a class="button secondary sm" href="#">コースを見る</a>
+    <button class="button secondary sm" type="button">.json をダウンロード</button>
+    <button class="button ghost sm" type="button">キャンセル</button>
   </div>
 
-  <div class="spec-label">危険操作 (破壊的操作のみ)</div>
+  <div class="spec-label">無効状態 (opacity .55・cursor not-allowed)</div>
   <div class="spec-row">
-    <button class="btn btn-danger">学習データを初期化</button>
+    <button class="button primary" type="submit" disabled>送信中...</button>
+    <button class="button secondary sm" type="button" disabled>コピー</button>
   </div>
+
+  <div class="spec-label">アイコン付き (gap 8px。カレンダーの月送りナビで実使用)</div>
+  <div class="spec-row">
+    <button class="button ghost sm" type="button">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M8.5 3 5 7l3.5 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      前の月
+    </button>
+    <button class="button ghost sm" type="button">
+      次の月
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M5.5 3 9 7l-3.5 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
 </body>
 </html>

@@ -1,10 +1,9 @@
-<!-- @dsCard group="Foundations" name="タイポグラフィ" subtitle="大見出し〜統計数値・eyebrowラベルの実寸見本" width="900" height="720" -->
+<!-- @dsCard group="Foundations" name="タイポグラフィ" subtitle="タイプスケール6段・役割別見本・スタットラベル/数値" width="900" height="820" -->
 <!--
   使い方 (AI向け):
-  - サイズ・行間・字間・太さは表の値を厳守する。似た値への微調整はしない。
-  - 見出し系は字間を締める(負の値)、eyebrowラベルは字間を開く(+0.08em)+大文字+太字で使い分ける。
-  - 統計数値は必ず1.9rem以上/800で、下にmuted色の説明を添えるタイル形式にする(単独で置かない)。
-  - フォントは "Hiragino Sans", "Yu Gothic", sans-serif のみ。Webフォントを足さない。
+  - サイズは12/14/16/20/28/40pxの6段のみ。中間サイズを発明しない。見出しは字間を締め(負の値)、ラベルは+0.06emだけ開く。
+  - 統計数値は必ず font-variant-numeric: tabular-nums を付け、単位は別要素(14px/ink-2)で添える。
+  - フォントは "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif のスタック指定のみ。Webフォントの追加読み込みはしない。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,108 +13,126 @@
 <title>タイポグラフィ — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec; --surface: #fffdf9;
-    --ink: #24343b; --muted: #6b7b82; --line: rgba(36, 52, 59, 0.1);
-    --primary: #365a5c; --primary-soft: #e5efee;
-    --shadow: 0 12px 30px rgba(36, 52, 59, 0.07);
-    --radius-lg: 20px; --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --border: #e3e8f0;
+    --primary: #4f46e5;
+    --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --radius-lg: 14px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --fs-xs: 12px;
+    --fs-sm: 14px;
+    --fs-md: 16px;
+    --fs-lg: 20px;
+    --fs-xl: 28px;
+    --fs-2xl: 40px;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; padding: 28px; font-family: var(--font-sans);
+    margin: 0; padding: 24px; font-family: var(--font-sans);
     color: var(--ink); background: var(--bg);
   }
   .spec-label {
-    width: 100%; margin: 24px 0 10px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    width: 100%; margin: 20px 0 10px; font-size: var(--fs-xs); font-weight: 600;
+    letter-spacing: 0.06em; color: var(--muted);
   }
   .spec-label:first-child { margin-top: 0; }
 
-  .type-block {
-    background: var(--surface); border: 1px solid rgba(255, 255, 255, 0.92);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow);
-    padding: 18px 22px; margin-bottom: 14px;
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+    padding: 18px 22px; margin-bottom: 12px;
   }
-  .type-sample { color: var(--ink); margin: 0; }
   .type-spec {
-    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
-    font-size: 0.76rem; color: var(--muted); line-height: 1.7;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-size: var(--fs-xs); color: var(--muted); line-height: 1.7;
   }
 
-  .h1-sample {
-    font-size: clamp(2.2rem, 4.4vw, 3.9rem); line-height: 1.04;
-    letter-spacing: -0.05em; font-weight: 600;
+  /* ===== タイプスケール一覧 ===== */
+  .scale-row { display: flex; align-items: baseline; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .scale-row:last-child { border-bottom: none; }
+  .scale-px { width: 52px; flex: none; font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .scale-sample { color: var(--ink); font-weight: 700; }
+  .scale-role { margin-left: auto; font-size: var(--fs-xs); color: var(--muted); }
+
+  /* ===== 役割別見本 ===== */
+  .h1-sample { font-size: var(--fs-xl); line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; margin: 0; }
+  .h2-sample { font-size: var(--fs-lg); line-height: 1.3; letter-spacing: -0.01em; font-weight: 700; margin: 0; }
+  .h3-sample { font-size: var(--fs-md); line-height: 1.3; letter-spacing: 0.01em; font-weight: 700; margin: 0; }
+  .body-sample { font-size: var(--fs-md); line-height: 1.6; font-weight: 400; margin: 0; }
+  .caption-sample { font-size: var(--fs-xs); line-height: 1.5; font-weight: 400; color: var(--muted); margin: 0; }
+
+  .stat-label {
+    font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.06em; color: var(--muted);
   }
-  .h2-sample { font-size: 1.64rem; line-height: 1.2; letter-spacing: -0.03em; font-weight: 700; }
-  .h3-sample { font-size: 1.32rem; line-height: 1.28; letter-spacing: -0.03em; font-weight: 700; }
-  .body-sample { font-size: 1rem; line-height: 1.8; font-weight: 400; }
-  .lead-sample { font-size: 1rem; line-height: 1.72; font-weight: 400; color: var(--ink); }
-  .eyebrow-sample {
-    display: inline-block; padding: 6px 14px; border-radius: var(--radius-pill);
-    background: var(--primary-soft); color: var(--primary);
-    font-size: 0.76rem; line-height: 1; letter-spacing: 0.08em;
-    text-transform: uppercase; font-weight: 700;
+  .stat-value-row { display: flex; align-items: baseline; gap: 6px; margin-top: 6px; }
+  .stat-value {
+    font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.01em; color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
-  .stat-tile { display: flex; gap: 28px; flex-wrap: wrap; }
-  .stat-item { min-width: 140px; }
-  .stat-number {
-    font-size: 1.9rem; line-height: 1.1; letter-spacing: -0.03em; font-weight: 800;
-    color: var(--ink);
-  }
-  .stat-caption { margin-top: 4px; font-size: 0.82rem; color: var(--muted); }
+  .stat-unit { font-size: var(--fs-sm); color: var(--ink-2); }
+
+  .font-stack-sample { font-size: var(--fs-md); color: var(--ink); }
 </style>
 </head>
 <body>
-  <div class="spec-label">大見出し (h1 / 表紙)</div>
-  <div class="type-block">
-    <p class="type-sample h1-sample">必要な勉強会に、<br>すぐ届く。</p>
-    <div class="type-spec">clamp(2.2rem, 4.4vw, 3.9rem) / 行間 1.04 / 字間 -0.05em / 太さ 通常〜600</div>
+  <div class="spec-label">タイプスケール (6段固定)</div>
+  <div class="panel">
+    <div class="scale-row"><div class="scale-px">12px</div><div class="scale-sample" style="font-size:12px;">Aa 学び</div><div class="scale-role">キャプション・スタットラベル</div></div>
+    <div class="scale-row"><div class="scale-px">14px</div><div class="scale-sample" style="font-size:14px;">Aa 学び</div><div class="scale-role">本文(小)・UIラベル</div></div>
+    <div class="scale-row"><div class="scale-px">16px</div><div class="scale-sample" style="font-size:16px;">Aa 学び</div><div class="scale-role">本文・カード見出し(h3)</div></div>
+    <div class="scale-row"><div class="scale-px">20px</div><div class="scale-sample" style="font-size:20px;">Aa 学び</div><div class="scale-role">セクション見出し(h2)</div></div>
+    <div class="scale-row"><div class="scale-px">28px</div><div class="scale-sample" style="font-size:28px;">Aa 学び</div><div class="scale-role">大見出し(h1)・統計数値</div></div>
+    <div class="scale-row"><div class="scale-px">40px</div><div class="scale-sample" style="font-size:40px;">Aa 学び</div><div class="scale-role">大見出し(大判媒体)</div></div>
+  </div>
+
+  <div class="spec-label">大見出し (h1)</div>
+  <div class="panel">
+    <p class="h1-sample">必要な勉強会に、すぐ届く。</p>
+    <div class="type-spec">28px (大判媒体は40px) / 行間 1.3 / 字間 -0.01em / 太さ 700</div>
   </div>
 
   <div class="spec-label">セクション見出し (h2)</div>
-  <div class="type-block">
-    <p class="type-sample h2-sample">循環器アーカイブ</p>
-    <div class="type-spec">1.64rem / 行間 1.2 / 字間 -0.03em / 太さ 700</div>
+  <div class="panel">
+    <p class="h2-sample">循環器アーカイブ</p>
+    <div class="type-spec">20px / 行間 1.3 / 字間 -0.01em / 太さ 700</div>
   </div>
 
   <div class="spec-label">カード見出し (h3)</div>
-  <div class="type-block">
-    <p class="type-sample h3-sample">抗凝固療法の実践ポイント</p>
-    <div class="type-spec">1.32rem / 行間 1.28 / 字間 -0.03em / 太さ 700</div>
+  <div class="panel">
+    <p class="h3-sample">抗凝固療法の実践ポイント</p>
+    <div class="type-spec">16px / 行間 1.3 / 字間 +0.01em / 太さ 700</div>
   </div>
 
-  <div class="spec-label">本文 / リード文</div>
-  <div class="type-block">
-    <p class="type-sample lead-sample">臨床学術ワーキンググループは、薬剤師・医療従事者が臨床・研究・基礎レクチャー・AI活用を学び合う勉強会です。月2回以上ハイブリッドで開催し、録画と資料をアーカイブとして公開しています。</p>
-    <div class="type-spec">リード文: 1rem / 行間 1.72 / 字間 0 / 太さ 400</div>
-    <p class="type-sample body-sample" style="margin-top:14px;">今回は直接経口抗凝固薬(DOAC)の選択基準と、腎機能低下時の減量判断について、症例(架空例)を交えて解説します。事前資料は開催3日前を目安に配布します。</p>
-    <div class="type-spec">本文: 0.95〜1rem / 行間 1.7〜1.85 / 字間 0 / 太さ 400</div>
+  <div class="spec-label">本文</div>
+  <div class="panel">
+    <p class="body-sample">臨床学術ワーキンググループは、薬剤師・医療従事者が臨床・研究・基礎レクチャー・AI活用を学び合う勉強会です。月2回以上ハイブリッドで開催し、録画と資料をアーカイブとして公開しています。</p>
+    <div class="type-spec">14〜16px / 行間 1.6 / 字間 0 / 太さ 400</div>
   </div>
 
-  <div class="spec-label">ラベル / eyebrow</div>
-  <div class="type-block">
-    <span class="eyebrow-sample">Theme Library</span>
-    <div class="type-spec">0.72〜0.78rem / 行間 1 / 字間 +0.08em・大文字 / 太さ 700。セクションや資料冒頭に置く署名的パーツ</div>
+  <div class="spec-label">キャプション・メタ</div>
+  <div class="panel">
+    <p class="caption-sample">2026-06-30 開催 ・ 循環器 ・ 収録 48分</p>
+    <div class="type-spec">12px / 行間 1.4〜1.6 / 字間 0 / 太さ 400〜500</div>
   </div>
 
-  <div class="spec-label">統計数値</div>
-  <div class="type-block">
-    <div class="stat-tile">
-      <div class="stat-item">
-        <div class="stat-number">128</div>
-        <div class="stat-caption">延べ開催回数</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">6</div>
-        <div class="stat-caption">テーマ分類数</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">92%</div>
-        <div class="stat-caption">アーカイブ視聴率</div>
-      </div>
+  <div class="spec-label">スタットラベル / 統計数値</div>
+  <div class="panel">
+    <div class="stat-label">延べ開催回数</div>
+    <div class="stat-value-row">
+      <span class="stat-value">128</span>
+      <span class="stat-unit">回</span>
     </div>
-    <div class="type-spec">1.9rem〜 / 行間 1.1 / 字間 -0.03em / 太さ 800。数値単体では置かず、下にmuted色の説明を添える</div>
+    <div class="type-spec">ラベル: 12px / 行間 1.4 / 字間 +0.06em / 太さ 600 / muted<br>数値: 28px / 行間 1.25 / 字間 -0.01em / 太さ 700 + tabular-nums</div>
+  </div>
+
+  <div class="spec-label">フォントスタック</div>
+  <div class="panel">
+    <p class="font-stack-sample">"Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif</p>
+    <div class="type-spec">サイト本体は next/font でセルフホスト。プレビュー・成果物ではこのスタックを書くだけでよく、外部Webフォントの読み込み・装飾フォントは追加しない。</div>
   </div>
 </body>
 </html>

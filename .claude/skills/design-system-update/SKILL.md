@@ -12,7 +12,7 @@ description: >
 
 ## 大原則
 
-1. **正の連鎖を守る**: サイト実CSS (`public/assets/styles.css` の `:root`) → `design-system/tokens/tokens.css` → 各プレビューHTMLのインライン `:root`。上流を飛ばして下流だけ変えない。デザインシステム側で新しい値を発明しない。
+1. **正の連鎖を守る**: サイト実CSS (`app/globals.css` の `:root`) → `design-system/tokens/tokens.css` → 各プレビューHTMLのインライン `:root`。上流を飛ばして下流だけ変えない。デザインシステム側で新しい値を発明しない。
 2. **各プレビューは自己完結**: 外部CSS/JS/フォント/画像参照は禁止。必要なトークンだけをインライン `:root` にコピーする。
 3. **1行目マーカー厳守**: 全プレビューHTMLの1行目は `<!-- @dsCard group="…" name="…" subtitle="…" width="…" height="…" -->`。DOCTYPEより前。groupは Foundations / Components / Templates / Assets のいずれか。
 4. **文言規約**: 人名なし(担当は「事務局」等)・絵文字/感嘆符なし・誇大表現なし・症例詳細なし。免責「本アーカイブは個別診療の判断を代替するものではありません。」は一字一句変えない。詳細は `design-system/guidelines.md` 第2節・第8節。
@@ -20,7 +20,7 @@ description: >
 
 ## トークンを変更するとき
 
-1. まずサイト本体 (`public/assets/styles.css`) を変更し、実機で確認する。
+1. まずサイト本体 (`app/globals.css`。ダーク値は2箇所あるので同期) を変更し、実機で確認する。
 2. `tokens/tokens.css` の該当値を追従させる。
 3. 全プレビューHTMLへ一括反映:
    ```bash
@@ -38,7 +38,7 @@ description: >
 ## コンポーネント/テンプレを追加するとき
 
 1. `guidelines.md` と既存の一番近い見本 (`components/buttons.html` が構造の基準) を読み、同じ構成で作る: @dsCardマーカー → 使い方コメント(AI向け2〜4行) → 自己完結HTML → spec-labelで状態・種類を区分。
-2. サイトに実在するUIなら該当CSS (`public/assets/styles.css` / `app/globals.css`) からクラス名・数値ごと忠実に移植する。
+2. サイトに実在するUIなら該当CSS (`app/globals.css` / `app/ui/*.module.css` / `app/components/*.module.css`) からクラス名・数値ごと忠実に移植する。
 3. 検証ループを回してから完了報告。
 
 ## 検証ループ (変更のたびに必須)

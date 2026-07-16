@@ -1,10 +1,9 @@
-<!-- @dsCard group="Components" name="バッジ・チップ" subtitle="eyebrow/ステータス/テーマ/凡例" width="900" height="640" -->
+<!-- @dsCard group="Components" name="バッジ・チップ" subtitle="基本バッジ/テーマチップ/ステータスバッジ" width="880" height="560" -->
 <!--
   使い方 (AI向け):
-  - eyebrowはセクション/資料冒頭専用の署名的パーツ。本文中の強調には使わない。
-  - ステータスチップと学習ステータスバッジは似て見えるが別部品: 前者は開催回・アーカイブの状態、後者はレッスンの視聴進捗専用。
-  - テーマ分類チップはレベル系(primary-soft)とテーマ系(茶系)の2系統を必ず両方使い分ける。テーマ語彙は固定6種のみ。
-  - セマンティックチップ(緑/茶/危険)はイベント告知の受付状況にのみ使う。緑をボタンや成功メッセージ以外へ転用しない。
+  - 基本バッジ (.badge) はピル型・surface-2地・ink-2文字。資料有無などの中立的な付記に使う。
+  - テーマ分類チップは基本バッジに8pxのカテゴリ色ドットを足したもの。固定順6種 (循環器/脳神経/感染症/基礎レクチャー/研究・認定/AI活用) のみを使い、順番を替えない。
+  - ステータスバッジは12%ティント地+セマンティック色文字+7pxドット。確定/受付中=success、保留/締切間近=warning、中止/満席=dangerの3値のみ。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,122 +13,81 @@
 <title>バッジ・チップ — 臨床学術WG Design System</title>
 <style>
   :root {
-    --bg: #f6f3ec;
-    --ink: #24343b;
-    --muted: #6b7b82;
-    --primary: #365a5c;
-    --primary-soft: #e5efee;
-    --accent: #97724b;
-    --accent-strong: #8c4f1f;
-    --accent-tint: rgba(151, 114, 75, 0.14);
-    --on-primary: #ffffff;
-    --success: #2d6c45;
-    --success-tint: rgba(56, 118, 78, 0.14);
-    --danger: #8a3f30;
-    --danger-tint: rgba(150, 70, 55, 0.12);
-    --radius-pill: 999px;
-    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
+    --surface-2: #eef2f8;
+    --ink-2: #475569;
+    --muted: #64748b;
+    --success: #15803d;
+    --warning: #b45309;
+    --danger: #b91c1c;
+    --success-tint: rgba(21, 128, 61, 0.12);
+    --warning-tint: rgba(180, 83, 9, 0.12);
+    --danger-tint: rgba(185, 28, 28, 0.12);
+    --cat-1: #2a78d6;
+    --cat-2: #1baf7a;
+    --cat-3: #eda100;
+    --cat-4: #008300;
+    --cat-5: #4a3aa7;
+    --cat-6: #e34948;
+    --fs-xs: 12px;
+    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 28px; font-family: var(--font-sans);
-    color: var(--ink); background: var(--bg);
+    color: #0f172a; background: #f5f7fb;
   }
-  .spec-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 0 0 10px; }
+  .spec-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 10px; }
   .spec-label {
-    width: 100%; margin: 22px 0 8px; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    width: 100%; margin: 22px 0 8px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--muted);
   }
   .spec-label:first-child { margin-top: 0; }
 
-  /* ===== eyebrow ===== */
-  .eyebrow {
-    display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  /* ===== 基本バッジ (app/ui/badge.module.css を忠実に移植) ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px;
+    border-radius: 999px; background: var(--surface-2); color: var(--ink-2);
+    font-size: var(--fs-xs); font-weight: 500; white-space: nowrap;
   }
+  .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--badge-dot, var(--muted)); }
+  .cat1 { --badge-dot: var(--cat-1); }
+  .cat2 { --badge-dot: var(--cat-2); }
+  .cat3 { --badge-dot: var(--cat-3); }
+  .cat4 { --badge-dot: var(--cat-4); }
+  .cat5 { --badge-dot: var(--cat-5); }
+  .cat6 { --badge-dot: var(--cat-6); }
 
-  /* ===== ステータスチップ (開催回・アーカイブの状態) ===== */
-  .meeting-card-badge {
-    display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px;
-    border-radius: var(--radius-pill); background: var(--primary-soft); color: var(--primary);
-    font-size: 0.75rem; font-weight: 700;
-  }
-  .meeting-card-badge.is-pending { background: var(--accent-tint); color: var(--accent); }
-  .meeting-card-badge.is-done { background: var(--primary); color: var(--on-primary); }
-
-  /* ===== 学習ステータスバッジ (レッスン視聴進捗) ===== */
-  .learn-status-badge {
-    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
-    border-radius: var(--radius-pill); background: rgba(107, 123, 130, 0.14); color: var(--muted);
-    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em;
-  }
-  .learn-status-badge--watched { background: var(--primary-soft); color: var(--primary); }
-  .learn-status-badge--completed { background: var(--primary); color: var(--on-primary); }
-
-  /* ===== テーマ分類チップ ===== */
-  .learn-course-pill {
-    display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px;
-    border-radius: var(--radius-pill); background: rgba(107, 123, 130, 0.14);
-    color: var(--muted); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
-  }
-  .learn-course-pill--level { background: var(--primary-soft); color: var(--primary); }
-  .learn-course-pill--theme { background: var(--accent-tint); color: var(--accent-strong); }
-
-  /* ===== セマンティックチップ (開催告知の受付状況) ===== */
-  .semantic-chip {
-    display: inline-flex; align-items: center; min-height: 30px; padding: 0 14px;
-    border-radius: var(--radius-pill); font-size: 0.82rem; font-weight: 700;
-  }
-  .semantic-chip--success { background: var(--success-tint); color: var(--success); }
-  .semantic-chip--pending { background: var(--accent-tint); color: var(--accent-strong); }
-  .semantic-chip--danger { background: var(--danger-tint); color: var(--danger); }
+  .status { padding: 3px 12px 3px 10px; font-weight: 600; }
+  .status-dot { width: 7px; height: 7px; background: currentColor; }
+  .status-success { background: var(--success-tint); color: var(--success); }
+  .status-warning { background: var(--warning-tint); color: var(--warning); }
+  .status-danger { background: var(--danger-tint); color: var(--danger); }
 </style>
 </head>
 <body>
 
-  <div class="spec-label">eyebrowラベル (.eyebrow) — セクション/資料冒頭の署名的パーツ</div>
+  <div class="spec-label">基本バッジ (.badge) — ピル型・surface-2地・ink-2文字。資料有無などの中立的な付記。</div>
   <div class="spec-row">
-    <span class="eyebrow">ARCHIVE LIBRARY</span>
-    <span class="eyebrow">今月の注目</span>
+    <span class="badge">スライドあり</span>
+    <span class="badge">要点メモあり</span>
+    <span class="badge">参考文献あり</span>
   </div>
 
-  <div class="spec-label">ステータスチップ (.meeting-card-badge) — 確定=primary-soft / 保留=茶系 / 完了=primary塗り</div>
+  <div class="spec-label">テーマ分類チップ (カテゴリ色ドット付き・固定順6種のみ)</div>
   <div class="spec-row">
-    <span class="meeting-card-badge">確定</span>
-    <span class="meeting-card-badge is-pending">保留</span>
-    <span class="meeting-card-badge is-done">完了</span>
+    <span class="badge cat1"><span class="dot" aria-hidden="true"></span>循環器</span>
+    <span class="badge cat2"><span class="dot" aria-hidden="true"></span>脳神経</span>
+    <span class="badge cat3"><span class="dot" aria-hidden="true"></span>感染症</span>
+    <span class="badge cat4"><span class="dot" aria-hidden="true"></span>基礎レクチャー</span>
+    <span class="badge cat5"><span class="dot" aria-hidden="true"></span>研究・認定</span>
+    <span class="badge cat6"><span class="dot" aria-hidden="true"></span>AI活用</span>
   </div>
 
-  <div class="spec-label">学習ステータスバッジ (.learn-status-badge) — 未視聴=グレー / 視聴済み=primary-soft / 完了=primary塗り</div>
+  <div class="spec-label">ステータスバッジ (12%ティント地+セマンティック色文字+7pxドット)</div>
   <div class="spec-row">
-    <span class="learn-status-badge">未視聴</span>
-    <span class="learn-status-badge learn-status-badge--watched">視聴済み</span>
-    <span class="learn-status-badge learn-status-badge--completed">完了</span>
-  </div>
-
-  <div class="spec-label">レベルpill (.learn-course-pill--level) — primary-soft系、コース難易度の表示専用</div>
-  <div class="spec-row">
-    <span class="learn-course-pill learn-course-pill--level">初級</span>
-    <span class="learn-course-pill learn-course-pill--level">中級</span>
-    <span class="learn-course-pill learn-course-pill--level">上級</span>
-  </div>
-
-  <div class="spec-label">テーマ分類チップ (.learn-course-pill--theme) — 茶系、固定語彙6種のみ使用</div>
-  <div class="spec-row">
-    <span class="learn-course-pill learn-course-pill--theme">循環器</span>
-    <span class="learn-course-pill learn-course-pill--theme">脳神経</span>
-    <span class="learn-course-pill learn-course-pill--theme">感染症</span>
-    <span class="learn-course-pill learn-course-pill--theme">基礎レクチャー</span>
-    <span class="learn-course-pill learn-course-pill--theme">研究・認定</span>
-    <span class="learn-course-pill learn-course-pill--theme">AI活用</span>
-  </div>
-
-  <div class="spec-label">セマンティック凡例 (.semantic-chip) — 登録受付中=緑系 / 締切間近=茶系 / 満席=危険系(開催告知専用)</div>
-  <div class="spec-row">
-    <span class="semantic-chip semantic-chip--success">登録受付中</span>
-    <span class="semantic-chip semantic-chip--pending">締切間近</span>
-    <span class="semantic-chip semantic-chip--danger">満席</span>
+    <span class="badge status status-success"><span class="dot status-dot" aria-hidden="true"></span>登録受付中</span>
+    <span class="badge status status-warning"><span class="dot status-dot" aria-hidden="true"></span>締切間近</span>
+    <span class="badge status status-danger"><span class="dot status-dot" aria-hidden="true"></span>満席</span>
   </div>
 
 </body>
