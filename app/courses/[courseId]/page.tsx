@@ -23,6 +23,11 @@ async function getCourse(courseId: string) {
   return learningContent.courses.find((course) => course.id === courseId) ?? null;
 }
 
+export async function generateStaticParams() {
+  const learningContent = await loadLearningContent();
+  return learningContent.courses.map((course) => ({ courseId: course.id }));
+}
+
 export async function generateMetadata({ params }: CourseDetailPageProps): Promise<Metadata> {
   const { courseId } = await params;
   const course = await getCourse(courseId);
