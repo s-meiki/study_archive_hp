@@ -1,10 +1,10 @@
 # デザイン全面リニューアル v2 — 引き継ぎメモ
 
-最終更新: 2026-07-16　作成: Fable 5（司令塔セッション）
+最終更新: 2026-07-17　作成: Fable 5（司令塔セッション）
 
 ## 現在地（一言で）
 
-**Phase 0〜8 完了・本番反映済み。** 本番（https://study-archive-hp.vercel.app）は新デザイン（クリニカル・モダン、案A ダッシュボード型）で稼働中。**Phase 9（フォローアップ）のみ未着手**で、これは優先度低・締切なし。
+**Phase 0〜9 完了（Phase 9 は2件の承認待ちのみ残）。** 本番（https://study-archive-hp.vercel.app）は新デザイン（クリニカル・モダン、案A ダッシュボード型）で稼働中。
 
 計画全文: `~/.claude/plans/grill-me-generic-feather.md`（めいき承認済み）
 
@@ -42,18 +42,17 @@ b0d447d Merge pull request #2 from s-meiki/redesign/v2  ← カットオーバ�
 - クイズ実フロー（採点→修了→バッジ）、進捗データ互換、モバイル375px
 - `redesign/v2` ブランチは main と同期済み（fast-forward、差分なし）
 
-## Phase 9: 残タスク（優先度低・締切なし）
+## Phase 9: 完了（2026-07-17 実施）
 
-着手時は `docs/design-system-update` スキルを読むこと（design-system/ 更新の規約）。
+1. **OGP画像の軽量化**: `design-system/assets/og-export.html` を新ブランドで作り直し、候補 `design-system/assets/ogp-candidate.png`（2400x1260・約206KB。現行3.6MBの約6%）を生成済み。**→ めいき承認後に `public/images/ogp.png` へ手動コピー（自動上書き禁止の規約）。** metadata宣言（app/page.tsx / app/about/page.tsx の 2400x1260）はそのままでよい。
+2. **favicon一式の新ブランド化**: 完了。`scripts/generate_brand_icons.py`（新規・PILでロゴ幾何を直接描画）で favicon.svg / favicon-32x32.png / favicon.ico(16-48) / icon-192.png / apple-touch-icon.png を再生成。ロゴ変更時はこのスクリプトを再実行すればよい。
+3. **design-system/ バンドルの再構築**: 完了。tokens.css・guidelines.md・全プレビュー14ファイルを新トークン（案A インディゴ）+パルス波形ロゴで刷新。検証ループ（マーカー・外部参照ゼロ・色集計・実描画・固定寸法実測）全通過。**→ Claude Design への `/design-sync` は未実施**（インタラクティブターミナル必須・push前に dry-run 承認の規約）。
+4. **ドキュメント更新**: 完了。AGENTS.md（Structure/Build/Style/Testing 節を Next.js 構成に）、README.md（URL例を新IAに）、design-system/README.md と `.claude/skills/design-system-update/SKILL.md` の旧パス参照（public/assets/styles.css → app/globals.css）も追従。
 
-1. **OGP画像の軽量化**: `public/images/ogp.png` が **3.6MB**（要 300KB以下）。新ブランド（インディゴ系・パルス波形ロゴ `public/images/logo.svg`）で作り直す。`design-system/assets/og-export.html` が生成元。
-2. **favicon一式の新ブランド化**: `public/favicon.svg` `public/favicon-32x32.png` `public/favicon.ico` `public/icon-192.png` `public/apple-touch-icon.png` は旧ブランド（Learning Loopロゴ）のまま。新ロゴ（`public/images/logo.svg` のパルス波形、`--primary: #4f46e5`）で差し替え。
-3. **design-system/ バンドルの再構築**: `design-system/tokens/tokens.css` 含め全体が旧トークン（暖色オフホワイト×ティール）のまま。`app/globals.css` の新トークンに合わせて作り直し、`/design-sync` で Claude Design へ反映。
-4. **ドキュメント更新**: `AGENTS.md` の「Build, Test, and Development Commands」節が旧構成（`public/index.html` を開く等）の記述のまま古い。新IA・新コマンド体系に更新。`README.md` があれば同様に確認。
+## 残っている承認待ち（めいきの判断事項）
 
-## 次に着手するときの入り方
+1. **ogp.png 差し替え**: `design-system/assets/ogp-candidate.png` を目視確認 → OKなら `cp design-system/assets/ogp-candidate.png public/images/ogp.png` してコミット。
+2. **/design-sync push**: インタラクティブターミナルで `claude` → `/design-sync design-system/ をプロジェクト「臨床学術WG Design System」に同期して`（増分sync・dry-run確認後）。
+3. 本番反映は main への push（Vercel自動デプロイ）。上記2件の反映と合わせて実施するとよい。
 
-1. `git status` / `git log --oneline -5` で現在地確認（このメモの内容と齟齬がないか）
-2. `docs/design-system-update` スキルを読む
-3. Phase 9 の4項目は互いに独立なので、どれから着手してもよい。OGP/favicon は画像生成、design-system/ 再構築はデザイン反映、ドキュメント更新は軽作業。
-4. 完了したら本メモを更新するか、不要になれば削除してよい。
+本メモは上記が済んだら削除してよい。
