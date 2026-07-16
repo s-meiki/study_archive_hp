@@ -1,0 +1,30 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.progressGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .progressGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.storageNote {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  text-align: center;
+}
+
+.loading {
+  padding: 40px 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+}

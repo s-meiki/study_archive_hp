@@ -1,0 +1,245 @@
+.section {
+  display: grid;
+  gap: 14px;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.copyBlock {
+  display: grid;
+  gap: 2px;
+}
+
+.heading {
+  font-size: var(--fs-lg);
+}
+
+.copy {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.legendChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.summary {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+.summaryList {
+  display: grid;
+  gap: 4px;
+}
+
+.monthCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.navStatus {
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+
+.scroller {
+  overflow-x: auto;
+}
+
+.gridInner {
+  --lane-step: 26px;
+  --bar-offset: 30px;
+  --row-height: calc(38px + var(--lane-count, 1) * var(--lane-step));
+
+  display: grid;
+  gap: 6px;
+  min-width: 640px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-align: center;
+}
+
+.shell {
+  position: relative;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(6, var(--row-height));
+  gap: 4px;
+}
+
+.day {
+  min-width: 0;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.dayOutside {
+  background: var(--surface-2);
+  opacity: 0.55;
+}
+
+.dayToday {
+  border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+}
+
+.dayNumber {
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.dayToday .dayNumber {
+  display: inline-grid;
+  min-width: 22px;
+  min-height: 22px;
+  margin: -2px 0 0 -2px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.spanLayer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(6, var(--row-height));
+  gap: 4px;
+  pointer-events: none;
+}
+
+.span {
+  pointer-events: auto;
+  align-self: start;
+  display: block;
+  min-width: 0;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a.span:hover {
+  text-decoration: underline;
+}
+
+.spanContinuation {
+  border-left-style: dashed;
+  opacity: 0.92;
+}
+
+.overflowChip {
+  pointer-events: auto;
+  align-self: start;
+  display: block;
+  min-width: 0;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.catEvent {
+  background: color-mix(in srgb, var(--primary) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--surface));
+  color: var(--primary-strong);
+}
+
+.catAbstract {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--surface));
+  color: var(--accent);
+}
+
+.catRegistration {
+  background: color-mix(in srgb, var(--success) 14%, var(--surface));
+  border-color: color-mix(in srgb, var(--success) 38%, var(--surface));
+  color: var(--success);
+}
+
+.catInfo {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--ink-2);
+}
+
+@media (max-width: 719px) {
+  .monthCard {
+    padding: 12px;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .navStatus {
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ホーム 案C タイムライン/ライブラリ型 — 臨床学術WG</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('mock.theme');
+        if (t === 'dark' || t === 'light') {
+          document.documentElement.setAttribute('data-theme', t);
+        }
+      } catch (e) { /* storage unavailable */ }
+    })();
+  </script>
+  <style>
+    /* ============================================================
+       Tokens — contract: --bg --surface --surface-2 --ink --ink-2
+       --muted --border --primary --primary-strong --on-primary
+       --accent --success --warning --danger --radius-* --shadow-*
+       --font-sans
+       ============================================================ */
+    :root {
+      color-scheme: light;
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface-2: #eef2f9;
+      --ink: #0c1930;
+      --ink-2: #3a4a68;
+      --muted: #5a6a86;
+      --border: #d8dfec;
+      --primary: #1d4ed8;
+      --primary-strong: #16307c;
+      --on-primary: #ffffff;
+      --accent: #2f80ff;
+      --success: #157f3c;
+      --warning: #b45309;
+      --danger: #d92d20;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --shadow-1: 0 1px 2px rgba(12, 25, 48, 0.06);
+      --shadow-2: 0 10px 30px rgba(12, 25, 48, 0.1);
+      --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+      /* categorical palette — fixed slot order, validated (light, surface #ffffff) */
+      --cat-cardiology: #2a78d6;
+      --cat-neurology: #0f9066;
+      --cat-infectious: #c98500;
+      --cat-foundations: #007500;
+      --cat-research: #4a3aa7;
+      --cat-ai: #e34948;
+      /* meter: track = lighter step of the fill's own (blue) ramp */
+      --meter-track: #d9e6fb;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #060b16;
+      --surface: #0d1626;
+      --surface-2: #16223a;
+      --ink: #eef3fc;
+      --ink-2: #c2cee6;
+      --muted: #8b9ab8;
+      --border: #26344f;
+      --primary: #4d8dff;
+      --primary-strong: #7fabff;
+      --on-primary: #071227;
+      --accent: #62a0ff;
+      --success: #43c26d;
+      --warning: #e0a53f;
+      --danger: #f47069;
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.45);
+      /* categorical palette — same slots, stepped for the dark surface #0d1626 */
+      --cat-cardiology: #3987e5;
+      --cat-neurology: #199e70;
+      --cat-infectious: #c98500;
+      --cat-foundations: #007900;
+      --cat-research: #9085e9;
+      --cat-ai: #e66767;
+      --meter-track: #1e3a66;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #060b16;
+        --surface: #0d1626;
+        --surface-2: #16223a;
+        --ink: #eef3fc;
+        --ink-2: #c2cee6;
+        --muted: #8b9ab8;
+        --border: #26344f;
+        --primary: #4d8dff;
+        --primary-strong: #7fabff;
+        --on-primary: #071227;
+        --accent: #62a0ff;
+        --success: #43c26d;
+        --warning: #e0a53f;
+        --danger: #f47069;
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.45);
+        --cat-cardiology: #3987e5;
+        --cat-neurology: #199e70;
+        --cat-infectious: #c98500;
+        --cat-foundations: #007900;
+        --cat-research: #9085e9;
+        --cat-ai: #e66767;
+        --meter-track: #1e3a66;
+      }
+    }
+
+    /* ============================================================
+       Base
+       ============================================================ */
+    * { box-sizing: border-box; }
+
+    html { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--bg);
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+    ul, ol { padding: 0; list-style: none; }
+    time { font-variant-numeric: tabular-nums; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 100;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    /* Category slot mapping — fixed order, never reassigned by filters */
+    [data-cat="cardiology"] { --cat: var(--cat-cardiology); }
+    [data-cat="neurology"] { --cat: var(--cat-neurology); }
+    [data-cat="infectious"] { --cat: var(--cat-infectious); }
+    [data-cat="foundations"] { --cat: var(--cat-foundations); }
+    [data-cat="research"] { --cat: var(--cat-research); }
+    [data-cat="ai"] { --cat: var(--cat-ai); }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cat, var(--muted));
+      flex: none;
+    }
+
+    /* ============================================================
+       Header
+       ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      flex: none;
+    }
+    .brand svg { display: block; }
+
+    .global-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .global-nav a {
+      position: relative;
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: var(--ink-2);
+      border-radius: var(--radius-sm);
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+    .global-nav a:hover { color: var(--primary); background: var(--surface-2); }
+    .global-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+    .global-nav a[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: -1px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: none;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--ink-2);
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .icon-button:hover { border-color: var(--primary); color: var(--primary); }
+    .icon-button svg { display: block; }
+
+    html:not([data-mode="dark"]) .theme-icon-moon { display: none; }
+    html[data-mode="dark"] .theme-icon-sun { display: none; }
+
+    .nav-toggle { display: none; }
+
+    /* ============================================================
+       Page scaffold
+       ============================================================ */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 72px;
+    }
+
+    .hero {
+      padding: 44px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin-top: 10px;
+      font-size: 40px;
+      line-height: 1.25;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .hero .lede {
+      margin-top: 10px;
+      font-size: 16px;
+      color: var(--ink-2);
+      max-width: 560px;
+    }
+
+    .site-stats {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .site-stats > div {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 4px 24px;
+      border-left: 1px solid var(--border);
+    }
+    .site-stats > div:first-child { border-left: 0; padding-left: 0; }
+    .site-stats dt { font-size: 12px; color: var(--muted); }
+    .site-stats dd { font-size: 20px; font-weight: 700; color: var(--ink); }
+    .site-stats dd small { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 2px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      padding-top: 32px;
+    }
+
+    .stream { min-width: 0; display: grid; gap: 40px; }
+    .rail { min-width: 0; display: grid; gap: 16px; align-self: start; order: -1; }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.005em; }
+    .section-link { font-size: 13px; color: var(--primary); font-weight: 600; white-space: nowrap; }
+    .section-link:hover { color: var(--primary-strong); }
+
+    /* ============================================================
+       Cards & chips
+       ============================================================ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+    }
+
+    .chip-static {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-2);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+    .chip-static .dot { width: 7px; height: 7px; }
+
+    .tag-new {
+      display: inline-block;
+      padding: 1px 8px;
+      border: 1px solid var(--primary);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    .badge-level {
+      display: inline-block;
+      padding: 1px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-2);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .btn-primary { background: var(--primary); color: var(--on-primary); }
+    .btn-primary:hover { background: var(--primary-strong); }
+    .btn-ghost { border-color: var(--border); background: var(--surface); color: var(--ink-2); }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-block { width: 100%; }
+
+    /* ============================================================
+       Latest shelf (最新アーカイブ)
+       ============================================================ */
+    .shelf {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .shelf-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 18px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .shelf-card:hover { border-color: var(--primary); box-shadow: var(--shadow-2); }
+
+    .shelf-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .shelf-meta time { font-size: 12px; color: var(--muted); }
+
+    .shelf-card h3 { font-size: 16px; font-weight: 700; line-height: 1.4; }
+    .shelf-card h3 a:hover { color: var(--primary); }
+    .shelf-sub { font-size: 12px; color: var(--muted); }
+
+    /* ============================================================
+       Timeline
+       ============================================================ */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-2);
+      transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip[aria-pressed="true"] {
+      border-color: var(--primary);
+      background: var(--surface-2);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 26px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 6px;
+      bottom: 6px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .tl-month { padding-bottom: 8px; }
+    .tl-month:last-child { padding-bottom: 0; }
+
+    .tl-month-head {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 6px 0 14px;
+    }
+    .tl-month-head::before {
+      content: "";
+      position: absolute;
+      left: -26px;
+      top: 12px;
+      width: 11px;
+      height: 11px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface);
+    }
+    .tl-month-head h3 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+    .tl-month-head .count { font-size: 12px; color: var(--muted); }
+
+    .tl-entries { display: grid; gap: 12px; padding-bottom: 20px; }
+    .tl-month:last-child .tl-entries { padding-bottom: 0; }
+
+    .tl-entry { position: relative; }
+    .tl-node {
+      position: absolute;
+      left: -25px;
+      top: 22px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--cat, var(--muted));
+      box-shadow: 0 0 0 2px var(--bg); /* surface ring where the dot crosses the spine */
+    }
+
+    .tl-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 14px 18px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tl-card:hover { border-color: var(--primary); box-shadow: var(--shadow-2); }
+
+    .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tl-meta time { font-size: 12px; font-weight: 600; color: var(--muted); }
+
+    .tl-card h4 { font-size: 16px; font-weight: 700; line-height: 1.45; }
+    .tl-card h4 a:hover { color: var(--primary); }
+    .tl-sub { font-size: 12px; color: var(--muted); }
+
+    .tl-empty {
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .tl-empty button {
+      margin-left: 8px;
+      border: 0;
+      background: none;
+      padding: 0;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .tl-foot { margin-top: 20px; }
+
+    [hidden] { display: none !important; }
+
+    /* ============================================================
+       Course progress
+       ============================================================ */
+    .course-list { display: grid; }
+    .course-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .course-row:first-child { border-top: 0; }
+
+    .course-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .course-name a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .course-name a:hover { color: var(--primary); }
+
+    .course-meter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .course-frac {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-2);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* segmented meter: fill = primary, track = lighter step of the same
+       blue ramp, 2px surface gaps between segments */
+    .meter {
+      display: flex;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+      height: 6px;
+    }
+    .meter span {
+      flex: 1;
+      background: var(--meter-track);
+      border-radius: 1px;
+    }
+    .meter span:first-child { border-radius: 3px 1px 1px 3px; }
+    .meter span:last-child { border-radius: 1px 3px 3px 1px; }
+    .meter span.is-filled { background: var(--primary); }
+
+    /* ============================================================
+       Learning rail
+       ============================================================ */
+    .rail-card { padding: 18px; }
+
+    .rail-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .resume-course { font-size: 12px; color: var(--muted); }
+    .resume-title { margin-top: 4px; font-size: 20px; font-weight: 700; line-height: 1.35; }
+    .resume-sub { margin-top: 4px; font-size: 12px; color: var(--muted); }
+    .resume-meter { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+    .resume-meter .course-frac { color: var(--ink-2); }
+    .resume-actions { margin-top: 16px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .stat-tile {
+      padding: 12px 14px;
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+    }
+    .stat-tile dt { font-size: 11px; color: var(--muted); }
+    .stat-tile dd {
+      margin-top: 2px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .stat-tile dd small { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 2px; }
+
+    .rail-cta { margin-top: 14px; }
+
+    .queue { display: grid; }
+    .queue li {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px solid var(--border);
+    }
+    .queue li:first-child { border-top: 0; padding-top: 0; }
+    .queue li:last-child { padding-bottom: 0; }
+    .queue .idx {
+      flex: none;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      width: 20px;
+      padding-top: 2px;
+    }
+    .queue-body { min-width: 0; }
+    .queue-body a {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .queue-body a:hover { color: var(--primary); }
+    .queue-meta {
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .queue-meta .dot { width: 7px; height: 7px; }
+
+    .conf-name { font-size: 14px; font-weight: 700; line-height: 1.45; }
+    .conf-meta { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .conf-status {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+    }
+    .conf-status svg { display: block; flex: none; }
+    .conf-link { margin-top: 14px; }
+
+    /* ============================================================
+       Footer
+       ============================================================ */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 20px; }
+    .footer-nav a { font-size: 12px; color: var(--ink-2); }
+    .footer-nav a:hover { color: var(--primary); }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+    @media (min-width: 640px) {
+      .shelf { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .course-row { grid-template-columns: minmax(0, 1fr) minmax(200px, 40%); align-items: center; }
+    }
+
+    @media (min-width: 960px) {
+      .layout { grid-template-columns: minmax(0, 1fr) 332px; gap: 36px; }
+      .rail {
+        order: 0;
+        position: sticky;
+        top: 76px;
+      }
+      .page { padding-bottom: 96px; }
+    }
+
+    @media (max-width: 959px) {
+      .global-nav {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        margin: 0;
+        padding: 10px 16px 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-2);
+      }
+      .global-nav.is-open { display: flex; }
+      .global-nav a { padding: 10px 12px; font-size: 15px; }
+      .global-nav a[aria-current="page"]::after { display: none; }
+      .global-nav a[aria-current="page"] { background: var(--surface-2); }
+      .nav-toggle { display: inline-flex; }
+      .nav-toggle .nav-icon-close { display: none; }
+      .nav-toggle[aria-expanded="true"] .nav-icon-open { display: none; }
+      .nav-toggle[aria-expanded="true"] .nav-icon-close { display: block; }
+    }
+
+    @media (max-width: 519px) {
+      .hero { padding-top: 32px; }
+      .hero h1 { font-size: 28px; }
+      .hero .lede { font-size: 14px; }
+      .site-stats > div { padding: 4px 16px; }
+      .site-stats dd { font-size: 16px; }
+      .stat-tile dd { font-size: 20px; }
+      .timeline { padding-left: 22px; }
+      .tl-node { left: -21px; }
+      .tl-month-head::before { left: -22px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+          <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary-strong)"></rect>
+          <path d="M5.5 16.5h4.2l2-5.4 3.4 8.6 2.1-5h5.3" fill="none" stroke="var(--on-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>臨床学術WG</span>
+      </a>
+      <nav id="global-nav" class="global-nav" aria-label="グローバルナビゲーション">
+        <a href="#" aria-current="page">ホーム</a>
+        <a href="#">アーカイブ</a>
+        <a href="#">コース</a>
+        <a href="#">カレンダー</a>
+        <a href="#">ダッシュボード</a>
+      </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="ダークテーマに切り替え">
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <circle cx="9" cy="9" r="3.4" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M9 1.2v2M9 14.8v2M1.2 9h2M14.8 9h2M3.5 3.5l1.4 1.4M13.1 13.1l1.4 1.4M14.5 3.5l-1.4 1.4M4.9 13.1l-1.4 1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <path d="M15 11.2A6.8 6.8 0 0 1 6.8 3a6.8 6.8 0 1 0 8.2 8.2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+          </svg>
+        </button>
+        <button id="nav-toggle" class="icon-button nav-toggle" type="button" aria-expanded="false" aria-controls="global-nav" aria-label="メニューを開く">
+          <svg class="nav-icon-open" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <svg class="nav-icon-close" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <section class="hero" aria-label="サイト概要">
+      <p class="eyebrow">Archive Library</p>
+      <h1>勉強会アーカイブ・ライブラリ</h1>
+      <p class="lede">臨床学術ワーキンググループの学びの記録を、時系列でたどる。見返す、続ける、積み上げる。</p>
+      <dl class="site-stats">
+        <div><dt>アーカイブ</dt><dd>24<small>本</small></dd></div>
+        <div><dt>コース</dt><dd>6<small>本</small></dd></div>
+        <div><dt>確認クイズ</dt><dd>86<small>問</small></dd></div>
+      </dl>
+    </section>
+
+    <div class="layout">
+      <main id="main" class="stream">
+        <!-- 最新アーカイブ -->
+        <section aria-labelledby="latest-heading">
+          <div class="section-head">
+            <h2 id="latest-heading">最新アーカイブ</h2>
+            <a class="section-link" href="#">アーカイブ一覧へ</a>
+          </div>
+          <div class="shelf">
+            <article class="card shelf-card" data-cat="foundations">
+              <div class="shelf-meta">
+                <time datetime="2026-05-26">2026-05-26</time>
+                <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                <span class="tag-new">NEW</span>
+              </div>
+              <h3><a href="#">血液製剤</a></h3>
+              <p class="shelf-sub">講師: 須賀</p>
+            </article>
+            <article class="card shelf-card" data-cat="foundations">
+              <div class="shelf-meta">
+                <time datetime="2026-05-15">2026-05-15</time>
+                <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+              </div>
+              <h3><a href="#">病院薬剤師の仕事</a></h3>
+              <p class="shelf-sub">講師: 須賀</p>
+            </article>
+            <article class="card shelf-card" data-cat="infectious">
+              <div class="shelf-meta">
+                <time datetime="2026-04-24">2026-04-24</time>
+                <span class="chip-static"><span class="dot"></span>感染症</span>
+              </div>
+              <h3><a href="#">感染症治療~肺炎~</a></h3>
+              <p class="shelf-sub">講師: 須賀</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- タイムライン -->
+        <section aria-labelledby="timeline-heading">
+          <div class="section-head">
+            <h2 id="timeline-heading">アーカイブ・タイムライン</h2>
+          </div>
+          <div class="chip-row" role="group" aria-label="テーマで絞り込む">
+            <button class="chip" type="button" data-filter="all" aria-pressed="true">すべて</button>
+            <button class="chip" type="button" data-filter="cardiology" data-cat="cardiology" aria-pressed="false"><span class="dot"></span>循環器</button>
+            <button class="chip" type="button" data-filter="neurology" data-cat="neurology" aria-pressed="false"><span class="dot"></span>脳神経</button>
+            <button class="chip" type="button" data-filter="infectious" data-cat="infectious" aria-pressed="false"><span class="dot"></span>感染症</button>
+            <button class="chip" type="button" data-filter="foundations" data-cat="foundations" aria-pressed="false"><span class="dot"></span>基礎レクチャー</button>
+            <button class="chip" type="button" data-filter="research" data-cat="research" aria-pressed="false"><span class="dot"></span>研究・認定</button>
+            <button class="chip" type="button" data-filter="ai" data-cat="ai" aria-pressed="false"><span class="dot"></span>AI活用</button>
+          </div>
+
+          <ol class="timeline" id="timeline">
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2026年5月</h3><span class="count">2件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="foundations">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-05-26">05.26</time>
+                      <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                      <span class="tag-new">NEW</span>
+                    </div>
+                    <h4><a href="#">血液製剤</a></h4>
+                    <p class="tl-sub">講師: 須賀 ・ コース「薬剤師業務の土台を固める」レッスン4</p>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="foundations">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-05-15">05.15</time>
+                      <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                    </div>
+                    <h4><a href="#">病院薬剤師の仕事</a></h4>
+                    <p class="tl-sub">講師: 須賀</p>
+                  </article>
+                </li>
+              </ol>
+            </li>
+
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2026年4月</h3><span class="count">2件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="infectious">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-04-24">04.24</time>
+                      <span class="chip-static"><span class="dot"></span>感染症</span>
+                    </div>
+                    <h4><a href="#">感染症治療~肺炎~</a></h4>
+                    <p class="tl-sub">講師: 須賀</p>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="foundations">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-04-08">04.08</time>
+                      <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                    </div>
+                    <h4><a href="#">poly pharmacyについて</a></h4>
+                  </article>
+                </li>
+              </ol>
+            </li>
+
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2026年3月</h3><span class="count">2件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="foundations">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-03-27">03.27</time>
+                      <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                    </div>
+                    <h4><a href="#">poly pharmacyについて</a></h4>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="infectious">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-03-18">03.18</time>
+                      <span class="chip-static"><span class="dot"></span>感染症</span>
+                    </div>
+                    <h4><a href="#">感染症治療 ~総説~</a></h4>
+                  </article>
+                </li>
+              </ol>
+            </li>
+
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2026年2月</h3><span class="count">2件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="cardiology">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-02-24">02.24</time>
+                      <span class="chip-static"><span class="dot"></span>循環器</span>
+                    </div>
+                    <h4><a href="#">「心房細動の薬物治療」</a></h4>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="cardiology">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-02-10">02.10</time>
+                      <span class="chip-static"><span class="dot"></span>循環器</span>
+                    </div>
+                    <h4><a href="#">「虚血性心疾患の薬物治療」</a></h4>
+                  </article>
+                </li>
+              </ol>
+            </li>
+
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2026年1月</h3><span class="count">3件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="neurology">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-01-28">01.28</time>
+                      <span class="chip-static"><span class="dot"></span>脳神経</span>
+                    </div>
+                    <h4><a href="#">脳卒中（出血性疾患編）</a></h4>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="foundations">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-01-16">01.16</time>
+                      <span class="chip-static"><span class="dot"></span>基礎レクチャー</span>
+                    </div>
+                    <h4><a href="#">「今さら聞けないシリーズ」---輸液の基礎---</a></h4>
+                  </article>
+                </li>
+                <li class="tl-entry" data-cat="research">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2026-01-09">01.09</time>
+                      <span class="chip-static"><span class="dot"></span>研究・認定</span>
+                    </div>
+                    <h4><a href="#">帰還報告会(医療薬学会)</a></h4>
+                  </article>
+                </li>
+              </ol>
+            </li>
+
+            <li class="tl-month">
+              <div class="tl-month-head"><h3>2025年7月</h3><span class="count">1件</span></div>
+              <ol class="tl-entries">
+                <li class="tl-entry" data-cat="ai">
+                  <span class="tl-node" aria-hidden="true"></span>
+                  <article class="card tl-card">
+                    <div class="tl-meta">
+                      <time datetime="2025-07-23">07.23</time>
+                      <span class="chip-static"><span class="dot"></span>AI活用</span>
+                    </div>
+                    <h4><a href="#">AIを活用する【第四回】</a></h4>
+                  </article>
+                </li>
+              </ol>
+            </li>
+          </ol>
+
+          <p class="tl-empty" id="tl-empty" hidden>
+            このテーマの直近アーカイブはありません。<button type="button" id="tl-reset">絞り込みを解除</button>
+          </p>
+
+          <div class="tl-foot">
+            <a class="btn btn-ghost" href="#">過去のアーカイブをすべて見る（全24本）</a>
+          </div>
+        </section>
+
+        <!-- コース進捗 -->
+        <section aria-labelledby="courses-heading">
+          <div class="section-head">
+            <h2 id="courses-heading">コース進捗</h2>
+            <a class="section-link" href="#">コース一覧へ</a>
+          </div>
+          <div class="card course-list">
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">薬剤師業務の土台を固める</a>
+                <span class="badge-level">入門</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 6レッスン中4完了">
+                  <span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span></span><span></span>
+                </div>
+                <span class="course-frac">4/6</span>
+              </div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">循環器の薬物療法を学ぶ</a>
+                <span class="badge-level">標準</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 2レッスン中1完了">
+                  <span class="is-filled"></span><span></span>
+                </div>
+                <span class="course-frac">1/2</span>
+              </div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">脳梗塞・脳卒中の病態と治療を押さえる</a>
+                <span class="badge-level">標準</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 4レッスン中2完了">
+                  <span class="is-filled"></span><span class="is-filled"></span><span></span><span></span>
+                </div>
+                <span class="course-frac">2/4</span>
+              </div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">感染症治療と抗菌薬選択の基本</a>
+                <span class="badge-level">標準</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 2レッスン中1完了">
+                  <span class="is-filled"></span><span></span>
+                </div>
+                <span class="course-frac">1/2</span>
+              </div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">AIを業務と学習に活かす</a>
+                <span class="badge-level">標準</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 4レッスン中3完了">
+                  <span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span></span>
+                </div>
+                <span class="course-frac">3/4</span>
+              </div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">
+                <a href="#">臨床研究と専門認定への一歩</a>
+                <span class="badge-level">標準</span>
+              </div>
+              <div class="course-meter">
+                <div class="meter" role="img" aria-label="進捗 6レッスン中0完了">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <span class="course-frac">0/6</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- 学習レール -->
+      <aside class="rail" aria-label="学習レール">
+        <section class="card rail-card" aria-labelledby="resume-heading">
+          <span class="rail-label" id="resume-heading">続きから</span>
+          <p class="resume-course">コース「薬剤師業務の土台を固める」</p>
+          <h2 class="resume-title">レッスン4「血液製剤」</h2>
+          <p class="resume-sub">2026-05-26 ・ 講師: 須賀</p>
+          <div class="resume-meter">
+            <div class="meter" role="img" aria-label="進捗 6レッスン中4完了">
+              <span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span class="is-filled"></span><span></span><span></span>
+            </div>
+            <span class="course-frac">4/6</span>
+          </div>
+          <div class="resume-actions">
+            <a class="btn btn-primary btn-block" href="#">このレッスンを再開する</a>
+          </div>
+        </section>
+
+        <section class="card rail-card" aria-labelledby="stats-heading">
+          <span class="rail-label" id="stats-heading">学習ステータス</span>
+          <div class="stat-grid">
+            <dl class="stat-tile"><dt>連続学習</dt><dd>12<small>日</small></dd></dl>
+            <dl class="stat-tile"><dt>バッジ</dt><dd>5<small>個</small></dd></dl>
+            <dl class="stat-tile"><dt>完了レッスン</dt><dd>14</dd></dl>
+            <dl class="stat-tile"><dt>クイズ平均正答</dt><dd>82<small>%</small></dd></dl>
+          </div>
+          <div class="rail-cta">
+            <a class="btn btn-ghost btn-block" href="#">確認クイズを解く（全86問）</a>
+          </div>
+        </section>
+
+        <section class="card rail-card" aria-labelledby="queue-heading">
+          <span class="rail-label" id="queue-heading">今日の復習キュー</span>
+          <ol class="queue">
+            <li data-cat="infectious">
+              <span class="idx">01</span>
+              <div class="queue-body">
+                <a href="#">感染症治療~肺炎~</a>
+                <p class="queue-meta"><span class="dot"></span>感染症 ・ 2026-04-24</p>
+              </div>
+            </li>
+            <li data-cat="cardiology">
+              <span class="idx">02</span>
+              <div class="queue-body">
+                <a href="#">「心房細動の薬物治療」</a>
+                <p class="queue-meta"><span class="dot"></span>循環器 ・ 2026-02-24</p>
+              </div>
+            </li>
+            <li data-cat="foundations">
+              <span class="idx">03</span>
+              <div class="queue-body">
+                <a href="#">poly pharmacyについて</a>
+                <p class="queue-meta"><span class="dot"></span>基礎レクチャー ・ 2026-04-08</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="card rail-card" aria-labelledby="conf-heading">
+          <span class="rail-label" id="conf-heading">学会カレンダー</span>
+          <p class="conf-name">第36回日本医療薬学会年会</p>
+          <p class="conf-meta">2026-10-24〜26 ・ パシフィコ横浜</p>
+          <p class="conf-status">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+              <circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+              <path d="M4.4 7.2l1.8 1.8 3.4-3.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            事前参加登録 受付中
+          </p>
+          <div class="conf-link">
+            <a class="section-link" href="#">学会カレンダーを見る</a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-nav" aria-label="フッターナビゲーション">
+        <a href="#">About</a>
+        <a href="#">利用規約</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">問い合わせ</a>
+      </nav>
+      <p class="footer-copy">運営: 臨床学術ワーキンググループ</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------- theme toggle ---------- */
+      var root = document.documentElement;
+      var toggle = document.getElementById('theme-toggle');
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function effectiveTheme() {
+        var t = root.getAttribute('data-theme');
+        if (t === 'dark' || t === 'light') return t;
+        return mq.matches ? 'dark' : 'light';
+      }
+
+      function renderToggle() {
+        var mode = effectiveTheme();
+        root.setAttribute('data-mode', mode);
+        toggle.setAttribute('aria-label', mode === 'dark' ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+      }
+
+      toggle.addEventListener('click', function () {
+        var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('mock.theme', next);
+        } catch (e) { /* storage unavailable */ }
+        renderToggle();
+      });
+
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', renderToggle);
+      }
+      renderToggle();
+
+      /* ---------- mobile nav ---------- */
+      var navToggle = document.getElementById('nav-toggle');
+      var nav = document.getElementById('global-nav');
+
+      function setNav(open) {
+        nav.classList.toggle('is-open', open);
+        navToggle.setAttribute('aria-expanded', String(open));
+        navToggle.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
+      }
+
+      navToggle.addEventListener('click', function () {
+        setNav(navToggle.getAttribute('aria-expanded') !== 'true');
+      });
+
+      nav.addEventListener('click', function (event) {
+        if (event.target.closest('a')) setNav(false);
+      });
+
+      /* ---------- theme chip filter (colors stay fixed to entities) ---------- */
+      var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-filter]'));
+      var entries = Array.prototype.slice.call(document.querySelectorAll('.tl-entry'));
+      var months = Array.prototype.slice.call(document.querySelectorAll('.tl-month'));
+      var emptyNote = document.getElementById('tl-empty');
+      var resetButton = document.getElementById('tl-reset');
+
+      function applyFilter(filter) {
+        chips.forEach(function (chip) {
+          chip.setAttribute('aria-pressed', String(chip.dataset.filter === filter));
+        });
+        entries.forEach(function (entry) {
+          entry.hidden = filter !== 'all' && entry.dataset.cat !== filter;
+        });
+        var anyVisible = false;
+        months.forEach(function (month) {
+          var visible = month.querySelectorAll('.tl-entry:not([hidden])').length > 0;
+          month.hidden = !visible;
+          if (visible) anyVisible = true;
+        });
+        emptyNote.hidden = anyVisible;
+      }
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var pressed = chip.getAttribute('aria-pressed') === 'true';
+          applyFilter(pressed ? 'all' : chip.dataset.filter);
+        });
+      });
+
+      resetButton.addEventListener('click', function () {
+        applyFilter('all');
+      });
+    })();
+  </script>
+</body>
+</html>

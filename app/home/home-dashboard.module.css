@@ -1,0 +1,380 @@
+/* ホーム（案A: ダッシュボード型）のレイアウト。正: mockups/home-a.html */
+
+/* ページヘッダー */
+.pageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 28px 0 20px;
+}
+
+.siteTotals {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.headActions {
+  margin-left: auto;
+}
+
+/* スタットタイル行 */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* 12カラムグリッド */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "resume"
+    "queue"
+    "activity"
+    "courses"
+    "archives"
+    "conf";
+  gap: 16px;
+  padding: 20px 0 24px;
+}
+
+.areaResume {
+  grid-area: resume;
+}
+
+.areaQueue {
+  grid-area: queue;
+}
+
+.areaActivity {
+  grid-area: activity;
+}
+
+.areaCourses {
+  grid-area: courses;
+}
+
+.areaArchives {
+  grid-area: archives;
+}
+
+.areaConf {
+  grid-area: conf;
+}
+
+/* カード内共通 */
+.eyebrow {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.countBadge {
+  flex: none;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardFoot {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* 続きから */
+.resumeCourse {
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.resumeTitle {
+  margin-bottom: 8px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.resumeMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.segCaption {
+  margin: 6px 0 16px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.resumeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* リスト（復習キュー・最新アーカイブ） */
+.itemList {
+  margin-top: 4px;
+}
+
+.itemList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.itemList li:first-child {
+  border-top: 0;
+}
+
+.itemBody {
+  min-width: 0;
+}
+
+.itemTitle {
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.itemAction {
+  flex: none;
+}
+
+/* 週間アクティビティ（1系列・凡例なし） */
+.activityChart {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin-top: 8px;
+}
+
+.activityChart text {
+  fill: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gridLine {
+  stroke: var(--border);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.activityBar {
+  fill: var(--primary);
+}
+
+.chartSkeleton {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 8px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  aspect-ratio: 2 / 1;
+}
+
+/* コース進捗 */
+.courseList {
+  margin-top: 4px;
+}
+
+.courseList li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+}
+
+.courseList li:first-child {
+  border-top: 0;
+}
+
+.courseBody {
+  min-width: 0;
+}
+
+.courseName {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.courseName a:hover {
+  text-decoration: underline;
+}
+
+.courseMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.levelChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+/* 学会カレンダー */
+.confTitle {
+  margin-bottom: 8px;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.confMeta {
+  margin-bottom: 12px;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.confMeta span {
+  display: block;
+}
+
+.confEmpty {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.confFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* 進捗依存ブロックのスケルトン（hydrate 前のレイアウトシフト防止） */
+.skeletonStack {
+  display: grid;
+  gap: 14px;
+}
+
+.skeletonLine {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+
+.skeletonLineLg {
+  height: 24px;
+  width: 62%;
+}
+
+.skeletonLineMd {
+  width: 45%;
+}
+
+.skeletonLineSm {
+  width: 30%;
+}
+
+.skeletonAction {
+  height: 38px;
+  width: 200px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.resumeSkeleton {
+  min-height: 196px;
+}
+
+.queueSkeleton {
+  min-height: 200px;
+}
+
+/* 教育用コンテンツ注記 */
+.disclaimer {
+  margin-bottom: 48px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+/* レスポンシブ */
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "resume resume"
+      "queue activity"
+      "courses archives"
+      "courses conf";
+  }
+}
+
+@media (min-width: 1080px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+      "resume resume resume resume resume resume resume resume courses courses courses courses"
+      "queue queue queue queue activity activity activity activity courses courses courses courses"
+      "archives archives archives archives archives archives archives archives conf conf conf conf";
+    gap: 20px;
+  }
+}
+
+@media (max-width: 479px) {
+  .pageHead {
+    padding-top: 20px;
+  }
+
+  .pageHead h1 {
+    font-size: 24px;
+  }
+}

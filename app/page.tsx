@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
-import SiteFooter from "./site-footer";
-import { siteLegal, siteNavigation } from "./site-legal";
+import { ExamIcon } from "@phosphor-icons/react/dist/ssr";
+import { siteLegal } from "./site-legal";
 import { absoluteSiteUrl } from "./site-url";
-import { loadLearningContent, loadQuizBank, loadSiteContent } from "./site-data";
-import HomeLearning from "./home/home-learning";
+import {
+  loadAnnualMeetingsData,
+  loadLearningContent,
+  loadQuizBank,
+  loadSiteContent
+} from "./site-data";
+import { Button } from "./ui/button";
+import HomeDashboard from "./home/home-dashboard";
+import { ConferenceCard, LatestArchivesCard, type HomeLatestArchive } from "./home/home-static-cards";
 import type { HomeLearningData } from "./home/home-types";
+import { pickUpcomingMeeting } from "./home/upcoming-meeting";
+import styles from "./home/home-dashboard.module.css";
 
-const pageTitle = `復習ホーム | ${siteLegal.shortSiteName}`;
+const pageTitle = `学習ホーム | ${siteLegal.shortSiteName}`;
 const pageDescription =
-  "前回の続き、確認クイズ、テーマ別コースから学び直せる薬剤師向け勉強会アーカイブです。";
+  "学習の続き・今日の復習キュー・コース進捗・最新アーカイブ・学会情報をひと目で確認できる薬剤師向け学習ダッシュボードです。";
 const canonicalUrl = absoluteSiteUrl("/");
 const ogImageUrl = absoluteSiteUrl("/images/ogp.png");
 
@@ -41,20 +50,21 @@ export const metadata: Metadata = {
   }
 };
 
-function formatToday() {
-  return new Intl.DateTimeFormat("ja-JP", {
+function todayInTokyo(): string {
+  return new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Tokyo",
-    month: "long",
-    day: "numeric",
-    weekday: "short"
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
   }).format(new Date());
 }
 
 export default async function HomePage() {
-  const [siteContent, learningContent, quizBank] = await Promise.all([
+  const [siteContent, learningContent, quizBank, annualMeetings] = await Promise.all([
     loadSiteContent(),
     loadLearningContent(),
-    loadQuizBank()
+    loadQuizBank(),
+    loadAnnualMeetingsData()
   ]);
   const archiveById = new Map(siteContent.archives.map((archive) => [archive.id, archive]));
   const quizByArchiveId = new Map(quizBank.quizzes.map((quiz) => [quiz.archiveId, quiz]));
@@ -109,29 +119,50 @@ export default async function HomePage() {
     }))
   };
 
+  const archivesByDateDesc = [...homeData.archives].sort((a, b) => b.date.localeCompare(a.date));
+  const latestArchives: HomeLatestArchive[] = archivesByDateDesc.slice(0, 3).map((archive) => ({
+    id: archive.id,
+    title: archive.title,
+    date: archive.date,
+    speaker: archive.speaker,
+    themeId: archive.themeId
+  }));
+
+  const newestQuizArchive = archivesByDateDesc.find((archive) => archive.quiz);
+  const quizCtaHref = newestQuizArchive
+    ? `/archives/${encodeURIComponent(newestQuizArchive.id)}#quiz`
+    : "/archives";
+
+  const quizQuestionCount = quizBank.quizzes.reduce((sum, quiz) => sum + quiz.questions.length, 0);
+  const meeting = pickUpcomingMeeting(annualMeetings.meetings, todayInTokyo());
+
   return (
-    <div className="page-shell home-page-shell">
-      <header className="topbar home-topbar">
-        <a className="brand" href="/" aria-label={`${siteLegal.shortSiteName} ホーム`}>
-          <span className="brand-mark" aria-hidden="true"></span>
-          <span className="brand-copy">
-            <span className="brand-label">Learning Archive</span>
-            <span className="brand-name">{siteLegal.shortSiteName}</span>
-          </span>
-        </a>
-        <nav className="home-nav" aria-label="メインナビゲーション">
-          <a className="is-current" href="/" aria-current="page">
-            ホーム
-          </a>
-          <a href="/learn">学ぶ</a>
-          <a href="#archive-explorer">探す</a>
-          <a href={`${siteNavigation.aboutUrl}#openchat`}>参加する</a>
-        </nav>
-      </header>
+    <>
+      <div className={styles.pageHead}>
+        <div>
+          <h1>学習ホーム</h1>
+          <p className={styles.siteTotals}>
+            アーカイブ {homeData.archives.length}本 ・ コース {homeData.courses.length}本 ・ 確認クイズ{" "}
+            {quizQuestionCount}問
+          </p>
+        </div>
+        <div className={styles.headActions}>
+          <Button href={quizCtaHref}>
+            <ExamIcon size={16} aria-hidden="true" />
+            確認クイズを解く
+          </Button>
+        </div>
+      </div>
 
-      <HomeLearning data={homeData} dateLabel={formatToday()} />
+      <HomeDashboard
+        data={homeData}
+        archivesCard={<LatestArchivesCard archives={latestArchives} themes={homeData.themes} />}
+        conferenceCard={<ConferenceCard meeting={meeting} />}
+      />
 
-      <SiteFooter />
-    </div>
+      <p className={styles.disclaimer}>
+        教育用コンテンツ: 本アーカイブは個別診療の判断を代替するものではありません。学習進捗はこの端末のブラウザにのみ保存されます。
+      </p>
+    </>
   );
 }

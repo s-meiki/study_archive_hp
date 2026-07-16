@@ -47,25 +47,42 @@ export type SiteContent = {
   archives: SiteArchive[];
 };
 
+export type AnnualMeetingSource = {
+  label?: string;
+  url?: string;
+};
+
+export type AnnualMeetingMilestone = {
+  id: string;
+  label?: string;
+  category?: "abstract" | "registration" | "deadline" | "info";
+  startDate?: string;
+  endDate?: string;
+  note?: string;
+};
+
 export type AnnualMeeting = {
   id: string;
   eventName: string;
   society: string;
   status?: "confirmed" | "pending" | "past";
+  scope?: "local" | "national";
+  displayMonth?: number;
   primaryUrl?: string;
   imageUrl?: string;
+  imageFit?: "cover" | "contain";
   startDate?: string;
   endDate?: string;
+  sortDate?: string;
+  city?: string;
+  venue?: string;
+  theme?: string;
+  leadLabel?: string;
+  lead?: string;
   archivedAt?: string;
   note?: string;
-  milestones?: Array<{
-    id: string;
-    label: string;
-    category?: "abstract" | "registration" | "deadline" | "info";
-    startDate?: string;
-    endDate?: string;
-    note?: string;
-  }>;
+  sources?: AnnualMeetingSource[];
+  milestones?: AnnualMeetingMilestone[];
 };
 
 export type AnnualMeetingsData = {

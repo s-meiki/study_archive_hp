@@ -1,0 +1,28 @@
+.ring {
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+
+.track {
+  fill: none;
+  stroke: var(--track-primary);
+  stroke-width: 4;
+}
+
+.fill {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 22px 22px;
+}
+
+.value {
+  fill: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}

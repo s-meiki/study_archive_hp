@@ -1,0 +1,80 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--badge-dot, var(--muted));
+}
+
+.cat1 {
+  --badge-dot: var(--cat-1);
+}
+
+.cat2 {
+  --badge-dot: var(--cat-2);
+}
+
+.cat3 {
+  --badge-dot: var(--cat-3);
+}
+
+.cat4 {
+  --badge-dot: var(--cat-4);
+}
+
+.cat5 {
+  --badge-dot: var(--cat-5);
+}
+
+.cat6 {
+  --badge-dot: var(--cat-6);
+}
+
+.status {
+  padding: 3px 12px 3px 10px;
+  font-weight: 600;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.statusSuccess {
+  background: color-mix(in srgb, var(--success) 12%, var(--surface));
+  color: var(--success);
+}
+
+.statusWarning {
+  background: color-mix(in srgb, var(--warning) 12%, var(--surface));
+  color: var(--warning);
+}
+
+.statusDanger {
+  background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+  color: var(--danger);
+}

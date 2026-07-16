@@ -1,0 +1,96 @@
+/* コース文脈ストリップ */
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font-size: var(--fs-sm);
+}
+
+.stripBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--primary);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.stripBack:hover {
+  text-decoration: underline;
+}
+
+.stripBack svg {
+  flex: none;
+}
+
+.stripPosition {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+.stripNav {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-left: auto;
+}
+
+.stripNavLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+.stripNavLink:hover {
+  color: var(--primary);
+}
+
+/* レッスン進捗パネル */
+.panel {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.panelTitle {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.panelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.panelNote {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+
+@media (min-width: 1080px) {
+  .panel {
+    padding: 24px;
+  }
+}

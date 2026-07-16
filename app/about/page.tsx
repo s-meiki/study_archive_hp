@@ -1,8 +1,17 @@
 import { Fragment } from "react";
 import type { Metadata } from "next";
-import SiteFooter from "../site-footer";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { SectionHeader } from "../ui/section-header";
+import { Stat } from "../ui/stat";
+import buttonStyles from "../ui/button.module.css";
+import { loadSiteContent } from "../site-data";
 import { siteLegal, siteNavigation } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
+import styles from "./about.module.css";
 
 const openChatName = "臨床学術WG_SET.Ph";
 const openChatUrl =
@@ -42,25 +51,21 @@ const joinSteps = [
 // 見出しを文節単位の inline-block spans に分割し、語中改行を防ぐ。
 function kw(text: string) {
   return text.split("|").map((part, index) => (
-    <span className="about-kw" key={index}>
+    <span className={styles.kw} key={index}>
       {part}
     </span>
   ));
 }
 
-const stats = [
-  ["24", "開催回数（2024〜2026）"],
-  ["6", "テーマ領域"],
-  ["8", "録画（YouTube）"]
-];
+type ThemeCat = 1 | 2 | 3 | 4 | 5 | 6;
 
-const themeSummaries: [string, string, boolean][] = [
-  ["循環器", "虚血性心疾患や不整脈など、薬物治療の整理に使いやすいテーマ。", false],
-  ["脳神経", "脳梗塞・脳卒中など、病態と薬物療法をつなげて確認。", false],
-  ["感染症", "抗菌薬選択や肺炎など、現場で迷いやすい判断点を復習。", false],
-  ["基礎レクチャー", "病院薬剤師の仕事、薬物動態、輸液などの土台づくり。全6本。", true],
-  ["研究・認定", "臨床研究、学会、認定制度などキャリアに関わる学び。", false],
-  ["AI活用", "情報整理や業務改善など、医療者の実務に近いAI活用。", false]
+const themeSummaries: Array<{ cat: ThemeCat; name: string; summary: string; beginner: boolean }> = [
+  { cat: 1, name: "循環器", summary: "虚血性心疾患や不整脈など、薬物治療の整理に使いやすいテーマ。", beginner: false },
+  { cat: 2, name: "脳神経", summary: "脳梗塞・脳卒中など、病態と薬物療法をつなげて確認。", beginner: false },
+  { cat: 3, name: "感染症", summary: "抗菌薬選択や肺炎など、現場で迷いやすい判断点を復習。", beginner: false },
+  { cat: 4, name: "基礎レクチャー", summary: "病院薬剤師の仕事、薬物動態、輸液などの土台づくり。全6本。", beginner: true },
+  { cat: 5, name: "研究・認定", summary: "臨床研究、学会、認定制度などキャリアに関わる学び。", beginner: false },
+  { cat: 6, name: "AI活用", summary: "情報整理や業務改善など、医療者の実務に近いAI活用。", beginner: false }
 ];
 
 const learnFlow = ["アーカイブ", "コース", "クイズ", "進捗・バッジ"];
@@ -151,246 +156,218 @@ export const metadata: Metadata = {
   }
 };
 
-export default function AboutPage() {
+function ExternalButton({
+  href,
+  children,
+  variant = "primary"
+}: {
+  href: string;
+  children: string;
+  variant?: "primary" | "secondary";
+}) {
   return (
-    <div className="page-shell about-page">
-      <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true"></span>
-          <div className="brand-copy">
-            <span className="brand-label">Clinical Academic Working Group</span>
-            <span className="brand-name">{siteLegal.shortSiteName}</span>
-          </div>
+    <a
+      className={`${buttonStyles.button} ${variant === "primary" ? buttonStyles.primary : buttonStyles.secondary}`}
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {children}
+    </a>
+  );
+}
+
+export default async function AboutPage() {
+  const siteContent = await loadSiteContent();
+  const stats: Array<[string, string]> = [
+    [String(siteContent.archives.length), "開催回数（2024〜2026）"],
+    [String(siteContent.themes.length), "テーマ領域"],
+    [String(siteContent.archives.filter((archive) => archive.assets?.recording).length), "録画（YouTube）"]
+  ];
+
+  return (
+    <div className={styles.page}>
+      <section className={styles.hero} aria-labelledby="about-title">
+        <p className={styles.heroEyebrow}>薬剤師・医療従事者の勉強会</p>
+        <h1 id="about-title">
+          {kw("月2回、|オンラインで")}
+          <br />
+          {kw("つながって|学ぶ。")}
+        </h1>
+        <p className={styles.heroLead}>
+          一人だと続かない勉強を、仲間と。臨床から基礎、研究、AI活用まで、Zoomを使ったハイブリッドで最低月2回開催しています。
+        </p>
+        <div className={styles.heroActions}>
+          <ExternalButton href={openChatUrl}>オープンチャットに参加する</ExternalButton>
+          <Button variant="secondary" href="/archives">
+            アーカイブを見てみる
+          </Button>
         </div>
-        <div className="topbar-actions">
-          <a className="topbar-link" href={siteNavigation.archiveUrl}>
-            アーカイブ
-          </a>
-          <a className="topbar-link" href="#schedule">
-            直近予定
-          </a>
-          <a className="topbar-link" href={siteNavigation.annualMeetingsUrl}>
-            学会年会一覧
-          </a>
-          <a className="topbar-link" href={siteLegal.contactUrl}>
-            問い合わせ
-          </a>
+        <div className={styles.proofList} aria-label="勉強会の特徴">
+          <Badge>月2回以上</Badge>
+          <Badge>ハイブリッド開催</Badge>
+          <Badge>録画あり</Badge>
         </div>
-      </header>
+      </section>
 
-      <main className="about-main">
-        <section className="about-hero" aria-labelledby="about-title">
-          <div className="about-hero-content">
-            <p className="about-hero-eyebrow">薬剤師・医療従事者の勉強会</p>
-            <h1 id="about-title">
-              {kw("月2回、|オンラインで")}
-              <br />
-              {kw("つながって|学ぶ。")}
-            </h1>
-            <p>
-              一人だと続かない勉強を、仲間と。臨床から基礎、研究、AI活用まで、Zoomを使ったハイブリッドで最低月2回開催しています。
-            </p>
-            <div className="about-hero-actions">
-              <a className="button button-primary" href={openChatUrl} target="_blank" rel="noreferrer">
-                オープンチャットに参加する
-              </a>
-              <a className="button button-secondary" href={siteNavigation.archiveUrl}>
-                アーカイブを見てみる
-              </a>
-            </div>
-            <div className="about-proof-list" aria-label="勉強会の特徴">
-              <span>月2回以上</span>
-              <span>ハイブリッド開催</span>
-              <span>録画あり</span>
-            </div>
-          </div>
-        </section>
+      <section aria-label="こんな薬剤師のための会です" className={styles.section}>
+        <SectionHeader title="こんな薬剤師のための会です。" />
+        <div className={styles.answerGrid}>
+          {concerns.map(([worry, title, body]) => (
+            <Card className={styles.answerCard} key={worry}>
+              <p className={styles.answerWorry}>「{worry}」</p>
+              <h3>{kw(title)}</h3>
+              <p>{body}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-        <section className="about-section about-answer-section" aria-labelledby="answer-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">For You</div>
-              <h2 id="answer-heading">{kw("こんな|薬剤師のための|会です。")}</h2>
-            </div>
-          </div>
-          <div className="about-answer-grid">
-            {concerns.map(([worry, title, body]) => (
-              <article className="about-answer-card" key={worry}>
-                <p className="about-answer-worry">「{worry}」</p>
-                <h3>{kw(title)}</h3>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+      <section aria-label="参加までは、3ステップ" className={styles.section}>
+        <SectionHeader
+          title="参加までは、3ステップ。"
+          action={<ExternalButton href={openChatUrl}>オープンチャットに参加する</ExternalButton>}
+        />
+        <div className={styles.stepGrid}>
+          {joinSteps.map(([title, body], index) => (
+            <Card className={styles.stepCard} key={title}>
+              <span className={styles.stepNum} aria-hidden="true">
+                {index + 1}
+              </span>
+              <h3>{kw(title)}</h3>
+              <p>{body}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-        <section className="about-section about-steps-section" aria-labelledby="steps-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">How to Join</div>
-              <h2 id="steps-heading">{kw("参加までは、|3ステップ。")}</h2>
-            </div>
-            <a className="button button-primary" href={openChatUrl} target="_blank" rel="noreferrer">
-              オープンチャットに参加する
-            </a>
-          </div>
-          <div className="about-step-grid">
-            {joinSteps.map(([title, body], index) => (
-              <article className="about-step" key={title}>
-                <span className="about-step-num" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <h3>{kw(title)}</h3>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="about-section about-record-section" aria-labelledby="record-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">Track Record</div>
-              <h2 id="record-heading">{kw("2024年から|積み重ねた、|24回。")}</h2>
-            </div>
-            <a className="button button-tertiary" href={siteNavigation.archiveUrl}>
+      <section aria-label="2024年から積み重ねた、24回" className={styles.section}>
+        <SectionHeader
+          title="2024年から積み重ねた、24回。"
+          action={
+            <Button variant="secondary" href="/archives">
               アーカイブを見る
-            </a>
-          </div>
-          <p className="about-lead">
-            循環器・脳神経・感染症から、基礎レクチャー、研究・認定、AI活用まで6テーマ。過去回の録画8本とスライドを公開しています。
-          </p>
-          <div className="about-stat-grid">
-            {stats.map(([value, label]) => (
-              <div className="about-stat" key={label}>
-                <strong>{value}</strong>
-                <span>{label}</span>
+            </Button>
+          }
+        />
+        <p className={styles.sectionLead}>
+          循環器・脳神経・感染症から、基礎レクチャー、研究・認定、AI活用まで6テーマ。過去回の録画8本とスライドを公開しています。
+        </p>
+        <div className={styles.statRow}>
+          {stats.map(([value, label]) => (
+            <Stat key={label} label={label} value={<span className="tabular-nums">{value}</span>} />
+          ))}
+        </div>
+        <div className={styles.themeGrid}>
+          {themeSummaries.map((theme) => (
+            <Card className={styles.themeCard} key={theme.name}>
+              <div className={styles.themeCardHead}>
+                <Badge variant="theme" cat={theme.cat}>
+                  {theme.name}
+                </Badge>
+                {theme.beginner ? <Badge>初学者向け</Badge> : null}
               </div>
-            ))}
-          </div>
-          <div className="about-theme-grid">
-            {themeSummaries.map(([name, summary, beginner]) => (
-              <article className="about-theme-card" key={name}>
-                <div className="about-theme-card-head">
-                  <h3>{name}</h3>
-                  {beginner ? <span className="about-tag">初学者向け</span> : null}
+              <p>{theme.summary}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section aria-label="参加して、終わりにしない" className={styles.section}>
+        <SectionHeader title="参加して、終わりにしない。" />
+        <p className={styles.sectionLead}>
+          アーカイブで気になる回を見て、コースで体系的に学び、クイズで理解を確認。進捗やバッジも記録されます。登録・ログインは不要、ブラウザだけで今すぐ試せます（進捗はお使いのブラウザに保存されます）。
+        </p>
+        <div className={styles.flow} aria-hidden="true">
+          {learnFlow.map((label, index) => (
+            <Fragment key={label}>
+              {index > 0 ? (
+                <span className={styles.flowArrow}>
+                  <ArrowRightIcon weight="bold" />
+                </span>
+              ) : null}
+              <span className={styles.flowStep}>{label}</span>
+            </Fragment>
+          ))}
+        </div>
+        <div className={styles.learnActions}>
+          <Button variant="primary" href="/">
+            学習を始める
+          </Button>
+          <Button variant="secondary" href="/courses">
+            コース一覧を見る
+          </Button>
+        </div>
+      </section>
+
+      <section aria-label="直近の勉強会予定" className={styles.section} id="schedule">
+        <SectionHeader
+          title="直近の勉強会予定"
+          action={<ExternalButton href={openChatUrl} variant="secondary">最新情報を受け取る</ExternalButton>}
+        />
+        <div className={styles.meetingGrid}>
+          {upcomingMeetings.map((meeting) => (
+            <Card className={styles.meetingCard} key={meeting.id}>
+              <div className={styles.meetingDate}>
+                <span>{meeting.dateLabel}</span>
+                <strong>
+                  {meeting.weekday} {meeting.time}
+                </strong>
+              </div>
+              <div className={styles.meetingBody}>
+                <h3>{meeting.title}</h3>
+                <p>{meeting.theme} / 参加URLと詳細はオープンチャットで共有します。</p>
+                <div className={styles.meetingTags} aria-label={`${meeting.title} の予定情報`}>
+                  <Badge>{meeting.format}</Badge>
+                  {meeting.recordingPlanned ? <Badge>録画予定あり</Badge> : null}
+                  {meeting.materialsPlanned ? <Badge>資料共有あり</Badge> : null}
                 </div>
-                <p>{summary}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-        <section className="about-section about-learn-section" aria-labelledby="learn-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">Keep Learning</div>
-              <h2 id="learn-heading">{kw("参加して、|終わりにしない。")}</h2>
+      <section aria-label="よくある質問" className={styles.section}>
+        <SectionHeader title="よくある質問" />
+        <Card className={styles.faqList}>
+          {faqs.map(([question, answer]) => (
+            <div className={styles.faqItem} key={question}>
+              <h3>{question}</h3>
+              <p>{answer}</p>
             </div>
-          </div>
-          <p className="about-lead">
-            アーカイブで気になる回を見て、コースで体系的に学び、クイズで理解を確認。進捗やバッジも記録されます。登録・ログインは不要、ブラウザだけで今すぐ試せます（進捗はお使いのブラウザに保存されます）。
-          </p>
-          <div className="about-flow" aria-hidden="true">
-            {learnFlow.map((label, index) => (
-              <Fragment key={label}>
-                {index > 0 ? <span className="about-flow-arrow">→</span> : null}
-                <span className="about-flow-step">{label}</span>
-              </Fragment>
-            ))}
-          </div>
-          <div className="about-learn-actions">
-            <a className="button button-primary" href="/learn">
-              学習を始める
-            </a>
-            <a className="button button-tertiary" href="/courses">
-              コース一覧を見る
-            </a>
-          </div>
-        </section>
+          ))}
+        </Card>
+      </section>
 
-        <section className="about-section about-schedule-section" id="schedule" aria-labelledby="schedule-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">Schedule</div>
-              <h2 id="schedule-heading">{kw("直近の|勉強会予定")}</h2>
-            </div>
-            <a className="button button-secondary" href={openChatUrl} target="_blank" rel="noreferrer">
-              最新情報を受け取る
-            </a>
-          </div>
-          <div className="about-meeting-grid">
-            {upcomingMeetings.map((meeting) => (
-              <article className="about-meeting-card" key={meeting.id}>
-                <div className="about-meeting-date">
-                  <span>{meeting.dateLabel}</span>
-                  <strong>
-                    {meeting.weekday} {meeting.time}
-                  </strong>
-                </div>
-                <div className="about-meeting-body">
-                  <h3>{meeting.title}</h3>
-                  <p>{meeting.theme} / 参加URLと詳細はオープンチャットで共有します。</p>
-                  <div className="about-meeting-tags" aria-label={`${meeting.title} の予定情報`}>
-                    <span>{meeting.format}</span>
-                    {meeting.recordingPlanned ? <span>録画予定あり</span> : null}
-                    {meeting.materialsPlanned ? <span>資料共有あり</span> : null}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="about-section about-faq-section" aria-labelledby="faq-heading">
-          <div className="about-section-head">
-            <div>
-              <div className="section-kicker">FAQ</div>
-              <h2 id="faq-heading">{kw("よくある|質問")}</h2>
-            </div>
-          </div>
-          <div className="about-faq-list">
-            {faqs.map(([question, answer]) => (
-              <article className="about-faq-item" key={question}>
-                <h3>{question}</h3>
-                <p>{answer}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="about-section about-join-section" id="openchat" aria-labelledby="openchat-heading">
-          <div className="about-join-copy">
-            <div className="section-kicker">Join Us</div>
-            <h2 id="openchat-heading">{kw("まずは、|オープンチャットへ。")}</h2>
+      <section className={styles.section} id="openchat" aria-labelledby="openchat-heading">
+        <Card className={styles.joinPanel}>
+          <div className={styles.joinCopy}>
+            <h2 id="openchat-heading">まずは、オープンチャットへ。</h2>
             <p>
               「{openChatName}」では、開催日程・参加URL・資料の案内を共有しています。QRコードまたはリンクから参加できます。まず質問したい方は、問い合わせフォームもご利用ください。
             </p>
-            <div className="about-join-actions">
-              <a className="button button-primary" href={openChatUrl} target="_blank" rel="noreferrer">
-                オープンチャットに参加する
-              </a>
-              <a className="button button-tertiary" href={siteLegal.contactUrl}>
+            <div className={styles.joinActions}>
+              <ExternalButton href={openChatUrl}>オープンチャットに参加する</ExternalButton>
+              <Button variant="secondary" href={siteLegal.contactUrl}>
                 問い合わせフォーム
-              </a>
+              </Button>
             </div>
           </div>
-          <div className="about-qr-block" aria-label={`${openChatName} の参加QRコード`}>
-            <img src="/images/openchat-qr.png" alt={`${openChatName} 参加用QRコード`} width="590" height="590" />
+          <div className={styles.qrBlock} aria-label={`${openChatName} の参加QRコード`}>
+            <img alt={`${openChatName} 参加用QRコード`} height="160" src="/images/openchat-qr.png" width="160" />
             <p>{openChatName}</p>
           </div>
-        </section>
+        </Card>
+      </section>
 
-        <section className="notice about-notice" aria-labelledby="notice-heading">
-          <strong id="notice-heading">教育用コンテンツ</strong>
-          <span>
-            本アーカイブは個別診療の判断を代替するものではありません。症例や患者情報を投稿する場合は個人が特定されない形にし、
-            誹謗中傷、営業・勧誘目的の投稿、無断転載は控えてください。
-          </span>
-        </section>
-      </main>
-
-      <SiteFooter />
+      <section aria-labelledby="notice-heading" className={styles.notice}>
+        <strong id="notice-heading">教育用コンテンツ</strong>
+        <span>
+          本アーカイブは個別診療の判断を代替するものではありません。症例や患者情報を投稿する場合は個人が特定されない形にし、
+          誹謗中傷、営業・勧誘目的の投稿、無断転載は控えてください。
+        </span>
+      </section>
     </div>
   );
 }
