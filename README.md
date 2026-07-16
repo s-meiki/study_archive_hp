@@ -6,9 +6,9 @@
 
 ```text
 app/      Next.js のページと API ルート
-public/   公開する静的ページと配布ファイル
+public/   静的アセットと生成データ（public/data/*.js）
 admin/    ローカル運用用の管理画面
-content/  元Excelなどの保存用データ
+content/  元Excel・コース定義・クイズ原稿
 scripts/  一括取り込みや補助スクリプト
 docs/     運用メモ
 ```
@@ -19,13 +19,18 @@ docs/     運用メモ
 - 公開ページの開発: `npm run dev`
 - 管理画面を開く: `open admin/index.html`
 - ブラウザ表示:
-  - 公開ページ: `http://localhost:3000/`
-  - 詳細ページ: `http://localhost:3000/archive?id=archive-20241210-c9374cc04a`
-  - 学会年会一覧: `http://localhost:3000/annual-meetings-2026`
+  - ホーム: `http://localhost:3000/`
+  - アーカイブ一覧: `http://localhost:3000/archives`
+  - 詳細ページ: `http://localhost:3000/archives/archive-20241210-c9374cc04a`
+  - コース一覧: `http://localhost:3000/courses`
+  - 学習ダッシュボード: `http://localhost:3000/dashboard`
+  - 学会年会カレンダー: `http://localhost:3000/calendar`
   - 問い合わせフォーム: `http://localhost:3000/contact`
   - 利用規約: `http://localhost:3000/terms`
   - プライバシーポリシー: `http://localhost:3000/privacy`
   - 管理画面: `http://localhost:4173/admin/`
+
+旧URL（`/archive?id=...`、`/annual-meetings-2026` など）は新URLへ恒久リダイレクトされます（`next.config.mjs` の redirects）。
 
 管理画面は引き続き静的ファイルなので、必要なら別ターミナルで次を使います。
 
