@@ -57,13 +57,14 @@ export function AppHeader() {
           <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
             <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary)" />
             <path
-              d="M6 15h4l2.5-6 3 9 2-5h4.5"
+              d="M7 20h4.7v-4.6h4.6v-4.6H21"
               fill="none"
               stroke="var(--on-primary)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
+            <circle cx="21" cy="8.2" r="1.6" fill="var(--on-primary)" />
           </svg>
           <span>臨床学術WG</span>
         </Link>

@@ -62,13 +62,14 @@
   --warning-tint: rgba(180, 83, 9, 0.12);
   --danger-tint: rgba(185, 28, 28, 0.12);
 
-  /* ロゴマーク (パルス波形)
-     角丸スクエア (rx=7/28) の primary塗りに、白のパルス波形ライン (stroke 2/28)。
-     学びの継続的なリズム・臨床のバイタルサインを表す。
+  /* ロゴマーク (学びの階段)
+     角丸スクエア (rx=7/28) の primary塗りに、白の階段ライン (stroke 2/28) と到達点ドット。
+     入門→標準→実践と段階を上がるコース設計・学びの積み上げを表す。
      サイト実体は public/images/logo.svg (ヘッダーは app/components/app-header.tsx に同一パス)。
      SVGパス: <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary)"/>
-              <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="var(--on-primary)"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> (viewBox 0 0 28 28)
+              <path d="M7 20h4.7v-4.6h4.6v-4.6H21" fill="none" stroke="var(--on-primary)"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="21" cy="8.2" r="1.6" fill="var(--on-primary)"/> (viewBox 0 0 28 28)
      色・形・比率は改変しない。プレビューHTMLには同じインラインSVGを複製する。 */
 }
 

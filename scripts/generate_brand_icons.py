@@ -3,8 +3,9 @@
 
 Source of truth: public/images/logo.svg (viewBox 0 0 28 28)
   <rect x="1" y="1" width="26" height="26" rx="7" fill="#4f46e5"/>
-  <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="#ffffff"
+  <path d="M7 20h4.7v-4.6h4.6v-4.6H21" fill="none" stroke="#ffffff"
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="21" cy="8.2" r="1.6" fill="#ffffff"/>
 
 Outputs (into public/):
   favicon.svg          … logo.svg と同一内容 (aria属性なしのプレーン版)
@@ -26,8 +27,9 @@ PUBLIC = ROOT / "public"
 VIEWBOX = 28.0
 PRIMARY = (0x4F, 0x46, 0xE5, 255)
 WHITE = (255, 255, 255, 255)
-# "M6 15h4l2.5-6 3 9 2-5h4.5" を展開した頂点列
-WAVE = [(6, 15), (10, 15), (12.5, 9), (15.5, 18), (17.5, 13), (22, 13)]
+# "M7 20h4.7v-4.6h4.6v-4.6H21" を展開した頂点列 (学びの階段)
+STEPS = [(7, 20), (11.7, 20), (11.7, 15.4), (16.3, 15.4), (16.3, 10.8), (21, 10.8)]
+DOT = (21, 8.2, 1.6)  # 到達点ドット (cx, cy, r)
 STROKE = 2.0
 RECT = (1.0, 1.0, 27.0, 27.0)
 RECT_RADIUS = 7.0
@@ -58,19 +60,23 @@ def draw_mark(size: int, full_bleed: bool) -> Image.Image:
             fill=PRIMARY,
         )
 
-    pts = [(x * scale + offset, y * scale + offset) for x, y in WAVE]
+    pts = [(x * scale + offset, y * scale + offset) for x, y in STEPS]
     w = STROKE * scale
     d.line(pts, fill=WHITE, width=round(w), joint="curve")
     for cx, cy in (pts[0], pts[-1]):  # 丸線端
         r = w / 2
         d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=WHITE)
+    dx, dy, dr = DOT
+    cx, cy, r = dx * scale + offset, dy * scale + offset, dr * scale
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=WHITE)
 
     return img.resize((size, size), Image.LANCZOS)
 
 
 FAVICON_SVG = """<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
   <rect x="1" y="1" width="26" height="26" rx="7" fill="#4f46e5"/>
-  <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M7 20h4.7v-4.6h4.6v-4.6H21" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="21" cy="8.2" r="1.6" fill="#ffffff"/>
 </svg>
 """
 
