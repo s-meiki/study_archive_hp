@@ -1,7 +1,7 @@
 <!-- @dsCard group="Assets" name="OGP書き出し原稿" subtitle="1200x630 フルブリード (ogp.png生成用)" width="1200" height="630" -->
 <!--
   使い方 (AI向け):
-  - ogp.png を再生成するための実寸原稿。左に代表コピーとサイト全体数値、右にコース進捗ダッシュボードのモチーフ。
+  - ogp.png を再生成するための実寸原稿。左にOGP専用コピー（代表コピーの「勉強会」を「学び」に変えた派生。めいき指定）とサイト全体数値、右にコース進捗ダッシュボードのモチーフ。
   - 書き出し: リポジトリルートで design-system/README.md「OGP画像の書き出し」のコマンドを実行する。
   - 人名・絵文字・感嘆符・誇大表現を入れない。学びの階段マーク (foundations/brand.html が正) を改変せず使う。
   - 右カードのコース名・進捗値は実データ (mockups/DESIGN_BRIEF.md) 由来。変更時も実在データから採る。
@@ -17,7 +17,10 @@
     --ink: #0f172a; --ink-2: #475569; --muted: #64748b; --border: #e3e8f0;
     --primary: #4f46e5; --on-primary: #ffffff;
     --track-primary: #e0e7ff;
-    --font-sans: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    /* この原稿は macOS ローカルの Chrome headless でのみ書き出す前提のため、
+       あえて Hiragino Sans を先頭にする (Noto Sans JP が拾われると W7/W8 が細く描画され
+       視認性が落ちる。めいき指定で太め表示を優先)。Web配信ページには適用しない。 */
+    --font-sans: "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; margin: 0; }
   html, body { padding: 0; }
@@ -32,18 +35,18 @@
   .og-brand svg { display: block; }
   .og-brand-name { color: var(--ink); font-size: 27px; font-weight: 700; letter-spacing: 0.02em; }
   .og-brand-sub { color: var(--muted); font-size: 18px; font-weight: 500; }
-  .og-title { color: var(--ink); font-size: 62px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.24; }
+  .og-title { color: var(--ink); font-size: 62px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.24; }
   .og-title em { font-style: normal; color: var(--primary); }
-  .og-lead { margin-top: 18px; color: var(--ink-2); font-size: 25px; font-weight: 500; line-height: 1.55; }
+  .og-lead { margin-top: 18px; color: var(--ink-2); font-size: 25px; font-weight: 600; line-height: 1.55; }
   .og-foot { display: flex; align-items: center; gap: 12px; }
   .og-stat {
     display: inline-flex; align-items: baseline; gap: 8px; padding: 12px 20px;
     border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
   }
-  .og-stat .label { color: var(--muted); font-size: 18px; font-weight: 600; }
-  .og-stat .value { color: var(--ink); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .og-stat .value small { margin-left: 1px; color: var(--ink-2); font-size: 18px; font-weight: 600; }
+  .og-stat .label { color: var(--muted); font-size: 18px; font-weight: 700; }
+  .og-stat .value { color: var(--ink); font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .og-stat .value small { margin-left: 1px; color: var(--ink-2); font-size: 18px; font-weight: 700; }
   .og-right { flex: none; width: 400px; display: flex; align-items: center; justify-content: center; }
   .og-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: var(--primary); }
 
@@ -79,7 +82,7 @@
       <span class="og-brand-sub">勉強会アーカイブ</span>
     </div>
     <div>
-      <h1 class="og-title">必要な勉強会に、<br><em>すぐ届く。</em></h1>
+      <h1 class="og-title">必要な学びに、<br><em>すぐ届く。</em></h1>
       <p class="og-lead">録画・資料・確認クイズで、<br>復習から実践へつなげる。</p>
     </div>
     <div class="og-foot">
