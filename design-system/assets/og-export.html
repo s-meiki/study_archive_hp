@@ -1,10 +1,10 @@
 <!-- @dsCard group="Assets" name="OGP書き出し原稿" subtitle="1200x630 フルブリード (ogp.png生成用)" width="1200" height="630" -->
 <!--
   使い方 (AI向け):
-  - ogp.png を再生成するための実寸原稿。templates/social.html のOGP型のフルブリード版 (角丸・影・外枠なし)。
+  - ogp.png を再生成するための実寸原稿。左に代表コピーとサイト全体数値、右にコース進捗ダッシュボードのモチーフ。
   - 書き出し: リポジトリルートで design-system/README.md「OGP画像の書き出し」のコマンドを実行する。
-  - 見出しはブランド代表コピー、下段はサイト全体数値のスタットチップ。
-    人名・絵文字・感嘆符・誇大表現を入れない。パルス波形マーク (foundations/brand.html が正) を改変せず使う。
+  - 人名・絵文字・感嘆符・誇大表現を入れない。学びの階段マーク (foundations/brand.html が正) を改変せず使う。
+  - 右カードのコース名・進捗値は実データ (mockups/DESIGN_BRIEF.md) 由来。変更時も実在データから採る。
 -->
 <!DOCTYPE html>
 <html lang="ja">
@@ -24,71 +24,89 @@
   body { font-family: var(--font-sans); }
   .og {
     position: relative; width: 1200px; height: 630px; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: space-between;
-    padding: 64px 72px 56px; background: var(--bg);
+    display: flex; align-items: stretch; gap: 48px;
+    padding: 60px 72px 64px; background: var(--bg);
   }
-  /* 装飾: 右下の大きなパルス波形 (トラック色) */
-  .og-wave {
-    position: absolute; right: -40px; bottom: 88px; width: 640px; height: 320px;
-  }
-  .og-brand { position: relative; display: flex; align-items: center; gap: 18px; }
+  .og-left { display: flex; flex-direction: column; justify-content: space-between; flex: 1 1 auto; }
+  .og-brand { display: flex; align-items: center; gap: 14px; }
   .og-brand svg { display: block; }
-  .og-brand-name { color: var(--ink); font-size: 34px; font-weight: 700; letter-spacing: 0.02em; }
-  .og-brand-sub { margin-left: 2px; color: var(--muted); font-size: 22px; font-weight: 500; }
-  .og-main { position: relative; }
-  .og-title {
-    color: var(--ink); font-size: 76px; font-weight: 700;
-    letter-spacing: -0.01em; line-height: 1.22;
-  }
+  .og-brand-name { color: var(--ink); font-size: 27px; font-weight: 700; letter-spacing: 0.02em; }
+  .og-brand-sub { color: var(--muted); font-size: 18px; font-weight: 500; }
+  .og-title { color: var(--ink); font-size: 62px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.24; }
   .og-title em { font-style: normal; color: var(--primary); }
-  .og-lead {
-    margin-top: 22px;
-    color: var(--ink-2); font-size: 30px; font-weight: 500; line-height: 1.55;
-  }
-  .og-foot { position: relative; display: flex; align-items: center; gap: 16px; }
+  .og-lead { margin-top: 18px; color: var(--ink-2); font-size: 25px; font-weight: 500; line-height: 1.55; }
+  .og-foot { display: flex; align-items: center; gap: 12px; }
   .og-stat {
-    display: inline-flex; align-items: baseline; gap: 10px;
-    padding: 16px 26px; border: 1px solid var(--border); border-radius: 14px;
-    background: var(--surface); box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+    display: inline-flex; align-items: baseline; gap: 8px; padding: 12px 20px;
+    border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
   }
-  .og-stat .label { color: var(--muted); font-size: 22px; font-weight: 600; letter-spacing: 0.02em; }
-  .og-stat .value {
-    color: var(--ink); font-size: 30px; font-weight: 700;
-    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
-  }
-  .og-stat .value small { margin-left: 2px; color: var(--ink-2); font-size: 22px; font-weight: 600; }
+  .og-stat .label { color: var(--muted); font-size: 18px; font-weight: 600; }
+  .og-stat .value { color: var(--ink); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .og-stat .value small { margin-left: 1px; color: var(--ink-2); font-size: 18px; font-weight: 600; }
+  .og-right { flex: none; width: 400px; display: flex; align-items: center; justify-content: center; }
   .og-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: var(--primary); }
+
+  /* コース進捗ダッシュボードのモチーフ */
+  .dash {
+    width: 400px; padding: 26px 28px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+  }
+  .dash-head { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+  .ring { flex: none; }
+  .ring .v { fill: var(--ink); font-size: 22px; font-weight: 700; font-family: var(--font-sans); }
+  .dash-head .cap .k { color: var(--muted); font-size: 15px; font-weight: 600; letter-spacing: 0.06em; }
+  .dash-head .cap .n { color: var(--ink); font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .course { margin-top: 16px; }
+  .course .nm { display: flex; justify-content: space-between; color: var(--ink-2); font-size: 16px; font-weight: 600; }
+  .course .nm span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .course .bar { margin-top: 8px; height: 8px; border-radius: 4px; background: var(--track-primary); overflow: hidden; }
+  .course .bar i { display: block; height: 100%; border-radius: 4px; background: var(--primary); }
 </style>
 </head>
 <body>
 <div class="og">
-  <svg class="og-wave" viewBox="0 0 320 160" fill="none" aria-hidden="true">
-    <path d="M0 96h56l24-58 30 88 20-48h54l22-30 26 62 18-40h70"
-          stroke="var(--track-primary)" stroke-width="10"
-          stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-
-  <div class="og-brand">
-    <svg width="64" height="64" viewBox="0 0 28 28" aria-hidden="true">
-      <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary)"/>
-      <path d="M6 15h4l2.5-6 3 9 2-5h4.5" fill="none" stroke="var(--on-primary)"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="og-brand-name">臨床学術ワーキンググループ</span>
-    <span class="og-brand-sub">勉強会アーカイブ</span>
+  <div class="og-left">
+    <div class="og-brand">
+      <svg width="48" height="48" viewBox="0 0 28 28" aria-hidden="true">
+        <rect x="1" y="1" width="26" height="26" rx="7" fill="var(--primary)"/>
+        <path d="M7 20h4.7v-4.6h4.6v-4.6H21" fill="none" stroke="var(--on-primary)"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="21" cy="8.2" r="1.6" fill="var(--on-primary)"/>
+      </svg>
+      <span class="og-brand-name">臨床学術ワーキンググループ</span>
+      <span class="og-brand-sub">勉強会アーカイブ</span>
+    </div>
+    <div>
+      <h1 class="og-title">必要な勉強会に、<br><em>すぐ届く。</em></h1>
+      <p class="og-lead">録画・資料・確認クイズで、<br>復習から実践へつなげる。</p>
+    </div>
+    <div class="og-foot">
+      <span class="og-stat"><span class="label">アーカイブ</span><span class="value">24<small>本</small></span></span>
+      <span class="og-stat"><span class="label">コース</span><span class="value">6<small>本</small></span></span>
+      <span class="og-stat"><span class="label">確認クイズ</span><span class="value">86<small>問</small></span></span>
+    </div>
   </div>
-
-  <div class="og-main">
-    <h1 class="og-title">必要な勉強会に、<br><em>すぐ届く。</em></h1>
-    <p class="og-lead">薬剤師・医療従事者のための勉強会アーカイブ。<br>録画・資料・確認クイズで、復習から実践へつなげる。</p>
+  <div class="og-right">
+    <div class="dash">
+      <div class="dash-head">
+        <svg class="ring" width="104" height="104" viewBox="0 0 104 104">
+          <circle cx="52" cy="52" r="44" fill="none" stroke="var(--track-primary)" stroke-width="10"/>
+          <circle cx="52" cy="52" r="44" fill="none" stroke="var(--primary)" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="184 276" transform="rotate(-90 52 52)"/>
+          <text class="v" x="52" y="60" text-anchor="middle">67%</text>
+        </svg>
+        <div class="cap">
+          <div class="k">進行中のコース</div>
+          <div class="n">薬剤師業務の土台<br>を固める</div>
+        </div>
+      </div>
+      <div class="course"><div class="nm"><span>循環器の薬物療法</span><span>1/2</span></div><div class="bar"><i style="width:50%"></i></div></div>
+      <div class="course"><div class="nm"><span>感染症治療と抗菌薬選択</span><span>1/2</span></div><div class="bar"><i style="width:50%"></i></div></div>
+      <div class="course"><div class="nm"><span>AIを業務と学習に活かす</span><span>3/4</span></div><div class="bar"><i style="width:75%"></i></div></div>
+    </div>
   </div>
-
-  <div class="og-foot">
-    <span class="og-stat"><span class="label">アーカイブ</span><span class="value">24<small>本</small></span></span>
-    <span class="og-stat"><span class="label">コース</span><span class="value">6<small>本</small></span></span>
-    <span class="og-stat"><span class="label">確認クイズ</span><span class="value">86<small>問</small></span></span>
-  </div>
-
   <div class="og-bar"></div>
 </div>
 </body>
