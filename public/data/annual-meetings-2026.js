@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-07-10",
+  "verifiedAt": "2026-09-29",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -23,7 +23,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "",
       "leadLabel": "主催",
       "lead": "第73回北海道薬学大会組織委員会",
-      "note": "",
+      "note": "公式サイトでは開催御礼が掲載されています。",
       "sources": [
         {
           "label": "公式サイト",
@@ -70,7 +70,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "contain",
       "scope": "national",
       "displayMonth": 7,
-      "status": "confirmed",
+      "status": "past",
       "society": "日本臨床救急医学会",
       "eventName": "第29回日本臨床救急医学会総会・学術集会",
       "startDate": "2026-07-16",
@@ -80,7 +80,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "探そう・救急医療の3拍子 ―原点から現点。そして頂点へ―",
       "leadLabel": "会長",
       "lead": "藤見 聡（大阪急性期・総合医療センター 高度救命救急センター救急診療科）",
-      "note": "公式サイトではカフェ企画の一部事前申込期間が2026-07-12まで延長された旨が重要なお知らせとして案内されています。",
+      "note": "公式サイトでは開催終了の御礼と、専門医共通講習・救急科領域講習のオンデマンド配信が2026-07-31から2026-08-28まで行われる旨が案内されています。",
       "milestones": [
         {
           "id": "clinical-emergency-29-abstract",
@@ -111,11 +111,12 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "参加登録の案内",
           "url": "https://site.convention.co.jp/jsem29/registration/"
         }
-      ]
+      ],
+      "archivedAt": "2026-07-28"
     },
     {
       "id": "medical-pharmacy-forum-2026",
-      "primaryUrl": "https://k-gakkai.jp/cps2026/",
+      "primaryUrl": "https://www.k-gakkai.jp/cps2026/",
       "imageUrl": "https://www.k-gakkai.jp/cps2026/images/top/mainvisual.jpg",
       "imageFit": "cover",
       "scope": "national",
@@ -130,7 +131,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "医療薬科学が拓く新しい薬学の世界",
       "leadLabel": "実行委員長",
       "lead": "舘 知也（名古屋市立大学大学院薬学研究科 教授）",
-      "note": "",
+      "note": "公式サイトでは開催御礼、優秀ポスター賞受賞者一覧、ワークショップ参加者向け単位申請案内が掲載されています。",
       "milestones": [
         {
           "id": "medical-pharmacy-forum-2026-abstract",
@@ -177,7 +178,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "cover",
       "scope": "national",
       "displayMonth": 7,
-      "status": "confirmed",
+      "status": "past",
       "society": "日本中毒学会",
       "eventName": "第48回日本中毒学会総会・学術集会",
       "startDate": "2026-07-24",
@@ -187,7 +188,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "ヘルスセキュリティーと中毒",
       "leadLabel": "会長",
       "lead": "大西 光雄（国立病院機構 大阪医療センター 救命救急センター）",
-      "note": "",
+      "note": "公式サイトでは2026-07-27に開催終了の御礼が掲載されています。",
       "sources": [
         {
           "label": "開催概要",
@@ -222,7 +223,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "startDate": "2026-06-12",
           "endDate": "2026-07-25"
         }
-      ]
+      ],
+      "archivedAt": "2026-07-28"
     },
     {
       "id": "tdm-42",
@@ -241,7 +243,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "",
       "leadLabel": "会長 / 実行委員長",
       "lead": "寺田 智祐 / 中川 俊作（京都大学医学部附属病院 薬剤部）",
-      "note": "2026年5月21日時点で大会テーマの明記は未確認です。公式サイトでは2026年5月11日に採択演題一覧が掲載されています。",
+      "note": "公式サイトでは開催御礼と2026-07-07の優秀演題賞掲載が案内されています。大会テーマの明記は未確認です。",
       "milestones": [
         {
           "id": "tdm-42-abstract",
@@ -293,7 +295,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "cover",
       "scope": "national",
       "displayMonth": 7,
-      "status": "confirmed",
+      "status": "past",
       "society": "日本医薬品安全性学会",
       "eventName": "第12回日本医薬品安全性学会学術大会",
       "startDate": "2026-07-25",
@@ -303,7 +305,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "患者中心の医薬品安全性：共創と未来への挑戦",
       "leadLabel": "大会長",
       "lead": "今給黎 修（福岡大学薬学部教授 / 福岡大学筑紫病院薬剤部長）",
-      "note": "",
+      "note": "公式サイトでは開催終了の御礼と、2026-07-16に認定単位ページ更新、2026-07-14に参加者・発表者向け案内とプログラム・日程表更新が案内されています。",
       "milestones": [
         {
           "id": "jasds-12-abstract",
@@ -345,6 +347,32 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "参加登録",
           "url": "https://www.jasds2026.org/registration.html"
         }
+      ],
+      "archivedAt": "2026-07-28"
+    },
+    {
+      "id": "tdm-43",
+      "primaryUrl": "https://kwcs.jp/tdm2027/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 7,
+      "status": "confirmed",
+      "society": "日本TDM学会",
+      "eventName": "第43回日本TDM学会・学術大会",
+      "startDate": "2027-07-24",
+      "endDate": "2027-07-25",
+      "city": "岐阜",
+      "venue": "じゅうろくプラザ（JR岐阜駅隣接）",
+      "theme": "多職種連携・協働へ―活かせTDM",
+      "leadLabel": "会長",
+      "lead": "北市 清幸（岐阜薬科大学薬物動態学研究室 教授）",
+      "note": "公式サイトが2026-09-09に公開され、実行委員長は種田 靖久と案内されています。演題募集・参加登録の日程は未公表です。",
+      "sources": [
+        {
+          "label": "第43回日本TDM学会・学術大会 公式サイト",
+          "url": "https://kwcs.jp/tdm2027/"
+        }
       ]
     },
     {
@@ -364,7 +392,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "2040年の社会課題を解決する医療薬学の融合研究～すべての薬剤師が集う学術的基盤を目指して～",
       "leadLabel": "年会長",
       "lead": "崔 吉道（金沢大学附属病院 教授・薬剤部長）",
-      "note": "",
+      "note": "公式サイトでは早期参加登録が2026-09-30まで延長され、2026-09-24から後期参加登録を受け付けています。託児室・メディカルセミナー事前申込の案内も掲載されています。後期参加登録のオンデマンド配信終了日は未公表です。",
       "sources": [
         {
           "label": "公式サイト",
@@ -373,6 +401,10 @@ window.ANNUAL_MEETINGS_2026_DATA = {
         {
           "label": "会長挨拶",
           "url": "https://www.c-linkage.co.jp/36jsphcs/greeting.html"
+        },
+        {
+          "label": "開催概要",
+          "url": "https://www.c-linkage.co.jp/36jsphcs/outline.html"
         },
         {
           "label": "一般演題登録",
@@ -396,7 +428,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "早期参加登録",
           "category": "registration",
           "startDate": "2026-06-26",
-          "endDate": "2026-09-16"
+          "endDate": "2026-09-30"
         },
         {
           "id": "jsphcs-36-registration-late-start",
@@ -475,6 +507,25 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "leadLabel": "年会長",
       "lead": "田﨑 嘉一",
       "note": "学会公式の年会一覧で次年度以降の開催情報が公表されています。",
+      "sources": [
+        {
+          "label": "日本医療薬学会 年会一覧",
+          "url": "https://www.jsphcs.jp/event/annual-meeting/"
+        }
+      ]
+    },
+    {
+      "id": "jsphcs-40",
+      "primaryUrl": "https://www.jsphcs.jp/event/annual-meeting/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "status": "pending",
+      "society": "日本医療薬学会",
+      "eventName": "第40回日本医療薬学会年会",
+      "leadLabel": "年会長",
+      "lead": "伊東 弘樹",
+      "note": "学会公式の年会一覧で年会長は公表されていますが、会期・会場は未定です。",
       "sources": [
         {
           "label": "日本医療薬学会 年会一覧",
@@ -579,7 +630,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "category": "abstract",
           "startDate": "2026-08-04",
           "endDate": "2026-09-30",
-          "note": "演題募集ページは準備中ですが、公式サイトのトップ画像で募集期間が案内されています。"
+          "note": "公式の演題募集ページで募集期間が案内されています。"
         },
         {
           "id": "stroke-2027-registration",
