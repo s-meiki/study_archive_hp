@@ -1,225 +1,154 @@
-import type { LessonProgress, LessonStatus, ProgressState } from "./types";
+import type { ProgressState } from "./types";
 
 export const PROGRESS_STORAGE_KEY = "cawg.learning.progress.v1";
-
-const LESSON_STATUSES: LessonStatus[] = ["unwatched", "watched", "completed"];
+export const PROGRESS_BACKUP_KEY = `${PROGRESS_STORAGE_KEY}.backup`;
+const LOCK_NAME = `${PROGRESS_STORAGE_KEY}.write`;
 
 export function createDefaultProgressState(): ProgressState {
-  return {
-    schemaVersion: 1,
-    updatedAt: new Date().toISOString(),
-    lessons: {},
-    streak: { current: 0, longest: 0, lastActiveDate: "" },
-    earnedBadges: {}
-  };
+  return { schemaVersion: 1, updatedAt: new Date().toISOString(), lessons: {},
+    streak: { current: 0, longest: 0, lastActiveDate: "" }, earnedBadges: {} };
 }
+const SERVER_DEFAULT_STATE = createDefaultProgressState();
+const object = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
+const count = (v: unknown): v is number => typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+const date = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v;
+const timestamp = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(v) && date(v.slice(0, 10)) && Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0, 19) === v.slice(0, 19);
+const id = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0 && !["__proto__", "prototype", "constructor"].includes(v);
+const keys = (v: Record<string, unknown>, allowed: string[]) => Object.keys(v).every((k) => allowed.includes(k));
 
-// Stable module-level default so server renders share one reference (useSyncExternalStore).
-const SERVER_DEFAULT_STATE: ProgressState = createDefaultProgressState();
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function salvageLesson(value: unknown): LessonProgress | undefined {
-  if (!isPlainObject(value)) {
-    return undefined;
+export function validateProgressState(raw: unknown): raw is ProgressState {
+  if (!object(raw) || !keys(raw, ["schemaVersion", "updatedAt", "lessons", "lastVisited", "streak", "earnedBadges"]) || raw.schemaVersion !== 1 || !timestamp(raw.updatedAt) || !object(raw.lessons) || !object(raw.streak) || !object(raw.earnedBadges)) return false;
+  for (const [key, lesson] of Object.entries(raw.lessons)) {
+    if (!id(key) || !object(lesson) || !keys(lesson, ["status", "watchedAt", "completedAt", "lastPositionSec", "quizBestScore"]) || typeof lesson.status !== "string" || !["unwatched", "watched", "completed"].includes(lesson.status)) return false;
+    for (const field of ["watchedAt", "completedAt"]) if (field in lesson && !timestamp(lesson[field])) return false;
+    if ("lastPositionSec" in lesson && !(typeof lesson.lastPositionSec === "number" && Number.isFinite(lesson.lastPositionSec) && lesson.lastPositionSec >= 0)) return false;
+    if ("quizBestScore" in lesson && !(typeof lesson.quizBestScore === "number" && Number.isFinite(lesson.quizBestScore) && lesson.quizBestScore >= 0 && lesson.quizBestScore <= 1)) return false;
   }
-
-  const status = value.status;
-  if (typeof status !== "string" || !LESSON_STATUSES.includes(status as LessonStatus)) {
-    return undefined;
+  const s = raw.streak;
+  if (!keys(s, ["current", "longest", "lastActiveDate"]) || !count(s.current) || !count(s.longest) || s.current > s.longest || !(s.lastActiveDate === "" || date(s.lastActiveDate))) return false;
+  if (Object.entries(raw.earnedBadges).some(([key, value]) => !id(key) || !timestamp(value))) return false;
+  if ("lastVisited" in raw) {
+    const visit = raw.lastVisited;
+    if (!object(visit) || !keys(visit, ["archiveId", "courseId", "at"]) || !id(visit.archiveId) || !timestamp(visit.at) || ("courseId" in visit && !id(visit.courseId))) return false;
   }
-
-  const lesson: LessonProgress = { status: status as LessonStatus };
-
-  if (typeof value.watchedAt === "string") lesson.watchedAt = value.watchedAt;
-  if (typeof value.completedAt === "string") lesson.completedAt = value.completedAt;
-  if (typeof value.lastPositionSec === "number") lesson.lastPositionSec = value.lastPositionSec;
-  if (typeof value.quizBestScore === "number") lesson.quizBestScore = value.quizBestScore;
-
-  return lesson;
+  return true;
 }
 
 export function migrateProgressState(raw: unknown): ProgressState {
-  const next = createDefaultProgressState();
-
-  if (!isPlainObject(raw)) {
-    return next;
-  }
-
-  if (isPlainObject(raw.lessons)) {
-    for (const [archiveId, value] of Object.entries(raw.lessons)) {
-      const lesson = salvageLesson(value);
-      if (lesson) {
-        next.lessons[archiveId] = lesson;
-      }
-    }
-  }
-
-  if (isPlainObject(raw.lastVisited) && typeof raw.lastVisited.archiveId === "string") {
-    const at = typeof raw.lastVisited.at === "string" ? raw.lastVisited.at : new Date().toISOString();
-    next.lastVisited = { archiveId: raw.lastVisited.archiveId, at };
-    if (typeof raw.lastVisited.courseId === "string") {
-      next.lastVisited.courseId = raw.lastVisited.courseId;
-    }
-  }
-
-  if (isPlainObject(raw.streak)) {
-    const current = typeof raw.streak.current === "number" ? raw.streak.current : 0;
-    const longest = typeof raw.streak.longest === "number" ? raw.streak.longest : 0;
-    const lastActiveDate = typeof raw.streak.lastActiveDate === "string" ? raw.streak.lastActiveDate : "";
-    next.streak = { current, longest, lastActiveDate };
-  }
-
-  if (isPlainObject(raw.earnedBadges)) {
-    for (const [badgeId, earnedAt] of Object.entries(raw.earnedBadges)) {
-      if (typeof earnedAt === "string") {
-        next.earnedBadges[badgeId] = earnedAt;
-      }
-    }
-  }
-
-  return next;
+  return validateProgressState(raw) ? structuredClone(raw) : createDefaultProgressState();
 }
-
+export type ProgressResult = { ok: boolean; error?: string };
+export type ProgressPreview = ProgressResult & { lessons?: number; badges?: number };
+export function previewProgressJson(json: string): ProgressPreview {
+  try {
+    const raw: unknown = JSON.parse(json);
+    if (!validateProgressState(raw)) return { ok: false, error: "対応する進捗データではありません。形式・バージョン・数値・日付を確認してください。" };
+    return { ok: true, lessons: Object.keys(raw.lessons).length, badges: Object.keys(raw.earnedBadges).length };
+  } catch { return { ok: false, error: "JSON の形式が正しくありません。" }; }
+}
 export interface ProgressStore {
   get(): ProgressState;
-  set(next: ProgressState): void;
-  update(mutator: (current: ProgressState) => ProgressState): void;
+  getError(): string | null;
+  set(next: ProgressState): Promise<ProgressResult>;
+  update(mutator: (current: ProgressState) => ProgressState): Promise<ProgressResult>;
   subscribe(listener: () => void): () => void;
   exportJson(): string;
-  importJson(json: string): { ok: boolean; error?: string };
-  reset(): void;
-  // Loads localStorage (if not yet loaded) and notifies. Lets the provider surface
-  // persisted state after hydration without a spurious write. See progress-context.tsx.
+  exportBackup(): string | null;
+  importJson(json: string): Promise<ProgressResult>;
+  reset(): Promise<ProgressResult>;
   hydrate(): void;
-}
-
-function readStorage(): string | null {
-  try {
-    return window.localStorage.getItem(PROGRESS_STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function writeStorage(value: string, onWarn: () => void): void {
-  try {
-    window.localStorage.setItem(PROGRESS_STORAGE_KEY, value);
-  } catch {
-    onWarn();
-  }
-}
-
-function clearStorage(onWarn: () => void): void {
-  try {
-    window.localStorage.removeItem(PROGRESS_STORAGE_KEY);
-  } catch {
-    onWarn();
-  }
 }
 
 export function createProgressStore(): ProgressStore {
   const listeners = new Set<() => void>();
-  let snapshot: ProgressState = SERVER_DEFAULT_STATE;
+  let snapshot = SERVER_DEFAULT_STATE;
   let loaded = false;
-  let warned = false;
-
-  function warnOnce(): void {
-    if (!warned) {
-      warned = true;
-      console.warn("学習進捗をローカル保存できませんでした。この機能はこのセッション中のみ動作します。");
-    }
+  let error: string | null = null;
+  let unsaved = false;
+  let queue: Promise<unknown> = Promise.resolve();
+  const notify = () => listeners.forEach((listener) => listener());
+  function read(): ProgressState {
+    const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
+    if (raw === null) return createDefaultProgressState();
+    const parsed: unknown = JSON.parse(raw);
+    if (!validateProgressState(parsed)) throw new Error("invalid persisted progress");
+    return parsed;
   }
-
-  function notify(): void {
-    for (const listener of listeners) {
-      listener();
-    }
-  }
-
-  function ensureLoaded(): void {
-    if (loaded || typeof window === "undefined") {
-      return;
-    }
+  function load() {
+    if (loaded || typeof window === "undefined") return;
     loaded = true;
-    const raw = readStorage();
-    if (raw === null) {
-      snapshot = createDefaultProgressState();
-      return;
-    }
-    let parsed: unknown = null;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      parsed = null;
-    }
-    snapshot = migrateProgressState(parsed);
+    try { snapshot = read(); }
+    catch { snapshot = createDefaultProgressState(); error = "保存済みの学習進捗を読み込めません。元のデータを保護するため保存を停止しています。"; }
   }
-
-  function persist(next: ProgressState): void {
-    snapshot = { ...next, updatedAt: new Date().toISOString() };
-    if (typeof window !== "undefined") {
-      writeStorage(JSON.stringify(snapshot), warnOnce);
-    }
+  function sync(event: StorageEvent) {
+    if (event.key !== PROGRESS_STORAGE_KEY && event.key !== null) return;
+    if (unsaved) return;
+    try { snapshot = read(); error = null; }
+    catch { error = "別の画面の学習進捗を読み込めませんでした。"; }
     notify();
   }
-
-  return {
-    get() {
-      if (typeof window === "undefined") {
-        return SERVER_DEFAULT_STATE;
-      }
-      ensureLoaded();
-      return snapshot;
-    },
-    set(next) {
-      persist(next);
-    },
-    update(mutator) {
-      ensureLoaded();
-      persist(mutator(this.get()));
-    },
-    subscribe(listener) {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-    exportJson() {
-      return JSON.stringify(this.get(), null, 2);
-    },
-    importJson(json) {
-      let parsed: unknown;
+  function commit(mutator: (current: ProgressState) => ProgressState, replace = false): Promise<ProgressResult> {
+    load();
+    const work = async (): Promise<ProgressResult> => {
+      let next: ProgressState | undefined;
       try {
-        parsed = JSON.parse(json);
+        if (unsaved) throw new Error("Export unsaved changes before reloading");
+        if (!window.navigator.locks) throw new Error("Web Locks unavailable");
+        return await window.navigator.locks.request(LOCK_NAME, () => {
+          // Every operation, including reset/import, shares this lock. Never merge a stale snapshot.
+          const previousJson = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
+          let current: ProgressState;
+          try {
+            current = read();
+          } catch (readError) {
+            // An explicit import/reset can recover corrupt data, but the exact
+            // original must be backed up before anything replaces it.
+            if (!replace) throw readError;
+            current = createDefaultProgressState();
+          }
+          next = { ...mutator(current), updatedAt: new Date().toISOString() };
+          if (!validateProgressState(next)) throw new Error("invalid progress update");
+          if (replace) window.localStorage.setItem(PROGRESS_BACKUP_KEY, previousJson ?? JSON.stringify(current));
+          window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(next));
+          snapshot = next;
+          unsaved = false;
+          error = null;
+          notify();
+          return { ok: true };
+        });
       } catch {
-        return { ok: false, error: "JSON の形式が正しくありません。" };
-      }
-      if (!isPlainObject(parsed)) {
-        return { ok: false, error: "進捗データの形式が正しくありません。" };
-      }
-      persist(migrateProgressState(parsed));
-      return { ok: true };
-    },
-    reset() {
-      loaded = true;
-      if (typeof window !== "undefined") {
-        clearStorage(warnOnce);
-      }
-      snapshot = createDefaultProgressState();
-      notify();
-    },
-    hydrate() {
-      if (typeof window === "undefined") {
-        return;
-      }
-      const before = snapshot;
-      ensureLoaded();
-      if (snapshot !== before) {
+        // Destructive operations never claim success or replace memory on persistence failure.
+        if (!replace) {
+          next ??= { ...mutator(snapshot), updatedAt: new Date().toISOString() };
+          if (validateProgressState(next)) { snapshot = next; unsaved = true; }
+        }
+        error = "学習進捗を保存できませんでした。画面を閉じる前に進捗データを書き出してください。";
         notify();
+        return { ok: false, error };
       }
-    }
+    };
+    const result = queue.then(work, work);
+    queue = result;
+    return result;
+  }
+  return {
+    get() { load(); return typeof window === "undefined" ? SERVER_DEFAULT_STATE : snapshot; },
+    getError() { return error; },
+    set(next) { return commit(() => next, true); },
+    update(mutator) { return commit(mutator); },
+    subscribe(listener) {
+      if (listeners.size === 0 && typeof window !== "undefined") window.addEventListener("storage", sync);
+      listeners.add(listener);
+      return () => { listeners.delete(listener); if (!listeners.size && typeof window !== "undefined") window.removeEventListener("storage", sync); };
+    },
+    exportJson() { load(); return JSON.stringify(snapshot, null, 2); },
+    exportBackup() { try { return window.localStorage.getItem(PROGRESS_BACKUP_KEY); } catch { return null; } },
+    async importJson(json) {
+      const result = previewProgressJson(json);
+      if (!result.ok) return result;
+      return commit(() => JSON.parse(json) as ProgressState, true);
+    },
+    reset() { return commit(createDefaultProgressState, true); },
+    hydrate() { load(); notify(); }
   };
 }

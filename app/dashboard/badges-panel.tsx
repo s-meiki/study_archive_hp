@@ -54,7 +54,7 @@ export default function BadgesPanel({ courses }: BadgesPanelProps) {
       const nextEarned = { ...current.earnedBadges };
       const now = new Date().toISOString();
       let changed = false;
-      for (const badgeId of newlyEarned) {
+      for (const badgeId of evaluateBadges(current, defs, todayLocalDate())) {
         if (nextEarned[badgeId] == null) {
           nextEarned[badgeId] = now;
           changed = true;

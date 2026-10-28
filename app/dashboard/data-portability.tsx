@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { previewProgressJson, type ProgressPreview } from "../learning/progress-store";
 import { useProgress } from "../learning/progress-context";
 import { Button } from "../ui/button";
 import styles from "./data-portability.module.css";
@@ -15,7 +16,6 @@ const messageClassName: Record<"success" | "error" | "warning", string> = {
   warning: styles.messageWarning
 };
 
-// ロジックは app/learn/data-portability.tsx から変更していない（export/import/reset の挙動・確認ダイアログを維持）。
 export default function DataPortability() {
   const { store } = useProgress();
 
@@ -25,6 +25,10 @@ export default function DataPortability() {
   const [importText, setImportText] = useState("");
   const [importMessage, setImportMessage] = useState<MessageState>(null);
   const [importConfirming, setImportConfirming] = useState(false);
+
+  const [preview, setPreview] = useState<ProgressPreview | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [backupText, setBackupText] = useState("");
 
   const [resetConfirming, setResetConfirming] = useState(false);
   const [resetMessage, setResetMessage] = useState<MessageState>(null);
@@ -53,10 +57,8 @@ export default function DataPortability() {
   }
 
   function handleDownload() {
-    const json = exportText || store.exportJson();
-    if (!exportText) {
-      setExportText(json);
-    }
+    const json = store.exportJson();
+    setExportText(json);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = downloadLinkRef.current;
@@ -65,21 +67,30 @@ export default function DataPortability() {
       link.download = DOWNLOAD_FILE_NAME;
       link.click();
     }
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  function handleImportClick() {
+  async function handleImportClick() {
     if (!importText.trim()) {
       setImportMessage({ type: "error", text: "読み込むデータを貼り付けてください。" });
       setImportConfirming(false);
       return;
     }
     if (!importConfirming) {
+      const checked = previewProgressJson(importText);
+      setPreview(checked);
+      if (!checked.ok) {
+        setImportMessage({ type: "error", text: checked.error! });
+        return;
+      }
       setImportConfirming(true);
       setImportMessage(null);
       return;
     }
-    const result = store.importJson(importText);
+    setBusy(true);
+    const result = await store.importJson(importText);
+    setBusy(false);
+    if (result.ok) setBackupText(store.exportBackup() ?? "");
     if (result.ok) {
       setImportMessage({ type: "success", text: "進捗データを読み込みました。" });
     } else {
@@ -93,15 +104,23 @@ export default function DataPortability() {
     setImportMessage(null);
   }
 
-  function handleResetClick() {
+  async function handleResetClick() {
     if (!resetConfirming) {
       setResetConfirming(true);
       setResetMessage(null);
       return;
     }
-    store.reset();
+    setBusy(true);
+    const result = await store.reset();
+    setBusy(false);
+    if (!result.ok) {
+      setResetMessage({ type: "error", text: result.error! });
+      setResetConfirming(false);
+      return;
+    }
     setResetConfirming(false);
     setResetMessage({ type: "success", text: "すべての進捗を削除しました。" });
+    setBackupText(store.exportBackup() ?? "");
     setExportText("");
     setImportText("");
   }
@@ -170,7 +189,7 @@ export default function DataPortability() {
             aria-label="読み込む進捗データ"
           />
           <div className={styles.actions}>
-            <Button type="button" variant="secondary" size="sm" onClick={handleImportClick}>
+            <Button type="button" variant="secondary" size="sm" onClick={handleImportClick} disabled={busy}>
               読み込む
             </Button>
             {importConfirming ? (
@@ -181,7 +200,7 @@ export default function DataPortability() {
           </div>
           {importConfirming ? (
             <p className={`${styles.message} ${messageClassName.warning}`} role="alert">
-              現在の進捗はこのデータで置き換わります。よろしければもう一度「読み込む」を押してください。
+              教材 {preview?.lessons} 件・バッジ {preview?.badges} 件を読み込みます。現在の進捗はバックアップを保存した後、このデータで置き換わります。よろしければもう一度「読み込む」を押してください。
             </p>
           ) : null}
           {importMessage ? (
@@ -191,12 +210,22 @@ export default function DataPortability() {
           ) : null}
         </section>
 
+        <section className={styles.section} aria-label="読み込み前のバックアップ">
+          <h3 className={styles.heading}>置き換え前のバックアップ</h3>
+          <Button type="button" variant="secondary" size="sm" onClick={() => {
+            const saved = store.exportBackup();
+            setBackupText(saved ?? "バックアップはありません。");
+          }}>直前のバックアップを表示</Button>
+          {backupText ? <textarea className={styles.textarea} readOnly rows={8} value={backupText} aria-label="置き換え前のバックアップデータ" /> : null}
+          <p className={styles.copy}>復元する場合は、この内容を「読み込み」に貼り付けてください。</p>
+        </section>
+
         <section className={`${styles.section} ${styles.danger}`} aria-labelledby="dashboard-portability-reset-heading">
           <h3 id="dashboard-portability-reset-heading" className={styles.heading}>
             リセット
           </h3>
           <div className={styles.actions}>
-            <Button type="button" variant="secondary" size="sm" onClick={handleResetClick}>
+            <Button type="button" variant="secondary" size="sm" onClick={handleResetClick} disabled={busy}>
               すべての進捗を削除
             </Button>
             {resetConfirming ? (
@@ -207,7 +236,7 @@ export default function DataPortability() {
           </div>
           {resetConfirming ? (
             <p className={`${styles.message} ${messageClassName.warning}`} role="alert">
-              本当にすべての進捗を削除しますか。この操作は取り消せません。よろしければもう一度「すべての進捗を削除」を押してください。
+              本当にすべての進捗を削除しますか。削除前の進捗はバックアップに保存されます。よろしければもう一度「すべての進捗を削除」を押してください。
             </p>
           ) : null}
           {resetMessage ? (
