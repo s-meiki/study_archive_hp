@@ -1,0 +1,47 @@
+{
+  "skill_name": "fable5-workstyle",
+  "evals": [
+    {
+      "id": 0,
+      "name": "next-action-triage",
+      "prompt": "study_archive_hp の作業を再開したい。リポジトリのいまの状態を把握して、次にやるべき作業を優先順位付きで提案してほしい。まだ作業そのものは始めないで、提案書としてまとめて。",
+      "expected_output": "未コミット納品物・承認待ち項目を特定し、公開ブロッカー優先の論理で並べ、デプロイを承認ゲート付きで扱う提案書（proposal.md）",
+      "files": [],
+      "assertions": [
+        "identifies-pending-approvals: 未コミットの納品物や承認・反映待ち項目（クイズreviewed化の反映、コース監査の反映、About LP作り直し、デプロイ承認のうち複数）を具体的に特定している",
+        "priority-logic: 優先順位が『公開ブロッカー・レビュー待ち解消が上位、将来拡張が下位』の論理で並んでいる",
+        "deploy-gated-by-approval: デプロイ/公開を即実行対象とせず、dry-run→めいき承認のゲートとして扱っている",
+        "grounded-in-artifacts: docs/publish-readiness-plan.md のWP構成や git status の実状態など、リポジトリ実データへの具体的言及がある",
+        "no-repo-modification: 実行後に本体リポジトリの git status --porcelain が実行前と同一である"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "publish-approved-quizzes",
+      "prompt": "確認クイズ全24本（content/quizzes/*.json）の内容レビューが完了し、すべて問題なしとして承認された。クイズがサイトに公開されるように反映して。",
+      "expected_output": "24本すべて reviewStatus: reviewed、quiz:build で quiz-bank.js 再生成、ビルド検証と残タスクを報告する report.md",
+      "files": [],
+      "assertions": [
+        "all-24-reviewed: content/quizzes の24ファイルすべてが reviewStatus: reviewed になっている",
+        "quiz-bank-regenerated: public/data/quiz-bank.js が再生成され、24本のクイズが収録されている",
+        "generated-via-build-not-hand-edit: npm run quiz:build を採点時に再実行しても quiz-bank.js に差分が出ない（＝手編集でなくビルド出力）",
+        "build-verification-reported: report.md にビルド実行と検証結果が明記されている",
+        "notes-remaining-steps: report.md が残タスク（コミット、デプロイ承認等）に言及している"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "fix-optional-lesson",
+      "prompt": "foundations コース（content/courses/foundations.json）に「poly pharmacyについて」の回が 2026-03-27 と 2026-04-08 の2回入っていて、両方とも本編扱いになっている。同内容の再演なので、片方を補足回扱いに修正してサイトへ反映して。",
+      "expected_output": "2回のうちちょうど1回に optional: true、learning:build で learning-content.js 再生成、検証報告付き report.md",
+      "files": [],
+      "assertions": [
+        "exactly-one-optional: foundations.json で 2026-03-27 / 2026-04-08 の2レッスンのうちちょうど1つに optional: true が付いている",
+        "learning-content-regenerated: public/data/learning-content.js が再生成され optional が反映されている",
+        "generated-via-build-not-hand-edit: npm run learning:build を採点時に再実行しても learning-content.js に差分が出ない（＝手編集でなくビルド出力）",
+        "verification-reported: report.md にビルド実行・検証の記載がある",
+        "explains-completion-impact: optional 化の意味（修了判定の分母から除外される補足回扱い）への言及がある"
+      ]
+    }
+  ]
+}
