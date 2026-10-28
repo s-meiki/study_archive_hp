@@ -7,14 +7,21 @@
     "dev:clean": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev",
     "dev:turbo": "NEXT_DIST_DIR=.next-dev npm run clean && NEXT_DIST_DIR=.next-dev next dev --turbopack",
     "build": "npm run clean && node scripts/run_next_with_server_chunk_fix.js build",
-    "build:clean": "npm run clean && node scripts/run_next_with_server_chunk_fix.js build",
+    "build:clean": "npm run build",
     "meetings:refresh": "node scripts/refresh_annual_meeting_windows.js",
     "meetings:refresh:dry": "node scripts/refresh_annual_meeting_windows.js --dry-run",
     "learning:build": "node scripts/build_learning_content.js",
     "learning:build:dry": "node scripts/build_learning_content.js --dry-run",
     "quiz:build": "node scripts/build_quiz_bank.js",
     "quiz:build:dry": "node scripts/build_quiz_bank.js --dry-run",
-    "start": "node scripts/run_next_with_server_chunk_fix.js start"
+    "start": "node scripts/run_next_with_server_chunk_fix.js start",
+    "test": "node --test tests/*.test.cjs",
+    "check:content": "python3 scripts/check_site_content.py && python3 scripts/check_public_security_basics.py && python3 scripts/check_public_uploads_metadata.py && npm run learning:build:dry && npm run quiz:build:dry",
+    "prebuild": "npm run check:content && npm test",
+    "test:e2e": "playwright test",
+    "verify": "npm run build && npm run test:e2e",
+    "thumbnails:refresh": "node scripts/refresh_archive_thumbnails.js --write",
+    "thumbnails:refresh:dry": "node scripts/refresh_archive_thumbnails.js --dry-run"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -23,6 +30,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

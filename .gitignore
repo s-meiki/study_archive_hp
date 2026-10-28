@@ -35,5 +35,7 @@ node_modules/
 .env.local
 .vercel/
 tsconfig.tsbuildinfo
+test-results/
+playwright-report/
 .vercel
 .env*
