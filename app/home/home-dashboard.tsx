@@ -2,433 +2,113 @@
 
 import Link from "next/link";
 import { useMemo, type ReactNode } from "react";
-import { ChartBarIcon, ListChecksIcon } from "@phosphor-icons/react";
+import { ArrowRightIcon, PlayCircleIcon, BookOpenIcon } from "@phosphor-icons/react";
 import { useProgress } from "../learning/progress-context";
-import type { ProgressState } from "../learning/types";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Card, CardHeader } from "../ui/card";
-import { EmptyState } from "../ui/empty-state";
 import { ProgressBar } from "../ui/progress-bar";
-import { ProgressRing } from "../ui/progress-ring";
-import { Stat } from "../ui/stat";
-import type { HomeArchive, HomeLearningData } from "./home-types";
-import {
-  archiveForCandidate,
-  buildCourseProgress,
-  buildReviewCandidates,
-  hasAnyLearningProgress,
-  type CourseProgressView,
-  type ReviewCandidate,
-  type ReviewReason
-} from "./review-engine";
 import { themeCatOf, themeNameOf } from "../lib/theme-category";
-import { toLocalDateKey } from "./activity-data";
-import { WeeklyActivity } from "./weekly-activity";
+import { archiveForCandidate, buildReviewCandidates, hasAnyLearningProgress } from "./review-engine";
+import type { HomeLearningData } from "./home-types";
 import styles from "./home-dashboard.module.css";
 
 type HomeDashboardProps = {
   data: HomeLearningData;
-  /** SSR で確定する最新アーカイブカード（home-static-cards.tsx） */
   archivesCard: ReactNode;
-  /** SSR で確定する学会カレンダーカード（home-static-cards.tsx） */
   conferenceCard: ReactNode;
 };
-
-const PENDING_VALUE = "–";
-
-const resumeActionLabel: Record<ReviewReason, string> = {
-  continue: "レッスンを再開",
-  review: "クイズで復習する",
-  refresh: "もう一度確認する",
-  next: "次のレッスンへ",
-  start: "最初のコースを始める"
-};
-
-function archiveHref(archiveId: string, courseId?: string, quiz = false): string {
-  const query = courseId ? `?courseId=${encodeURIComponent(courseId)}` : "";
-  return `/archives/${encodeURIComponent(archiveId)}${query}${quiz ? "#quiz" : ""}`;
-}
-
-function candidateGoesToQuiz(
-  candidate: ReviewCandidate | undefined,
-  archive: HomeArchive | undefined
-): boolean {
-  return Boolean(
-    candidate && archive?.quiz && (candidate.reason === "review" || candidate.reason === "refresh")
-  );
-}
-
-function streakFoot(state: ProgressState): string {
-  if (state.streak.current <= 0) {
-    return "今日から学習を始めましょう";
-  }
-  if (state.streak.lastActiveDate === toLocalDateKey(new Date())) {
-    return "今日の学習で継続中";
-  }
-  return `最長 ${state.streak.longest}日`;
-}
-
-function quizBestScores(data: HomeLearningData, state: ProgressState): number[] {
-  return data.archives
-    .map((archive) => state.lessons[archive.id]?.quizBestScore)
-    .filter((score): score is number => typeof score === "number");
-}
-
-function StatsRow({
-  data,
-  state,
-  hydrated
-}: {
-  data: HomeLearningData;
-  state: ProgressState;
-  hydrated: boolean;
-}) {
-  const completedCount = data.archives.filter(
-    (archive) => state.lessons[archive.id]?.status === "completed"
-  ).length;
-  const scores = quizBestScores(data, state);
-  const quizAverage =
-    scores.length > 0
-      ? Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 100)
-      : null;
-  const badgeCount = Object.keys(state.earnedBadges).length;
-  const showQuizAverage = hydrated && quizAverage !== null;
-
-  return (
-    <section className={styles.stats} aria-label="学習ステータス" aria-busy={!hydrated}>
-      <Stat
-        label="連続学習"
-        value={hydrated ? state.streak.current : PENDING_VALUE}
-        unit="日"
-        foot={hydrated ? streakFoot(state) : "記録を確認中"}
-      />
-      <Stat
-        label="完了レッスン"
-        value={hydrated ? completedCount : PENDING_VALUE}
-        unit="件"
-        foot={`全${data.archives.length}レッスン中`}
-      />
-      <Stat
-        label="クイズ平均正答"
-        value={showQuizAverage ? quizAverage : PENDING_VALUE}
-        unit={showQuizAverage ? "%" : undefined}
-        foot={
-          showQuizAverage
-            ? `挑戦済み ${scores.length}クイズのベスト平均`
-            : "クイズに挑戦すると表示されます"
-        }
-      >
-        <ProgressBar
-          mode="continuous"
-          tone="accent"
-          value={showQuizAverage ? quizAverage ?? 0 : 0}
-          max={100}
-          label={`クイズ平均正答率 ${showQuizAverage ? quizAverage : 0}%`}
-        />
-      </Stat>
-      <Stat
-        label="獲得バッジ"
-        value={hydrated ? badgeCount : PENDING_VALUE}
-        unit="個"
-        foot="コース修了などで獲得"
-      />
-    </section>
-  );
-}
-
-function ResumeSkeleton() {
-  return (
-    <Card className={styles.areaResume}>
-      <div className={`${styles.skeletonStack} ${styles.resumeSkeleton}`} aria-hidden="true">
-        <span className={`${styles.skeletonLine} ${styles.skeletonLineSm}`} />
-        <span className={`${styles.skeletonLine} ${styles.skeletonLineMd}`} />
-        <span className={`${styles.skeletonLine} ${styles.skeletonLineLg}`} />
-        <span className={styles.skeletonLine} />
-        <span className={styles.skeletonAction} />
-      </div>
-      <p className="visually-hidden">学習記録を確認しています</p>
-    </Card>
-  );
-}
-
-function ResumeCard({
-  data,
-  candidates,
-  courseViews,
-  hasProgress,
-  hydrated
-}: {
-  data: HomeLearningData;
-  candidates: ReviewCandidate[];
-  courseViews: CourseProgressView[];
-  hasProgress: boolean;
-  hydrated: boolean;
-}) {
-  if (!hydrated) {
-    return <ResumeSkeleton />;
-  }
-
-  const candidate = candidates[0];
-  const archive = archiveForCandidate(data.archives, candidate);
-  if (!candidate || !archive) {
-    return (
-      <Card className={styles.areaResume}>
-        <EmptyState
-          title="公開中の学習コンテンツを確認できませんでした"
-          description="時間をおいて、もう一度開いてください。"
-        />
-      </Card>
-    );
-  }
-
-  const course =
-    data.courses.find((item) => item.id === candidate.courseId) ??
-    data.courses.find((item) => item.lessons.some((lesson) => lesson.archiveId === archive.id));
-  const lessonOrder = course?.lessons.find((lesson) => lesson.archiveId === archive.id)?.order;
-  const progressView = course ? courseViews.find((view) => view.id === course.id) : undefined;
-  const goesToQuiz = candidateGoesToQuiz(candidate, archive);
-
-  return (
-    <Card className={styles.areaResume}>
-      <p className={styles.eyebrow}>{hasProgress ? "続きから" : "ここから始める"}</p>
-      <p className={styles.resumeCourse}>
-        {course ? `コース: ${course.title}` : themeNameOf(data.themes, archive.themeId)}
-      </p>
-      <h2 className={styles.resumeTitle}>
-        {lessonOrder ? `レッスン${lessonOrder}「${archive.title}」` : archive.title}
-      </h2>
-      <p className={styles.resumeMeta}>
-        <Badge variant="theme" cat={themeCatOf(archive.themeId)}>
-          {themeNameOf(data.themes, archive.themeId)}
-        </Badge>
-        {archive.date ? <span>{archive.date}</span> : null}
-        {archive.speaker ? <span>講師: {archive.speaker}</span> : null}
-      </p>
-      {progressView && progressView.requiredCount > 0 ? (
-        <>
-          <ProgressBar
-            value={progressView.completedCount}
-            max={progressView.requiredCount}
-            label={`コース進捗: ${progressView.requiredCount}レッスン中${progressView.completedCount}件完了`}
-          />
-          <p className={styles.segCaption}>
-            進捗 {progressView.completedCount}/{progressView.requiredCount} レッスン
-          </p>
-        </>
-      ) : null}
-      <div className={styles.resumeActions}>
-        <Button href={archiveHref(archive.id, course?.id, goesToQuiz)}>
-          {resumeActionLabel[candidate.reason]}
-        </Button>
-        {course ? (
-          <Button variant="secondary" href={`/courses/${encodeURIComponent(course.id)}`}>
-            コース概要を見る
-          </Button>
-        ) : null}
-      </div>
-    </Card>
-  );
-}
-
-function QueueSkeleton() {
-  return (
-    <div className={`${styles.skeletonStack} ${styles.queueSkeleton}`} aria-hidden="true">
-      <span className={styles.skeletonLine} />
-      <span className={`${styles.skeletonLine} ${styles.skeletonLineMd}`} />
-      <span className={styles.skeletonLine} />
-      <span className={`${styles.skeletonLine} ${styles.skeletonLineMd}`} />
-    </div>
-  );
-}
-
-function QueueCard({
-  data,
-  queue,
-  hasProgress,
-  hydrated
-}: {
-  data: HomeLearningData;
-  queue: ReviewCandidate[];
-  hasProgress: boolean;
-  hydrated: boolean;
-}) {
-  const quizCandidate = queue.find((candidate) =>
-    candidateGoesToQuiz(candidate, archiveForCandidate(data.archives, candidate))
-  );
-
-  return (
-    <Card className={styles.areaQueue}>
-      <CardHeader
-        title="今日の復習キュー"
-        action={hydrated ? <span className={styles.countBadge}>{queue.length}件</span> : undefined}
-        sub="復習エンジンが選んだ、今日おさらいすべき回"
-      />
-      {!hydrated ? (
-        <QueueSkeleton />
-      ) : queue.length === 0 ? (
-        <EmptyState
-          icon={<ListChecksIcon />}
-          title={hasProgress ? "今日の復習はここまで" : "まだ復習する回がありません"}
-          description={
-            hasProgress
-              ? "新しいレッスンを進めると、復習候補がここに追加されます。"
-              : "レッスンを1本見ると、ここに今日の復習候補が並びます。"
-          }
-          action={
-            hasProgress ? undefined : (
-              <Button variant="secondary" size="sm" href="/courses">
-                コースから始める
-              </Button>
-            )
-          }
-        />
-      ) : (
-        <>
-          <ul className={styles.itemList}>
-            {queue.map((candidate) => {
-              const archive = archiveForCandidate(data.archives, candidate);
-              if (!archive) {
-                return null;
-              }
-              return (
-                <li key={candidate.archiveId}>
-                  <div className={styles.itemBody}>
-                    <p className={styles.itemTitle}>{archive.title}</p>
-                    <p className={styles.itemMeta}>
-                      <Badge variant="theme" cat={themeCatOf(archive.themeId)}>
-                        {themeNameOf(data.themes, archive.themeId)}
-                      </Badge>
-                      {archive.date ? <span>{archive.date}</span> : null}
-                    </p>
-                  </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className={styles.itemAction}
-                    href={archiveHref(
-                      archive.id,
-                      candidate.courseId,
-                      candidateGoesToQuiz(candidate, archive)
-                    )}
-                  >
-                    復習
-                  </Button>
-                </li>
-              );
-            })}
-          </ul>
-          {quizCandidate ? (
-            <div className={styles.cardFoot}>
-              <Link
-                className="text-link"
-                href={archiveHref(quizCandidate.archiveId, quizCandidate.courseId, true)}
-              >
-                復習してから確認クイズを解く →
-              </Link>
-            </div>
-          ) : null}
-        </>
-      )}
-    </Card>
-  );
-}
-
-function ActivityCard({
-  state,
-  hasProgress,
-  hydrated
-}: {
-  state: ProgressState;
-  hasProgress: boolean;
-  hydrated: boolean;
-}) {
-  return (
-    <Card className={styles.areaActivity}>
-      <CardHeader title="週間学習アクティビティ" sub="直近7日間に学習したレッスン数（視聴・完了）" />
-      {!hydrated ? (
-        <div className={styles.chartSkeleton} aria-hidden="true" />
-      ) : hasProgress ? (
-        <WeeklyActivity lessons={state.lessons} />
-      ) : (
-        <EmptyState
-          icon={<ChartBarIcon />}
-          title="まだ記録がありません"
-          description="レッスンを見たり修了すると、日々の学習量がここに積み上がります。"
-        />
-      )}
-    </Card>
-  );
-}
-
-function CoursesCard({
-  data,
-  courseViews
-}: {
-  data: HomeLearningData;
-  courseViews: CourseProgressView[];
-}) {
-  return (
-    <Card className={styles.areaCourses}>
-      <CardHeader
-        title="コース進捗"
-        action={
-          <Link className="text-link" href="/courses">
-            コース一覧
-          </Link>
-        }
-      />
-      <ul className={styles.courseList}>
-        {courseViews.map((course) => (
-          <li key={course.id}>
-            <ProgressRing
-              value={course.completedCount}
-              max={course.requiredCount}
-              label={`進捗 ${course.requiredCount}レッスン中${course.completedCount}件完了`}
-            />
-            <div className={styles.courseBody}>
-              <p className={styles.courseName}>
-                <Link href={`/courses/${encodeURIComponent(course.id)}`}>{course.title}</Link>
-              </p>
-              <p className={styles.courseMeta}>
-                <Badge variant="theme" cat={themeCatOf(course.themeId)}>
-                  {themeNameOf(data.themes, course.themeId)}
-                </Badge>
-                {course.level ? <span className={styles.levelChip}>{course.level}</span> : null}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
-  );
-}
 
 export default function HomeDashboard({ data, archivesCard, conferenceCard }: HomeDashboardProps) {
   const { state, hydrated } = useProgress();
   const candidates = useMemo(() => buildReviewCandidates(data, state), [data, state]);
-  const courseViews = useMemo(() => buildCourseProgress(data, state), [data, state]);
   const hasProgress = hydrated && hasAnyLearningProgress(data, state);
-  // 先頭候補は「続きから」カードが受け持つので、キューには2件目以降を出す。
-  const queue = hasProgress ? candidates.slice(1, 4) : [];
+  // The server and first hydration render use the same first-course recommendation.
+  const initialCandidates = useMemo(() => buildReviewCandidates(data, {
+    schemaVersion: 1, updatedAt: "", lessons: {},
+    streak: { current: 0, longest: 0, lastActiveDate: "" }, earnedBadges: {}
+  }), [data]);
+  const candidate = (hydrated ? candidates : initialCandidates)[0];
+  const archive = archiveForCandidate(data.archives, candidate);
+  const course = data.courses.find((item) => item.id === candidate?.courseId);
+  const quizReview = candidate?.reason === "review" || candidate?.reason === "refresh";
+  const query = course ? `?courseId=${encodeURIComponent(course.id)}` : "";
+  const href = archive ? `/archives/${encodeURIComponent(archive.id)}${query}${quizReview ? "#quiz" : ""}` : "/archives";
+  const completedCount = data.archives.filter((item) => state.lessons[item.id]?.status === "completed").length;
 
   return (
-    <>
-      <StatsRow data={data} state={state} hydrated={hydrated} />
-      <div className={styles.grid}>
-        <ResumeCard
-          data={data}
-          candidates={candidates}
-          courseViews={courseViews}
-          hasProgress={hasProgress}
-          hydrated={hydrated}
-        />
-        <QueueCard data={data} queue={queue} hasProgress={hasProgress} hydrated={hydrated} />
-        <ActivityCard state={state} hasProgress={hasProgress} hydrated={hydrated} />
-        <CoursesCard data={data} courseViews={courseViews} />
-        {archivesCard}
+    <div className={styles.home}>
+      {archive ? (
+        <section className={`${styles.feature} ${!archive.thumbnailUrl ? styles.featureTextOnly : ""}`} aria-labelledby="featured-lesson-title">
+          {archive.thumbnailUrl ? (
+            <Link href={href} className={styles.featureImage} aria-label={`${archive.title}の教材を開く`}>
+              <img src={archive.thumbnailUrl} alt="" width={480} height={270} fetchPriority="high" />
+              <span className={styles.imageTag}><PlayCircleIcon size={20} aria-hidden="true" />録画あり</span>
+            </Link>
+          ) : null}
+          <div className={styles.featureBody}>
+            <p className={styles.eyebrow}>{hasProgress ? (quizReview ? "もう一度、理解を深める" : "続きから学ぶ") : "はじめての方におすすめ"}</p>
+            <Badge variant="theme" cat={themeCatOf(archive.themeId)}>{themeNameOf(data.themes, archive.themeId)}</Badge>
+            <h2 id="featured-lesson-title" className={styles.featureTitle}>{archive.title}</h2>
+            <p className={styles.featureOutcome}>{archive.learningOutcome}</p>
+            <p className={styles.meta}>
+              <span>{archive.formatLabel}</span>
+              {archive.durationLabel ? <span>{archive.durationLabel}</span> : null}
+              {archive.quiz ? <span>確認クイズ {archive.quiz.questionCount}問</span> : null}
+            </p>
+            <p className={styles.meta}>{archive.date}{archive.speaker ? `　講師: ${archive.speaker}` : ""}</p>
+            <div className={styles.actions}>
+              <Button href={href}>{hasProgress ? (quizReview ? "クイズで復習する" : "学習を再開する") : "この教材で学ぶ"}<ArrowRightIcon size={18} aria-hidden="true" /></Button>
+              {course ? <Link className="text-link" href={`/courses/${course.id}`}>コースの内容を見る</Link> : null}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className={styles.introEmpty}>
+          <h2>これから学べる教材を準備しています</h2>
+          <p>公開された教材はアーカイブに掲載します。</p>
+          <Button href="/archives">アーカイブを見る</Button>
+        </section>
+      )}
+
+      <nav className={styles.themes} aria-label="学ぶ分野から探す">
+        <p>分野から探す</p>
+        <div>{data.themes.map((theme) => (
+          <Link key={theme.id} href={`/archives?theme=${encodeURIComponent(theme.id)}`}>{theme.name}<ArrowRightIcon size={14} aria-hidden="true" /></Link>
+        ))}</div>
+      </nav>
+
+      {archivesCard}
+
+      <section aria-labelledby="home-courses-title">
+        <div className={styles.sectionHead}>
+          <div><p className={styles.eyebrow}>テーマを通して理解を深める</p><h2 id="home-courses-title">順番に学べるコース</h2></div>
+          <Link className="text-link" href="/courses">すべてのコース<ArrowRightIcon size={16} aria-hidden="true" /></Link>
+        </div>
+        <div className={styles.courseList}>
+          {data.courses.map((item) => (
+            <Link className={styles.courseLink} key={item.id} href={`/courses/${encodeURIComponent(item.id)}`}>
+              <span className={styles.courseIcon}><BookOpenIcon size={24} aria-hidden="true" /></span>
+              <div>
+                <p className={styles.meta}>{themeNameOf(data.themes, item.themeId)} · {item.level} · 全{item.lessons.length}回</p>
+                <h3>{item.title}</h3>
+                <p className={styles.courseDescription}>{item.summary}</p>
+              </div>
+              <ArrowRightIcon size={18} aria-hidden="true" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <div className={styles.supporting}>
+        <section className={styles.progressSummary} aria-labelledby="home-progress-title">
+          <p className={styles.eyebrow}>あなたの学習記録</p>
+          <h2 id="home-progress-title">少しずつ、学びを積み重ねる</h2>
+          <p className={styles.summaryCopy}>{hasProgress ? `修了した教材は ${completedCount} / ${data.archives.length} 件。学習の記録と獲得したバッジを確認できます。` : "学習を始めると、ここに進捗が記録されます。自分のペースで取り組んでください。"}</p>
+          {hasProgress ? <ProgressBar value={completedCount} max={data.archives.length} label={`全${data.archives.length}教材中${completedCount}件修了`} /> : null}
+          <Link className="text-link" href="/dashboard">学習記録を見る<ArrowRightIcon size={16} aria-hidden="true" /></Link>
+        </section>
         {conferenceCard}
       </div>
-    </>
+    </div>
   );
 }

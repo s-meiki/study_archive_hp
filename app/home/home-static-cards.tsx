@@ -1,64 +1,40 @@
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card, CardHeader } from "../ui/card";
-import type { HomeTheme } from "./home-types";
+import type { HomeArchive, HomeTheme } from "./home-types";
 import { themeCatOf, themeNameOf } from "../lib/theme-category";
 import type { UpcomingMeetingView } from "./upcoming-meeting";
 import styles from "./home-dashboard.module.css";
 
-// サーバーで確定する静的カード群。クライアント進捗に依存しないため
-// page.tsx からスロットとして HomeDashboard に渡し、SSR のまま描画する。
-
-export type HomeLatestArchive = {
-  id: string;
-  title: string;
-  date: string;
-  speaker: string;
-  themeId: string;
-};
-
-type LatestArchivesCardProps = {
-  archives: HomeLatestArchive[];
+export function LatestArchivesCard({ archives, themes, recentNotes }: {
+  archives: HomeArchive[];
   themes: HomeTheme[];
-};
-
-export function LatestArchivesCard({ archives, themes }: LatestArchivesCardProps) {
+  recentNotes: HomeArchive[];
+}) {
   return (
-    <Card className={styles.areaArchives}>
-      <CardHeader
-        title="最新アーカイブ"
-        action={
-          <Link className="text-link" href="/archives">
-            すべて見る
-          </Link>
-        }
-      />
-      <ul className={styles.itemList}>
+    <section aria-labelledby="latest-videos-title">
+      <div className={styles.sectionHead}>
+        <div><p className={styles.eyebrow}>見て学べる教材</p><h2 id="latest-videos-title">新着の録画</h2></div>
+        <Link className="text-link" href="/archives?asset=recording">録画をすべて見る →</Link>
+      </div>
+      <ul className={styles.archiveGrid}>
         {archives.map((archive) => (
           <li key={archive.id}>
-            <div className={styles.itemBody}>
-              <p className={styles.itemTitle}>{archive.title}</p>
-              <p className={styles.itemMeta}>
-                <Badge variant="theme" cat={themeCatOf(archive.themeId)}>
-                  {themeNameOf(themes, archive.themeId)}
-                </Badge>
-                {archive.date ? <span>{archive.date}</span> : null}
-                {archive.speaker ? <span>講師: {archive.speaker}</span> : null}
-              </p>
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              className={styles.itemAction}
-              href={`/archives/${encodeURIComponent(archive.id)}`}
-            >
-              視聴
-            </Button>
+            <Link className={styles.archiveLink} href={`/archives/${encodeURIComponent(archive.id)}`}>
+              {archive.thumbnailUrl ? <img className={styles.archiveImage} src={archive.thumbnailUrl} alt="" width={480} height={270} loading="lazy" /> : null}
+              <div className={styles.archiveBody}>
+                <div><Badge variant="theme" cat={themeCatOf(archive.themeId)}>{themeNameOf(themes, archive.themeId)}</Badge></div>
+                <h3>{archive.title}</h3>
+                <p className={styles.archiveOutcome}>{archive.learningOutcome}</p>
+                <p className={styles.meta}><span>{archive.date}</span>{archive.speaker ? <span>講師: {archive.speaker}</span> : null}</p>
+                <p className={styles.meta}>{archive.durationLabel ? <span>{archive.durationLabel}</span> : null}{archive.quiz ? <span>確認クイズ {archive.quiz.questionCount}問</span> : null}</p>
+                <span className={styles.archiveAction}>録画・教材を見る <span aria-hidden="true">→</span></span>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>
-    </Card>
+      {recentNotes.length ? <div className={styles.recentNotes}><span>要点から学べる教材</span>{recentNotes.map((archive) => <Link key={archive.id} href={`/archives/${encodeURIComponent(archive.id)}`}>{archive.title} →</Link>)}</div> : null}
+    </section>
   );
 }
 
@@ -68,7 +44,7 @@ type ConferenceCardProps = {
 
 export function ConferenceCard({ meeting }: ConferenceCardProps) {
   return (
-    <Card className={styles.areaConf}>
+    <section aria-label="学会カレンダー">
       <p className={styles.eyebrow}>学会カレンダー</p>
       {meeting ? (
         <>
@@ -91,6 +67,6 @@ export function ConferenceCard({ meeting }: ConferenceCardProps) {
           学会カレンダーを見る →
         </Link>
       </div>
-    </Card>
+    </section>
   );
 }

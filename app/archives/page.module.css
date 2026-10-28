@@ -12,6 +12,13 @@
   font-size: var(--fs-sm);
 }
 
+.intro {
+  margin: 10px 0 8px;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+}
+
 @media (max-width: 479px) {
   .head {
     padding-top: 20px;

@@ -19,7 +19,9 @@ import {
 import { siteLegal } from "../../site-legal";
 import { absoluteSiteUrl } from "../../site-url";
 import { Badge } from "../../ui/badge";
+import { getArchivePresentation } from "../../lib/archive-presentation";
 import { themeCatOf } from "../../lib/theme-category";
+import ArchiveRecording from "./archive-recording";
 import ArchiveQuizSection from "./archive-quiz-section";
 import { CourseContextStrip, LessonProgressPanel, type CourseView } from "./lesson-context";
 import styles from "./archive-detail.module.css";
@@ -110,6 +112,8 @@ export default async function ArchiveDetailPage({ params }: ArchiveDetailPagePro
     return [{ key, label, Icon, url }];
   });
 
+  const { thumbnailUrl, recordingVideoId } = getArchivePresentation(archive);
+  const recordingLink = assetLinks.find((asset) => asset.key === "recording");
   const duration = archive.duration && archive.duration !== "未記載" ? archive.duration : "";
   const overviewParagraphs =
     archive.detail?.overview
@@ -151,6 +155,9 @@ export default async function ArchiveDetailPage({ params }: ArchiveDetailPagePro
           {duration ? <span>{duration}</span> : null}
         </p>
         <p className={styles.heroSummary}>{archive.summary}</p>
+        {recordingVideoId && recordingLink ? (
+          <ArchiveRecording key={recordingVideoId} videoId={recordingVideoId} title={archive.title} thumbnailUrl={thumbnailUrl} recordingUrl={recordingLink.url} />
+        ) : null}
       </header>
 
       <section className={styles.section} aria-labelledby="archive-assets-heading">

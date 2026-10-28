@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ExamIcon } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import { siteLegal } from "./site-legal";
 import { absoluteSiteUrl } from "./site-url";
 import {
@@ -8,16 +8,17 @@ import {
   loadQuizBank,
   loadSiteContent
 } from "./site-data";
+import { getArchivePresentation } from "./lib/archive-presentation";
 import { Button } from "./ui/button";
 import HomeDashboard from "./home/home-dashboard";
-import { ConferenceCard, LatestArchivesCard, type HomeLatestArchive } from "./home/home-static-cards";
+import { ConferenceCard, LatestArchivesCard } from "./home/home-static-cards";
 import type { HomeLearningData } from "./home/home-types";
 import { pickUpcomingMeeting } from "./home/upcoming-meeting";
 import styles from "./home/home-dashboard.module.css";
 
 const pageTitle = `学習ホーム | ${siteLegal.shortSiteName}`;
 const pageDescription =
-  "学習の続き・今日の復習キュー・コース進捗・最新アーカイブ・学会情報をひと目で確認できる薬剤師向け学習ダッシュボードです。";
+  "臨床・研究・AI活用の勉強会を、録画と学べる内容から探せる薬剤師向け学習アーカイブです。";
 const canonicalUrl = absoluteSiteUrl("/");
 const ogImageUrl = absoluteSiteUrl("/images/ogp.png");
 
@@ -78,6 +79,7 @@ export default async function HomePage() {
     archives: siteContent.archives.map((archive) => {
       const quiz = quizByArchiveId.get(archive.id);
       return {
+        ...getArchivePresentation(archive),
         id: archive.id,
         themeId: archive.themeId,
         title: archive.title,
@@ -120,18 +122,8 @@ export default async function HomePage() {
   };
 
   const archivesByDateDesc = [...homeData.archives].sort((a, b) => b.date.localeCompare(a.date));
-  const latestArchives: HomeLatestArchive[] = archivesByDateDesc.slice(0, 3).map((archive) => ({
-    id: archive.id,
-    title: archive.title,
-    date: archive.date,
-    speaker: archive.speaker,
-    themeId: archive.themeId
-  }));
-
-  const newestQuizArchive = archivesByDateDesc.find((archive) => archive.quiz);
-  const quizCtaHref = newestQuizArchive
-    ? `/archives/${encodeURIComponent(newestQuizArchive.id)}#quiz`
-    : "/archives";
+  const latestArchives = archivesByDateDesc.filter((archive) => archive.assets.recording).slice(0, 3);
+  const recentNotes = archivesByDateDesc.filter((archive) => !archive.assets.recording).slice(0, 2);
 
   const quizQuestionCount = quizBank.quizzes.reduce((sum, quiz) => sum + quiz.questions.length, 0);
   const meeting = pickUpcomingMeeting(annualMeetings.meetings, todayInTokyo());
@@ -140,23 +132,24 @@ export default async function HomePage() {
     <>
       <div className={styles.pageHead}>
         <div>
-          <h1>学習ホーム</h1>
+          <p className={styles.eyebrow}>臨床・研究・AI活用の学習アーカイブ</p>
+          <h1>必要な勉強会に、すぐ届く。</h1>
           <p className={styles.siteTotals}>
             アーカイブ {homeData.archives.length}本 ・ コース {homeData.courses.length}本 ・ 確認クイズ{" "}
             {quizQuestionCount}問
           </p>
         </div>
         <div className={styles.headActions}>
-          <Button href={quizCtaHref}>
-            <ExamIcon size={16} aria-hidden="true" />
-            確認クイズを解く
+          <Button href="/archives">
+            <MagnifyingGlassIcon size={16} aria-hidden="true" />
+            教材を探す
           </Button>
         </div>
       </div>
 
       <HomeDashboard
         data={homeData}
-        archivesCard={<LatestArchivesCard archives={latestArchives} themes={homeData.themes} />}
+        archivesCard={<LatestArchivesCard archives={latestArchives} themes={homeData.themes} recentNotes={recentNotes} />}
         conferenceCard={<ConferenceCard meeting={meeting} />}
       />
 

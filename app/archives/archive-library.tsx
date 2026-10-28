@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import Image from "next/image";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { emptyArchiveFilters, readArchiveFilters, writeArchiveFilters, type ArchiveFilters, type AssetFilter } from "./search-filters";
 import {
   BookOpenIcon,
   CalendarBlankIcon,
@@ -23,6 +26,10 @@ import { themeCatOf } from "../lib/theme-category";
 import styles from "./archive-library.module.css";
 
 export type ArchiveListItem = {
+  thumbnailUrl: string | null;
+  learningOutcome: string;
+  durationLabel: string;
+  formatLabel: string;
   id: string;
   themeId: string;
   title: string;
@@ -45,8 +52,6 @@ type ArchiveLibraryProps = {
   themes: SiteTheme[];
 };
 
-type AssetFilter = "all" | "recording" | "slides" | "notes" | "references";
-
 const assetChips = [
   { key: "recording", label: "録画", Icon: VideoCameraIcon },
   { key: "slides", label: "スライド", Icon: PresentationChartIcon },
@@ -60,16 +65,28 @@ function formatDate(value: string) {
 
 export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
   const { state } = useProgress();
-  const [search, setSearch] = useState("");
-  const [themeId, setThemeId] = useState("");
-  const [asset, setAsset] = useState<AssetFilter>("all");
-  const [year, setYear] = useState("all");
+  const searchParams = useSearchParams();
+  const themeIds = useMemo(() => themes.map((theme) => theme.id), [themes]);
 
   const themeById = useMemo(() => new Map(themes.map((theme) => [theme.id, theme])), [themes]);
   const yearOptions = useMemo(
     () => [...new Set(items.map((item) => item.date.slice(0, 4)).filter(Boolean))].sort().reverse(),
     [items]
   );
+
+  const { search, themeId, asset, year } = readArchiveFilters(searchParams, themeIds, yearOptions);
+
+  function updateFilters(patch: Partial<ArchiveFilters>, replace = false) {
+    const url = new URL(window.location.href);
+    const current = readArchiveFilters(url.searchParams, themeIds, yearOptions);
+    url.search = writeArchiveFilters(url.searchParams, { ...current, ...patch }).toString();
+    const destination = `${url.pathname}${url.search}${url.hash}`;
+    if (destination === `${window.location.pathname}${window.location.search}${window.location.hash}`) return;
+    // Next.js observes native history updates, including Back/Forward, without
+    // fetching the unchanged server content for each keystroke.
+    if (replace) window.history.replaceState(null, "", destination);
+    else window.history.pushState(null, "", destination);
+  }
 
   const filtered = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -83,10 +100,7 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
   }, [items, asset, search, themeId, year]);
 
   function resetFilters() {
-    setSearch("");
-    setThemeId("");
-    setAsset("all");
-    setYear("all");
+    updateFilters(emptyArchiveFilters);
   }
 
   return (
@@ -96,7 +110,7 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
           type="button"
           className={!themeId ? `${styles.themeChip} ${styles.themeChipActive}` : styles.themeChip}
           aria-pressed={!themeId}
-          onClick={() => setThemeId("")}
+          onClick={() => updateFilters({ themeId: "" })}
         >
           すべて
           <span className={`${styles.themeCount} tabular-nums`}>{items.length}</span>
@@ -110,7 +124,7 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
               key={theme.id}
               className={active ? `${styles.themeChip} ${styles.themeChipActive}` : styles.themeChip}
               aria-pressed={active}
-              onClick={() => setThemeId(theme.id)}
+              onClick={() => updateFilters({ themeId: theme.id })}
             >
               {theme.name}
               <span className={`${styles.themeCount} tabular-nums`}>{count}</span>
@@ -127,13 +141,13 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
             type="search"
             value={search}
             placeholder="キーワードで検索"
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => updateFilters({ search: event.target.value }, true)}
           />
         </label>
         <label className={styles.selectField}>
           <FunnelIcon aria-hidden="true" />
           <span className="visually-hidden">資料種別</span>
-          <select value={asset} onChange={(event) => setAsset(event.target.value as AssetFilter)}>
+          <select value={asset} onChange={(event) => updateFilters({ asset: event.target.value as AssetFilter })}>
             <option value="all">資料種別</option>
             <option value="recording">録画あり</option>
             <option value="slides">スライドあり</option>
@@ -144,7 +158,7 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
         <label className={styles.selectField}>
           <CalendarBlankIcon aria-hidden="true" />
           <span className="visually-hidden">年度</span>
-          <select value={year} onChange={(event) => setYear(event.target.value)}>
+          <select value={year} onChange={(event) => updateFilters({ year: event.target.value })}>
             <option value="all">年度</option>
             {yearOptions.map((option) => (
               <option key={option} value={option}>
@@ -183,51 +197,70 @@ export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
             return (
               <li key={item.id}>
                 <Card className={styles.card}>
-                  <div className={styles.cardTop}>
-                    <Badge variant="theme" cat={themeCatOf(item.themeId)}>
-                      {themeById.get(item.themeId)?.name ?? item.themeId}
-                    </Badge>
-                    {item.featured ? (
-                      <span className={styles.featured}>
-                        <StarIcon weight="fill" aria-hidden="true" />
-                        注目
-                      </span>
-                    ) : null}
-                  </div>
-                  <h2 className={styles.cardTitle}>
-                    <Link className={styles.cardLink} href={`/archives/${encodeURIComponent(item.id)}`}>
-                      {item.title}
-                    </Link>
-                  </h2>
-                  <p className={styles.cardMeta}>
-                    <span className="tabular-nums">{formatDate(item.date)}</span>
-                    {item.speaker ? <span>講師: {item.speaker}</span> : null}
-                  </p>
-                  <p className={styles.cardSummary}>{item.summary}</p>
-                  <div className={styles.cardFoot}>
-                    <span className={styles.assetChips}>
-                      {assetChips.map(({ key, label, Icon }) =>
-                        item.assets[key] ? (
-                          <span key={key} className={styles.assetChip}>
-                            <Icon aria-hidden="true" />
-                            {label}
-                          </span>
-                        ) : null
-                      )}
-                      {item.quizQuestionCount > 0 ? (
-                        <span className={`${styles.assetChip} tabular-nums`}>
-                          <QuestionIcon aria-hidden="true" />
-                          クイズ{item.quizQuestionCount}問
+                  {item.thumbnailUrl ? (
+                    <div className={styles.cardMedia}>
+                      <Image
+                        src={item.thumbnailUrl}
+                        unoptimized
+                        alt=""
+                        width={640}
+                        height={360}
+                        sizes="(min-width: 1080px) 33vw, (min-width: 720px) 50vw, 100vw"
+                        className={styles.thumbnail}
+                      />
+                    </div>
+                  ) : null}
+                  <div className={styles.cardBody}>
+                    <div className={styles.cardTop}>
+                      <Badge variant="theme" cat={themeCatOf(item.themeId)}>
+                        {themeById.get(item.themeId)?.name ?? item.themeId}
+                      </Badge>
+                      {item.featured ? (
+                        <span className={styles.featured}>
+                          <StarIcon weight="fill" aria-hidden="true" />
+                          注目
                         </span>
                       ) : null}
-                    </span>
-                    {lessonStatus === "completed" ? (
-                      <Badge variant="status" status="success">
-                        修了
-                      </Badge>
-                    ) : lessonStatus === "watched" ? (
-                      <Badge>視聴済み</Badge>
-                    ) : null}
+                    </div>
+                    <p className={styles.formatLine}>
+                      <span>{item.formatLabel}</span>
+                      {item.durationLabel ? <span className="tabular-nums">{item.durationLabel}</span> : null}
+                    </p>
+                    <h2 className={styles.cardTitle}>
+                      <Link className={styles.cardLink} href={`/archives/${encodeURIComponent(item.id)}`}>
+                        {item.title}
+                      </Link>
+                    </h2>
+                    <p className={styles.cardMeta}>
+                      <span className="tabular-nums">{formatDate(item.date)}</span>
+                      {item.speaker ? <span>講師: {item.speaker}</span> : null}
+                    </p>
+                    <p className={styles.cardSummary}>{item.learningOutcome}</p>
+                    <div className={styles.cardFoot}>
+                      <span className={styles.assetChips}>
+                        {assetChips.map(({ key, label, Icon }) =>
+                          item.assets[key] ? (
+                            <span key={key} className={styles.assetChip}>
+                              <Icon aria-hidden="true" />
+                              {label}
+                            </span>
+                          ) : null
+                        )}
+                        {item.quizQuestionCount > 0 ? (
+                          <span className={`${styles.assetChip} tabular-nums`}>
+                            <QuestionIcon aria-hidden="true" />
+                            クイズ{item.quizQuestionCount}問
+                          </span>
+                        ) : null}
+                      </span>
+                      {lessonStatus === "completed" ? (
+                        <Badge variant="status" status="success">
+                          修了
+                        </Badge>
+                      ) : lessonStatus === "watched" ? (
+                        <Badge>視聴済み</Badge>
+                      ) : null}
+                    </div>
                   </div>
                 </Card>
               </li>

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { loadQuizBank, loadSiteContent } from "../site-data";
 import { siteLegal } from "../site-legal";
 import { absoluteSiteUrl } from "../site-url";
+import { getArchivePresentation } from "../lib/archive-presentation";
 import ArchiveLibrary, { type ArchiveListItem } from "./archive-library";
 import styles from "./page.module.css";
 
@@ -30,6 +32,7 @@ export default async function ArchivesPage() {
   const items: ArchiveListItem[] = [...siteContent.archives]
     .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
     .map((archive) => ({
+      ...getArchivePresentation(archive),
       id: archive.id,
       themeId: archive.themeId,
       title: archive.title,
@@ -60,12 +63,15 @@ export default async function ArchivesPage() {
       <div className={styles.head}>
         <div>
           <h1>アーカイブライブラリ</h1>
+          <p className={styles.intro}>テーマやキーワードから、いま必要な学びを。</p>
           <p className={`${styles.totals} tabular-nums`}>
             全{items.length}回 ・ 確認クイズ{totalQuestions}問
           </p>
         </div>
       </div>
-      <ArchiveLibrary items={items} themes={siteContent.themes} />
+      <Suspense fallback={<p role="status">アーカイブを読み込んでいます…</p>}>
+        <ArchiveLibrary items={items} themes={siteContent.themes} />
+      </Suspense>
     </>
   );
 }
