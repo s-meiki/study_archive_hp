@@ -26,7 +26,7 @@ class ContactRequestError extends Error {
 const MAX_NAME_LENGTH = 80;
 const MAX_EMAIL_LENGTH = 120;
 const MAX_MESSAGE_LENGTH = 4000;
-const DISCORD_DESCRIPTION_LIMIT = 3800;
+const UPSTREAM_TIMEOUT_MS = 10_000;
 
 function normalizeText(value: unknown) {
   if (typeof value !== "string") {
@@ -34,14 +34,6 @@ function normalizeText(value: unknown) {
   }
 
   return value.trim();
-}
-
-function truncate(value: string, maxLength: number) {
-  if (value.length <= maxLength) {
-    return value;
-  }
-
-  return `${value.slice(0, maxLength - 1)}…`;
 }
 
 function isValidEmail(value: string) {
@@ -70,7 +62,8 @@ async function verifyTurnstile(token: string, ipAddress: string | null) {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body: requestBody.toString(),
-    cache: "no-store"
+    cache: "no-store",
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS)
   });
 
   if (!response.ok) {
@@ -92,6 +85,7 @@ async function sendDiscordWebhook(name: string, email: string, message: string) 
     headers: {
       "Content-Type": "application/json"
     },
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     body: JSON.stringify({
       allowed_mentions: {
         parse: []
@@ -100,16 +94,17 @@ async function sendDiscordWebhook(name: string, email: string, message: string) 
         {
           title: "新しい問い合わせ",
           color: 3555932,
-          description: truncate(message, DISCORD_DESCRIPTION_LIMIT),
+          // Discord allows 4096 description characters; the form accepts at most 4000.
+          description: message,
           fields: [
             {
               name: "お名前",
-              value: truncate(name, MAX_NAME_LENGTH),
+              value: name,
               inline: true
             },
             {
               name: "メールアドレス",
-              value: truncate(email, MAX_EMAIL_LENGTH),
+              value: email,
               inline: true
             }
           ],
@@ -126,7 +121,16 @@ async function sendDiscordWebhook(name: string, email: string, message: string) 
 
 export async function POST(request: Request) {
   try {
-    const payload = (await request.json()) as ContactPayload;
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "送信データの形式が正しくありません。" }, { status: 400 });
+    }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "送信データの形式が正しくありません。" }, { status: 400 });
+    }
+    const payload = body as ContactPayload;
     const name = normalizeText(payload.name);
     const email = normalizeText(payload.email);
     const message = normalizeText(payload.message);
@@ -152,11 +156,11 @@ export async function POST(request: Request) {
     const ipAddress = requestHeaders.get("cf-connecting-ip") ?? requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
     const verificationResult = await verifyTurnstile(token, ipAddress);
 
-    if (!verificationResult.success) {
+    if (verificationResult?.success !== true) {
       return NextResponse.json(
         {
           error: "Turnstile 検証に失敗しました。再度お試しください。",
-          turnstileErrors: verificationResult["error-codes"] ?? []
+          turnstileErrors: verificationResult?.["error-codes"] ?? []
         },
         { status: 400 }
       );
