@@ -1,0 +1,12 @@
+.content {
+  width: min(100% - 2rem, 48rem);
+  margin: 4rem auto;
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
