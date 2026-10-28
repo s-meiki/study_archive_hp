@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>スライドテンプレート（案A ライトクリーン）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     案A ライトクリーン テンプレート（slide-design.md 決定版）
+     - 1920x1080 固定
+     - 色は3色まで: 背景 #ffffff / 文字 #0f172a / アクセント #4f46e5
+     - グラデーション不使用・影不使用
+     - フォント: 見出し・本文 Noto Sans JP、欧文数字 Inter
+     使い方: .slide を1枚コピーし、data-role の中身だけ差し替える。
+     ============================================================ */
+  body { margin: 0; background: #0f172a; font-family: "Noto Sans JP", sans-serif; }
+  .slide {
+    width: 1920px; height: 1080px; box-sizing: border-box; overflow: hidden;
+    background: #ffffff; color: #0f172a; position: relative; margin: 0 auto 4px;
+  }
+
+  /* --- 講座ロゴ（左上・全スライド共通） --- */
+  .logo {
+    position: absolute; top: 64px; left: 88px;
+    color: #4f46e5; font-size: 28px; font-weight: 700; letter-spacing: 0.02em;
+  }
+
+  /* --- 本文スライド: 中央見出し＋箇条書き（最大4点） --- */
+  .slide.content { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 160px 200px; }
+  .slide.content h1[data-role="heading"] {
+    font-size: 64px; font-weight: 700; line-height: 1.5; margin: 0; text-align: center;
+  }
+  .slide.content .bar { width: 120px; height: 10px; background: #4f46e5; margin: 44px auto 72px; }
+  .slide.content ul[data-role="bullets"] { padding: 0; margin: 0; max-width: 1360px; }
+  .slide.content ul[data-role="bullets"] li {
+    font-size: 44px; line-height: 1.8; margin-bottom: 36px; list-style: none;
+  }
+  .slide.content ul[data-role="bullets"] li:last-child { margin-bottom: 0; }
+  .slide.content ul[data-role="bullets"] li::before { content: "— "; color: #4f46e5; font-weight: 700; }
+
+  /* --- 章とびらスライド: 大見出しのみ --- */
+  .slide.chapter { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 160px 200px; }
+  .slide.chapter .chapter-no[data-role="chapter-no"] {
+    font-family: "Inter", "Noto Sans JP", sans-serif;
+    color: #4f46e5; font-size: 40px; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 48px;
+  }
+  .slide.chapter h1[data-role="heading"] {
+    font-size: 96px; font-weight: 700; line-height: 1.45; margin: 0;
+  }
+  .slide.chapter .bar { width: 160px; height: 12px; background: #4f46e5; margin: 64px auto 0; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     テンプレート1: 本文スライド（左上ロゴ / 中央見出し / 箇条書き最大4点）
+     ================================================================ -->
+<section class="slide content">
+
+  <!-- ▼▼ 差し替え: 講座ロゴ（テキスト） ▼▼ -->
+  <div class="logo" data-role="logo">完全攻略ロードマップ</div>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+  <!-- ▼▼ 差し替え: 見出し ▼▼ -->
+  <h1 data-role="heading">見出しをここに入れる</h1>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+  <div class="bar"></div>
+
+  <!-- ▼▼ 差し替え: 箇条書き（最大4点。使わない li は削除する） ▼▼ -->
+  <ul data-role="bullets">
+    <li>箇条書きの1点目をここに入れる</li>
+    <li>箇条書きの2点目をここに入れる</li>
+    <li>箇条書きの3点目をここに入れる</li>
+    <li>箇条書きの4点目をここに入れる</li>
+  </ul>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+</section>
+
+<!-- ================================================================
+     テンプレート2: 章とびらスライド（大見出しのみ）
+     ================================================================ -->
+<section class="slide chapter">
+
+  <!-- ▼▼ 差し替え: 講座ロゴ（テキスト） ▼▼ -->
+  <div class="logo" data-role="logo">完全攻略ロードマップ</div>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+  <!-- ▼▼ 差し替え: 章番号（不要なら div ごと削除） ▼▼ -->
+  <div class="chapter-no" data-role="chapter-no">第1部</div>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+  <!-- ▼▼ 差し替え: 章タイトル ▼▼ -->
+  <h1 data-role="heading">章タイトルをここに入れる</h1>
+  <!-- ▲▲ 差し替えここまで ▲▲ -->
+
+  <div class="bar"></div>
+
+</section>
+
+</body>
+</html>

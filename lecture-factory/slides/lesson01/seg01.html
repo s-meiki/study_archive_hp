@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>第1回 オリエンテーション — スライド（案A ライトクリーン）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* 案A ライトクリーン（slide-design.md 決定版）
+     色は3色まで: #ffffff / #0f172a / #4f46e5。グラデ・影は不使用。
+     1スライド = 1920x1080。動画化パイプラインは .slide を1枚ずつ撮影する。 */
+  body { margin: 0; background: #0f172a; font-family: "Noto Sans JP", sans-serif; }
+  .slide {
+    width: 1920px; height: 1080px; box-sizing: border-box; overflow: hidden;
+    background: #ffffff; color: #0f172a; position: relative;
+    padding: 140px 160px; margin: 0;
+  }
+  .num { font-family: "Inter", "Noto Sans JP", sans-serif; }
+
+  .kicker { color: #4f46e5; font-size: 30px; font-weight: 700; margin-bottom: 28px; }
+  h1.title { font-size: 60px; font-weight: 700; line-height: 1.6; margin: 0; }
+  .bar { width: 120px; height: 10px; background: #4f46e5; margin: 44px 0 64px; }
+  ul { padding: 0; margin: 0; }
+  li { font-size: 42px; line-height: 1.8; margin-bottom: 40px; list-style: none; }
+  li::before { content: "— "; color: #4f46e5; font-weight: 700; }
+  li small { font-size: 30px; }
+  .foot { position: absolute; bottom: 56px; right: 88px; font-size: 26px; color: #4f46e5; font-weight: 700; }
+  .foot-label { position: absolute; bottom: 56px; left: 160px; font-size: 24px; color: #4f46e5; font-weight: 700; }
+
+  .cover { display: flex; flex-direction: column; justify-content: center; }
+  .cover .badge { color: #4f46e5; border: 3px solid #4f46e5; border-radius: 999px; padding: 12px 44px; font-size: 34px; font-weight: 700; width: fit-content; }
+  .cover h1 { font-size: 84px; font-weight: 700; line-height: 1.5; margin: 64px 0 0; }
+  .cover .sub { margin-top: 44px; font-size: 40px; color: #4f46e5; font-weight: 700; }
+</style>
+</head>
+<body>
+<section class="slide cover">
+  <div class="badge">第1回 オリエンテーション</div>
+  <h1>本物の臨床薬剤師になるための<br>完全攻略ロードマップ</h1>
+  <div class="sub">全12回｜1回3〜4分＋テキスト</div>
+</section>
+</body>
+</html>
