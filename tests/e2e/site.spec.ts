@@ -9,6 +9,7 @@ function readData<T>(file: string): T {
 
 const quizBank = readData<QuizBank>("quiz-bank.js");
 const learning = readData<LearningContent>("learning-content.js");
+const thumbnailCount = Object.keys(JSON.parse(readFileSync("content/archive-thumbnails.json", "utf8"))).length;
 const quiz = quizBank.quizzes[0];
 const secondQuiz = quizBank.quizzes[1];
 const key = "cawg.learning.progress.v1";
@@ -208,17 +209,22 @@ test("ホームの録画・分野から教材を選び、学習を再開でき�
   await expect(latest).not.toContainText('未記載');
   const recording = latest.locator('li a').first();
   const href = await recording.getAttribute('href');
+  const source = readData<{ archives: { id: string; title: string; links: { recording: string } }[] }>('site-content.js');
+  const selected = source.archives.find((archive) => href === `/archives/${archive.id}`)!;
+  expect(selected).toBeTruthy();
+  const videoUrl = new URL(selected.links.recording);
+  const videoId = videoUrl.hostname === 'youtu.be' ? videoUrl.pathname.slice(1) : videoUrl.searchParams.get('v');
   await recording.click();
   await expect(page).toHaveURL(new RegExp(href!));
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('病院薬剤師の仕事');
-  const detailThumbnail = page.getByRole('img', { name: '病院薬剤師の仕事の動画サムネイル' });
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(selected.title);
+  const detailThumbnail = page.getByRole('img', { name: `${selected.title}の動画サムネイル`, exact: true });
   await expect(detailThumbnail).toBeVisible();
   await expect.poll(() => detailThumbnail.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth === 480)).toBe(true);
   await expect(page.getByRole('link', { name: /^YouTubeで見る/  })).toHaveAttribute('target', '_blank');
   await expect(page.locator('iframe')).toHaveCount(0);
   await page.route('https://www.youtube-nocookie.com/embed/**', (route) => route.fulfill({ contentType: 'text/html', body: '<html><body>Test player</body></html>' }));
-  await page.getByRole('button', { name: '病院薬剤師の仕事をこのページで再生', exact: true }).click();
-  await expect(page.locator('iframe')).toHaveAttribute('src', 'https://www.youtube-nocookie.com/embed/DkLGmSEnxtE?autoplay=1&playsinline=1&rel=0');
+  await page.getByRole('button', { name: `${selected.title}をこのページで再生`, exact: true }).click();
+  await expect(page.locator('iframe')).toHaveAttribute('src', `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0`);
   await expect(page.locator('iframe')).toBeVisible();
   await expect(page).toHaveURL(new RegExp(href!));
   await page.screenshot({ path: testInfo.outputPath('archive-detail.png'), fullPage: false });
@@ -228,7 +234,7 @@ test("ホームの録画・分野から教材を選び、学習を再開でき�
   await expect(page).toHaveURL(/theme=infectious/);
   await expect(page.getByRole('heading', { name: '感染症治療~肺炎~', exact: true })).toBeVisible();
   await page.goto('/archives?asset=recording');
-  await expect(page.locator('main img')).toHaveCount(8);
+  await expect(page.locator('main img')).toHaveCount(thumbnailCount);
   for (const image of await page.locator('main img').all()) {
     await image.scrollIntoViewIfNeeded();
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);

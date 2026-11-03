@@ -30,7 +30,7 @@ test('removed or changed recordings cannot show an unrelated cached thumbnail', 
 });
 
 test('learning descriptions use source points and never invent missing duration', () => {
-  const archive = archives[0];
+  const archive = { ...archives[0], duration: '未記載', thumbnail: {}, assets: { recording: false } };
   const before = JSON.stringify(archive);
   const display = api.getArchivePresentation(archive);
   assert.ok(display.learningOutcome.includes(archive.detail.keyPoints[0]));

@@ -10,11 +10,15 @@ import {
 } from "./site-data";
 import { getArchivePresentation } from "./lib/archive-presentation";
 import { Button } from "./ui/button";
+import { getWeeklyEdition } from "./home/weekly-edition";
+import WeeklyPicks from "./home/weekly-picks";
 import HomeDashboard from "./home/home-dashboard";
 import { ConferenceCard, LatestArchivesCard } from "./home/home-static-cards";
 import type { HomeLearningData } from "./home/home-types";
 import { pickUpcomingMeeting } from "./home/upcoming-meeting";
 import styles from "./home/home-dashboard.module.css";
+
+export const revalidate = 300;
 
 const pageTitle = `学習ホーム | ${siteLegal.shortSiteName}`;
 const pageDescription =
@@ -126,29 +130,34 @@ export default async function HomePage() {
   const recentNotes = archivesByDateDesc.filter((archive) => !archive.assets.recording).slice(0, 2);
 
   const quizQuestionCount = quizBank.quizzes.reduce((sum, quiz) => sum + quiz.questions.length, 0);
-  const meeting = pickUpcomingMeeting(annualMeetings.meetings, todayInTokyo());
+  const today = todayInTokyo();
+  const meeting = pickUpcomingMeeting(annualMeetings.meetings, today);
+  const edition = getWeeklyEdition(archiveById, today);
 
   return (
     <>
-      <div className={styles.pageHead}>
-        <div>
-          <p className={styles.eyebrow}>臨床・研究・AI活用の学習アーカイブ</p>
-          <h1>必要な勉強会に、すぐ届く。</h1>
-          <p className={styles.siteTotals}>
-            アーカイブ {homeData.archives.length}本 ・ コース {homeData.courses.length}本 ・ 確認クイズ{" "}
-            {quizQuestionCount}問
-          </p>
+      {edition ? <WeeklyPicks edition={edition} /> : (
+        <div className={styles.pageHead}>
+          <div>
+            <p className={styles.eyebrow}>臨床・研究・AI活用の学習アーカイブ</p>
+            <h1>必要な勉強会に、すぐ届く。</h1>
+            <p className={styles.siteTotals}>
+              アーカイブ {homeData.archives.length}本 ・ コース {homeData.courses.length}本 ・ 確認クイズ{" "}
+              {quizQuestionCount}問
+            </p>
+          </div>
+          <div className={styles.headActions}>
+            <Button href="/archives">
+              <MagnifyingGlassIcon size={16} aria-hidden="true" />
+              教材を探す
+            </Button>
+          </div>
         </div>
-        <div className={styles.headActions}>
-          <Button href="/archives">
-            <MagnifyingGlassIcon size={16} aria-hidden="true" />
-            教材を探す
-          </Button>
-        </div>
-      </div>
+      )}
 
       <HomeDashboard
         data={homeData}
+        hasWeeklyPicks={Boolean(edition)}
         archivesCard={<LatestArchivesCard archives={latestArchives} themes={homeData.themes} recentNotes={recentNotes} />}
         conferenceCard={<ConferenceCard meeting={meeting} />}
       />

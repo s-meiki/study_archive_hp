@@ -14,11 +14,12 @@ import styles from "./home-dashboard.module.css";
 
 type HomeDashboardProps = {
   data: HomeLearningData;
+  hasWeeklyPicks: boolean;
   archivesCard: ReactNode;
   conferenceCard: ReactNode;
 };
 
-export default function HomeDashboard({ data, archivesCard, conferenceCard }: HomeDashboardProps) {
+export default function HomeDashboard({ data, hasWeeklyPicks, archivesCard, conferenceCard }: HomeDashboardProps) {
   const { state, hydrated } = useProgress();
   const candidates = useMemo(() => buildReviewCandidates(data, state), [data, state]);
   const hasProgress = hydrated && hasAnyLearningProgress(data, state);
@@ -35,8 +36,11 @@ export default function HomeDashboard({ data, archivesCard, conferenceCard }: Ho
   const href = archive ? `/archives/${encodeURIComponent(archive.id)}${query}${quizReview ? "#quiz" : ""}` : "/archives";
   const completedCount = data.archives.filter((item) => state.lessons[item.id]?.status === "completed").length;
 
+  const latestFirst = hasWeeklyPicks && !hasProgress;
+
   return (
     <div className={styles.home}>
+      {latestFirst && archivesCard}
       {archive ? (
         <section className={`${styles.feature} ${!archive.thumbnailUrl ? styles.featureTextOnly : ""}`} aria-labelledby="featured-lesson-title">
           {archive.thumbnailUrl ? (
@@ -77,7 +81,7 @@ export default function HomeDashboard({ data, archivesCard, conferenceCard }: Ho
         ))}</div>
       </nav>
 
-      {archivesCard}
+      {!latestFirst && archivesCard}
 
       <section aria-labelledby="home-courses-title">
         <div className={styles.sectionHead}>

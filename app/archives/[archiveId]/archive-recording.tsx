@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { PlayCircleIcon, ArrowSquareOutIcon } from "@phosphor-icons/react";
+import { RecordingFrame } from "../../components/recording-frame";
 import styles from "./archive-recording.module.css";
 
 export default function ArchiveRecording({ videoId, title, thumbnailUrl, recordingUrl }: {
@@ -20,14 +21,7 @@ export default function ArchiveRecording({ videoId, title, thumbnailUrl, recordi
     <div className={styles.recording}>
       <div className={styles.screen}>
         {playing ? (
-          <iframe
-            ref={player}
-            src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0`}
-            title={`${title}の動画プレーヤー`}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
+          <RecordingFrame ref={player} videoId={videoId} title={title} />
         ) : (
           <button type="button" className={styles.poster} onClick={() => setPlaying(true)} aria-label={`${title}をこのページで再生`}>
             {thumbnailUrl ? <img src={thumbnailUrl} alt={`${title}の動画サムネイル`} width={480} height={360} fetchPriority="high" /> : null}
