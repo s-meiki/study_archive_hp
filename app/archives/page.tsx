@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { loadQuizBank, loadSiteContent } from "../site-data";
 import { siteLegal } from "../site-legal";
@@ -65,7 +66,9 @@ export default async function ArchivesPage() {
           </p>
         </div>
       </div>
-      <ArchiveLibrary items={items} themes={siteContent.themes} />
+      <Suspense fallback={<p role="status">アーカイブを読み込んでいます…</p>}>
+        <ArchiveLibrary items={items} themes={siteContent.themes} />
+      </Suspense>
     </>
   );
 }
