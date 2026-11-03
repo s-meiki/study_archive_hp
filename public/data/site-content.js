@@ -33,6 +33,108 @@ window.STUDY_ARCHIVE_DATA = {
   ],
   "archives": [
     {
+      "themeId": "research-career",
+      "title": "薬剤師キャリアの描き方｜5年目までに考えておきたいこと【病院薬剤師10年の実例】",
+      "summary": "薬剤師1〜5年目に向けて、病院薬剤師10年の実例とWill・Can・Mustの棚卸しを通じ、自分の方向性と次の一歩を考える勉強会。",
+      "speaker": "須賀",
+      "date": "2026-08-28",
+      "updatedAt": "2026-10-30",
+      "duration": "25分17秒",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/P7K0sKoZpmU",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5b4c4c",
+        "end": "#baa09b"
+      },
+      "detail": {
+        "overview": "薬剤師1〜5年目の方が、自分のキャリアの方向性を仮決めするための勉強会です。\nキャリアを縦に深める・横に広げる・斜めに越えるという3方向から捉え、病院薬剤師10年の実例、認定取得での失敗や予定外の転機を振り返ります。\nWill・Can・Mustによる棚卸しや、偶然をチャンスに変える習慣を紹介。最後に、これまでの経験、10年後の仮の方向性、次の1年で取り組む一歩を考えるワークを行います。講師個人の経験にもとづく内容を含みます。",
+        "keyPoints": [
+          "キャリアの3方向と、病院薬剤師から広がる選択肢を整理する",
+          "Will・Can・Mustで自分を棚卸しし、偶然をチャンスに変える習慣を考える",
+          "経験を振り返り、仮の方向性と次の1年で取り組む一歩を言葉にする"
+        ],
+        "chapters": [
+          {
+            "time": "0:00",
+            "label": "はじめに"
+          },
+          {
+            "time": "0:51",
+            "label": "10年後、どんな薬剤師でいたいか言えますか？"
+          },
+          {
+            "time": "2:00",
+            "label": "今日の流れ"
+          },
+          {
+            "time": "2:23",
+            "label": "キャリアの地図｜昇進だけがキャリアではない"
+          },
+          {
+            "time": "2:46",
+            "label": "キャリアの3方向（縦・横・斜め）"
+          },
+          {
+            "time": "4:33",
+            "label": "病院薬剤師から広がる選択肢"
+          },
+          {
+            "time": "5:40",
+            "label": "ある薬剤師の10年"
+          },
+          {
+            "time": "6:41",
+            "label": "1年目の仕事が、論文につながった"
+          },
+          {
+            "time": "8:25",
+            "label": "取れなかった認定もある"
+          },
+          {
+            "time": "9:50",
+            "label": "予定していなかった転機"
+          },
+          {
+            "time": "11:57",
+            "label": "キャリアの8割は、偶然でできている"
+          },
+          {
+            "time": "12:24",
+            "label": "考え方の道具｜Will・Can・Must"
+          },
+          {
+            "time": "14:15",
+            "label": "偶然をチャンスに変える5つの習慣"
+          },
+          {
+            "time": "17:42",
+            "label": "1〜5年目に効く3つの行動"
+          },
+          {
+            "time": "20:21",
+            "label": "自分の地図を描く（ワーク）"
+          },
+          {
+            "time": "22:51",
+            "label": "まとめ"
+          }
+        ],
+        "materials": []
+      },
+      "id": "archive-20260828-9a2c06e58a"
+    },
+    {
       "id": "archive-20260526-c57ee27d13",
       "themeId": "foundations",
       "title": "血液製剤",
@@ -110,6 +212,88 @@ window.STUDY_ARCHIVE_DATA = {
             "url": "https://docs.google.com/presentation/d/1URW26NT-gxTtj-9KmXQuVO894_OhMbcmIuwtSPMfiB8/edit?usp=sharing"
           }
         ]
+      }
+    },
+    {
+      "id": "archive-20260515-oioyea",
+      "themeId": "foundations",
+      "title": "薬剤師の仕事とは｜病棟薬剤師の仕事と点数のはなし",
+      "summary": "病棟薬剤業務実施加算・薬剤管理指導料を切り口に、入院時の評価から服薬指導まで病棟薬剤師の役割を整理する勉強会。",
+      "speaker": "須賀",
+      "date": "2026-05-15",
+      "updatedAt": "2026-10-30",
+      "duration": "27分47秒",
+      "featured": false,
+      "assets": {
+        "recording": true,
+        "slides": false,
+        "notes": false,
+        "references": false
+      },
+      "links": {
+        "recording": "https://youtu.be/sA-ATh2ZzHU",
+        "slides": "",
+        "notes": "",
+        "references": ""
+      },
+      "thumbnail": {
+        "start": "#5d5b47",
+        "end": "#b4b08c"
+      },
+      "detail": {
+        "overview": "病棟薬剤師の仕事を、病棟薬剤業務実施加算と薬剤管理指導料の2つの点数から整理する勉強会です。\n入院時の薬や患者状態の評価、継続・中止の判断、処方の確認、服薬指導、副作用モニタリング、アドヒアランス向上まで、薬剤師として介入する場面を振り返ります。\n点数は収録時点の内容です。講師個人の経験にもとづく内容を含みます。",
+        "keyPoints": [
+          "病棟薬剤業務実施加算・薬剤管理指導料と病棟業務の関係を整理する",
+          "入院時の薬・患者状態の評価と、継続・中止や処方確認の視点を振り返る",
+          "服薬指導、副作用モニタリング、アドヒアランス向上での薬剤師の役割を確認する"
+        ],
+        "chapters": [
+          {
+            "time": "0:00",
+            "label": "はじめに"
+          },
+          {
+            "time": "1:52",
+            "label": "病棟薬剤師の仕事と点数"
+          },
+          {
+            "time": "5:02",
+            "label": "病棟薬剤業務実施加算（処方が出る前の業務）"
+          },
+          {
+            "time": "5:54",
+            "label": "入院時の薬の評価"
+          },
+          {
+            "time": "11:20",
+            "label": "ポリファーマシーと継続・中止の判断"
+          },
+          {
+            "time": "14:04",
+            "label": "入院時の患者状態の評価"
+          },
+          {
+            "time": "16:13",
+            "label": "適切な処方かを確認する"
+          },
+          {
+            "time": "17:56",
+            "label": "薬剤管理指導料と服薬指導"
+          },
+          {
+            "time": "19:07",
+            "label": "副作用モニタリング"
+          },
+          {
+            "time": "22:40",
+            "label": "アドヒアランス向上"
+          },
+          {
+            "time": "25:51",
+            "label": "まとめ"
+          }
+        ],
+        "materials": []
       }
     },
     {

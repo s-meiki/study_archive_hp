@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-09-29",
+  "verifiedAt": "2026-10-27",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -367,11 +367,119 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "多職種連携・協働へ―活かせTDM",
       "leadLabel": "会長",
       "lead": "北市 清幸（岐阜薬科大学薬物動態学研究室 教授）",
-      "note": "公式サイトが2026-09-09に公開され、実行委員長は種田 靖久と案内されています。演題募集・参加登録の日程は未公表です。",
+      "note": "公式サイトが2026-09-09に公開され、実行委員長は種田 靖久と案内されています。2026-10-09に協賛・寄付申込が掲載されました。演題募集・参加登録の日程は未公表です。",
       "sources": [
         {
           "label": "第43回日本TDM学会・学術大会 公式サイト",
           "url": "https://kwcs.jp/tdm2027/"
+        }
+      ]
+    },
+    {
+      "id": "clinical-emergency-30",
+      "primaryUrl": "https://site2.convention.co.jp/jsem30/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 7,
+      "status": "confirmed",
+      "society": "日本臨床救急医学会",
+      "eventName": "第30回日本臨床救急医学会総会・学術集会",
+      "startDate": "2027-07-15",
+      "endDate": "2027-07-17",
+      "city": "横浜",
+      "venue": "パシフィコ横浜 会議センター",
+      "theme": "",
+      "leadLabel": "会長",
+      "lead": "",
+      "note": "公式サイト公開を確認。会長・テーマ等の詳細は公式ページの画像表示から確実に抽出できないため未記載です。",
+      "sources": [
+        {
+          "label": "第30回公式サイト",
+          "url": "https://site2.convention.co.jp/jsem30/"
+        }
+      ]
+    },
+    {
+      "id": "medical-pharmacy-forum-2027",
+      "primaryUrl": "https://www.kwcs.jp/cps2027/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 7,
+      "status": "confirmed",
+      "society": "医療薬学フォーラム",
+      "eventName": "医療薬学フォーラム2027／第35回クリニカルファーマシーシンポジウム",
+      "startDate": "2027-07-17",
+      "endDate": "2027-07-18",
+      "city": "吹田",
+      "venue": "大阪大学コンベンションセンター・大阪大学大学院薬学研究科／薬学部 ほか",
+      "theme": "新たな医療の創造と実践を支える医療薬科学 ～データ駆動型社会を切り拓く～",
+      "leadLabel": "実行委員長",
+      "lead": "奥田 真弘（大阪大学医学部附属病院 教授・薬剤部長）",
+      "note": "公式サイトは2026-06-19公開。",
+      "sources": [
+        {
+          "label": "医療薬学フォーラム2027 公式サイト",
+          "url": "https://www.kwcs.jp/cps2027/"
+        }
+      ]
+    },
+    {
+      "id": "jsct-49",
+      "primaryUrl": "https://www.jsct49.jp/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 7,
+      "status": "confirmed",
+      "society": "日本中毒学会",
+      "eventName": "第49回日本中毒学会総会・学術集会",
+      "startDate": "2027-07-30",
+      "endDate": "2027-07-31",
+      "city": "東京",
+      "venue": "TKP市ヶ谷カンファレンスセンター",
+      "theme": "",
+      "leadLabel": "会長",
+      "lead": "杉田 学（順天堂大学医学部附属練馬病院）",
+      "note": "日程・会場・会長は日本中毒学会公式の学術集会案内で確認しました。テーマは未公表です。",
+      "sources": [
+        {
+          "label": "第49回公式サイト",
+          "url": "https://www.jsct49.jp/"
+        },
+        {
+          "label": "日本中毒学会 学術集会案内",
+          "url": "https://jsct.jp/event/soukai-2/"
+        }
+      ]
+    },
+    {
+      "id": "jasds-13",
+      "primaryUrl": "https://jasds.jp/conference/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "displayMonth": 8,
+      "status": "confirmed",
+      "society": "日本医薬品安全性学会",
+      "eventName": "第13回日本医薬品安全性学会学術大会",
+      "startDate": "2027-08-07",
+      "endDate": "2027-08-08",
+      "city": "東京",
+      "venue": "浜松町コンベンションホール（懇親会会場：慶應義塾大学芝共立キャンパス）",
+      "theme": "Precision Safetyの実現へ ～AI・DXで導く個別化された医薬品安全～",
+      "leadLabel": "大会長",
+      "lead": "中村 智徳（慶應義塾大学薬学部 教授／医療薬学・社会連携センター長）",
+      "note": "会期・会場・大会テーマ・大会長は学会公式ページで確認しました。",
+      "sources": [
+        {
+          "label": "日本医薬品安全性学会 学術集会案内",
+          "url": "https://jasds.jp/conference/"
+        },
+        {
+          "label": "第13回大会 特設サイト",
+          "url": "https://pub.confit.atlas.jp/ja/event/jasds2027"
         }
       ]
     },
@@ -392,7 +500,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "2040年の社会課題を解決する医療薬学の融合研究～すべての薬剤師が集う学術的基盤を目指して～",
       "leadLabel": "年会長",
       "lead": "崔 吉道（金沢大学附属病院 教授・薬剤部長）",
-      "note": "公式サイトでは早期参加登録が2026-09-30まで延長され、2026-09-24から後期参加登録を受け付けています。託児室・メディカルセミナー事前申込の案内も掲載されています。後期参加登録のオンデマンド配信終了日は未公表です。",
+      "note": "公式サイトで関連学会告知・広報申込（2026-10-19）、委員会企画ワークショップ事前申込（2026-10-05）、発表者・座長案内（2026-09-18）の掲載を確認。早期参加登録は2026-09-30まで延長済み。後期参加登録は2026-09-24開始で、締切はオンデマンド配信終了まで（終了日未公表）。",
       "sources": [
         {
           "label": "公式サイト",
@@ -629,8 +737,8 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "演題募集",
           "category": "abstract",
           "startDate": "2026-08-04",
-          "endDate": "2026-09-30",
-          "note": "公式の演題募集ページで募集期間が案内されています。"
+          "endDate": "2026-10-07",
+          "note": "公式ページで締切が2026-09-30から2026-10-07正午へ延長されたことを確認。"
         },
         {
           "id": "stroke-2027-registration",
