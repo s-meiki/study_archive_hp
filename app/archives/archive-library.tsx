@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   BookOpenIcon,
@@ -58,11 +59,21 @@ function formatDate(value: string) {
   return value || "日付未記載";
 }
 
-export default function ArchiveLibrary({ items, themes }: ArchiveLibraryProps) {
+export default function ArchiveLibrary(props: ArchiveLibraryProps) {
+  const params = useSearchParams();
+  const theme = props.themes.find(item => item.id === params.get("theme"))?.id ?? "";
+  const asset = params.get("asset") === "recording" ? "recording" : "all";
+  return <FilteredLibrary key={`${theme}/${asset}`} {...props} initialTheme={theme} initialAsset={asset} />;
+}
+
+function FilteredLibrary({ items, themes, initialTheme, initialAsset }: ArchiveLibraryProps & {
+  initialTheme: string;
+  initialAsset: AssetFilter;
+}) {
   const { state } = useProgress();
   const [search, setSearch] = useState("");
-  const [themeId, setThemeId] = useState("");
-  const [asset, setAsset] = useState<AssetFilter>("all");
+  const [themeId, setThemeId] = useState(initialTheme);
+  const [asset, setAsset] = useState<AssetFilter>(initialAsset);
   const [year, setYear] = useState("all");
 
   const themeById = useMemo(() => new Map(themes.map((theme) => [theme.id, theme])), [themes]);

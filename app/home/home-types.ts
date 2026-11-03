@@ -4,6 +4,10 @@ export type HomeTheme = {
   summary: string;
 };
 export type HomeArchive = {
+  thumbnailUrl: string | null;
+  learningOutcome: string;
+  durationLabel: string;
+  formatLabel: string;
   id: string;
   themeId: string;
   title: string;
