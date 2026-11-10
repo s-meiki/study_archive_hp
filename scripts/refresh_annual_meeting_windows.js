@@ -475,8 +475,9 @@ async function refreshJsphcs36() {
   const lateRegistrationDates = extractJapaneseDateMentions(lateRegistrationSection, {
     defaultYear: 2026,
   });
-  const lateRegistrationStart = lateRegistrationDates[0]
-    ? toIsoDate(lateRegistrationDates[0].year, lateRegistrationDates[0].month, lateRegistrationDates[0].day)
+  const currentLateRegistrationStart = lateRegistrationDates.at(-1);
+  const lateRegistrationStart = currentLateRegistrationStart
+    ? toIsoDate(currentLateRegistrationStart.year, currentLateRegistrationStart.month, currentLateRegistrationStart.day)
     : null;
 
   if (!abstractRange || !earlyRegistrationRange || !lateRegistrationStart) {
