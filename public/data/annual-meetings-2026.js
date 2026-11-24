@@ -4,7 +4,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
     "start": "2026-04-01",
     "end": "2027-03-31"
   },
-  "verifiedAt": "2026-11-10",
+  "verifiedAt": "2026-11-24",
   "meetings": [
     {
       "id": "hokkaido-pharma-73",
@@ -60,6 +60,29 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "category": "registration",
           "startDate": "2026-05-30",
           "endDate": "2026-05-31"
+        }
+      ]
+    },
+    {
+      "id": "hokkaido-pharma-74",
+      "primaryUrl": "https://hokubyo.or.jp/post-3935/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "local",
+      "displayMonth": 5,
+      "status": "confirmed",
+      "society": "北海道薬学大会",
+      "eventName": "第74回北海道薬学大会",
+      "startDate": "2027-05-29",
+      "endDate": "2027-05-30",
+      "city": "札幌",
+      "venue": "札幌コンベンションセンター",
+      "theme": "",
+      "note": "北海道病院薬剤師会の2026-10-09開催案内で会期・会場を確認。大会テーマ・会長は未公表で、周知ポスターPDFからの追加情報は未確認です。",
+      "sources": [
+        {
+          "label": "北海道病院薬剤師会 開催案内",
+          "url": "https://hokubyo.or.jp/post-3935/"
         }
       ]
     },
@@ -455,6 +478,29 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       ]
     },
     {
+      "id": "jsct-50",
+      "primaryUrl": "https://jsct.jp/",
+      "imageUrl": "",
+      "imageFit": "contain",
+      "scope": "national",
+      "status": "pending",
+      "society": "日本中毒学会",
+      "eventName": "第50回日本中毒学会総会・学術集会",
+      "leadLabel": "会長",
+      "lead": "伊関 憲（福島県立医科大学医学部）",
+      "note": "日本中毒学会公式サイトで次期学術集会として会長が公表されています。会期・会場は未公表です。",
+      "sources": [
+        {
+          "label": "日本中毒学会公式サイト",
+          "url": "https://jsct.jp/"
+        },
+        {
+          "label": "日本中毒学会 学術集会案内",
+          "url": "https://jsct.jp/event/soukai-2/"
+        }
+      ]
+    },
+    {
       "id": "jasds-13",
       "primaryUrl": "https://jasds.jp/conference/",
       "imageUrl": "",
@@ -490,7 +536,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "imageFit": "contain",
       "scope": "national",
       "displayMonth": 11,
-      "status": "confirmed",
+      "status": "past",
       "society": "日本医療薬学会",
       "eventName": "第36回日本医療薬学会年会",
       "startDate": "2026-11-21",
@@ -500,7 +546,7 @@ window.ANNUAL_MEETINGS_2026_DATA = {
       "theme": "2040年の社会課題を解決する医療薬学の融合研究～すべての薬剤師が集う学術的基盤を目指して～",
       "leadLabel": "年会長",
       "lead": "崔 吉道（金沢大学附属病院 教授・薬剤部長）",
-      "note": "公式サイトでポスタープリントサービス（2026-11-02）、各種単位（2026-10-28）、関連学会告知・広報申込（2026-10-19）の案内掲載を確認。早期参加登録は2026-09-30まで延長済み。後期参加登録は2026-10-08開始で、締切はオンデマンド配信終了まで（終了日未公表）。",
+      "note": "公式サイトで市民公開講座（2026-11-18）と学会アプリ緊急メンテナンス（2026-11-13開始、終了日未定）、ポスタープリントサービス（2026-11-02）、各種単位（2026-10-28）、関連学会告知・広報申込（2026-10-19）の案内掲載を確認。後期参加登録はオンデマンド配信終了までで、配信期間は2026-12-22から2027-02-28までの予定と案内されています。",
       "sources": [
         {
           "label": "公式サイト",
@@ -543,9 +589,10 @@ window.ANNUAL_MEETINGS_2026_DATA = {
           "label": "後期参加登録開始",
           "category": "registration",
           "startDate": "2026-10-08",
-          "note": "公式ページでは後期参加登録の締切はオンデマンド配信終了までと案内されていますが、終了日は未公表です。"
+          "note": "公式ページでは後期参加登録の締切はオンデマンド配信終了まで。配信期間は2026-12-22から2027-02-28までの予定と案内されています。"
         }
-      ]
+      ],
+      "archivedAt": "2026-11-24"
     },
     {
       "id": "jsphcs-37",
